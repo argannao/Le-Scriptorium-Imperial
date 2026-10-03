@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Talents — Le Scriptorium Impérial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js" defer></script>
+  <style>
+    .filters { display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:1rem; }
+    .filters button {
+      background:none; border:1px solid var(--line); color:var(--muted); cursor:pointer;
+      font-family:var(--font-title); font-size:0.75rem; letter-spacing:0.12em; text-transform:uppercase;
+      padding:0.3rem 0.7rem; border-radius:var(--radius);
+    }
+    .filters button.on { border-color:var(--gold-soft); color:var(--gold-bright); background:rgba(201,162,74,0.07); }
+    #talent-table td:first-child { white-space:nowrap; }
+    #talent-table small { color:var(--muted); display:block; }
+    .req { font-family:var(--font-mono); font-size:0.85rem; color:var(--muted); }
+  </style>
+</head>
+<body>
+  <main>
+    <header class="page-title">
+      <div class="kicker">Archive IX — Imperium Maledictum</div>
+      <h1>Talents</h1>
+      <p class="lead">Les tours, manies et dons qui distinguent un agent de la masse anonyme des sujets de l'Empereur.</p>
+    </header>
+
+    <h2>Fonctionnement</h2>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Obtenir un talent</h3>
+        <p>
+          On en reçoit à la création par la faction et le rôle (et éventuellement la table de talents aléatoires).
+          Ensuite, un talent coûte <strong>100 XP</strong>, à condition de remplir ses <strong>prérequis</strong>.
+          Si on cesse de les remplir, on perd le talent.
+        </p>
+      </div>
+      <div class="panel">
+        <h3>Prérequis</h3>
+        <p>
+          Une caractéristique minimale (ou maximale), des niveaux dans une compétence ou une spécialisation, l'absence de certains
+          niveaux, un autre talent… Certains talents ne se prennent qu'à la création. Les prérequis sont ignorés pour les talents
+          reçus à la création.
+        </p>
+      </div>
+    </div>
+    <div class="panel warn">
+      <p>
+        Chaque effet est <strong>résumé en une ligne</strong>, avec mes mots : c'est un aide-mémoire pour choisir, pas la règle complète.
+        Les noms français sont des traductions maison (nom officiel anglais dessous). Pour les détails exacts, voir le chapitre 4 du livre de base.
+      </p>
+    </div>
+
+    <h2>Liste des talents</h2>
+    <div class="filters" id="filters">
+      <button data-cat="" class="on">Tous</button>
+      <button data-cat="combat">Combat</button>
+      <button data-cat="social">Social</button>
+      <button data-cat="savoir">Savoir &amp; médecine</button>
+      <button data-cat="discretion">Discrétion</button>
+      <button data-cat="psy">Psy &amp; Warp</button>
+      <button data-cat="foi">Foi</button>
+      <button data-cat="divers">Divers</button>
+    </div>
+    <input class="search" id="talent-search" type="search" placeholder="> rechercher un talent, un prérequis, un effet..." aria-label="Rechercher un talent">
+    <p id="talent-count" class="req" style="margin-top:-1rem"></p>
+
+    <div class="table-wrap">
+      <table id="talent-table">
+        <thead><tr><th>Talent</th><th>Prérequis</th><th>En bref</th></tr></thead>
+        <tbody>
+          <tr data-cat="divers"><td>Sens aiguisé<small>Acute Sense</small></td><td class="req">—</td><td>Un des cinq sens est hors norme : on peut percevoir des détails normalement indétectables.</td></tr>
+          <tr data-cat="divers"><td>Poussée d'adrénaline<small>Adrenaline Acceleration</small></td><td class="req">—</td><td>Blessé gravement, on court plus vite et on a l'Avantage pour fuir ou poursuivre.</td></tr>
+          <tr data-cat="combat"><td>Attaques agiles<small>Agile Attacks</small></td><td class="req">Ag 45, Mêlée 2</td><td>Le BAg remplace le BF pour les dégâts des armes discrètes.</td></tr>
+          <tr data-cat="social"><td>Air d'autorité<small>Air of Authority</small></td><td class="req">Présence 2</td><td>À la première rencontre avec un groupe, un test réussi donne +1 Influence auprès de lui pour la mission.</td></tr>
+          <tr data-cat="combat"><td>Ambidextre<small>Ambidextrous</small></td><td class="req">—</td><td>Pas de pénalité avec la main non dominante ; arme de mêlée et pistolet en même temps sans malus.</td></tr>
+          <tr data-cat="savoir"><td>Anatomie appliquée<small>Applied Anatomy</small></td><td class="req">Médecine 2</td><td>Rend plus graves les blessures critiques qu'on inflige, selon ses niveaux en Médecine.</td></tr>
+          <tr data-cat="divers"><td>Artiste<small>Artistic</small></td><td class="req">—</td><td>+2 DR aux tests liés à un art (littérature, peinture, musique, théâtre). Cumulable, un art à chaque fois.</td></tr>
+          <tr data-cat="savoir"><td>Assistant attentif<small>Attentive Assistant</small></td><td class="req">—</td><td>Peut aider sans connaître la compétence ; s'il la connaît, l'aidé gagne +1 DR.</td></tr>
+          <tr data-cat="psy"><td>Paria<small>Blank</small></td><td class="req">Création seulement ; jamais Psyker</td><td>Aucune présence dans le Warp : immunisé à la possession et à la corruption, perturbe psykers et démons… mais met tout le monde mal à l'aise.</td></tr>
+          <tr data-cat="savoir"><td>Briseur d'os<small>Bone Breaker</small></td><td class="req">Médecine (spécialisation) 2</td><td>Peut briser un os d'une cible immobilisée.</td></tr>
+          <tr data-cat="social"><td>Corrupteur<small>Briber</small></td><td class="req">Intuition (Gens) 2</td><td>Sent qui est achetable et réduit le prix des pots-de-vin selon son talent de marchandage.</td></tr>
+          <tr data-cat="combat"><td>Rempart<small>Bulwark</small></td><td class="req">Réflexes 3</td><td>Avec un bouclier, protège un allié de plus, ou un allié et toute sa zone.</td></tr>
+          <tr data-cat="discretion"><td>Cambrioleur<small>Burglar</small></td><td class="req">Athlétisme 1, Discrétion 1</td><td>Avantage pour s'introduire quelque part : escalader, briser une vitre, ouvrir une serrure.</td></tr>
+          <tr data-cat="savoir"><td>Chirurgien<small>Chirurgeon</small></td><td class="req">Médecine 2</td><td>Peut opérer, amputer et soigner des critiques hors de portée des autres ; Avantage pour soigner en combat.</td></tr>
+          <tr data-cat="combat"><td>Discipline rapprochée<small>Close Quarters Discipline</small></td><td class="req">Discipline 2, Tir 2</td><td>Un ennemi au contact ne gêne plus les tirs.</td></tr>
+          <tr data-cat="combat"><td>Maître d'armes<small>Combat Master</small></td><td class="req">Mêlée 2</td><td>Compte pour deux combattants pour le surnombre.</td></tr>
+          <tr data-cat="psy"><td>Condamner la sorcière<small>Condemn the Witch</small></td><td class="req">FM 40, Psyker (ou accord du MJ)</td><td>Quand on contre un pouvoir, le psyker adverse subit des Blessures égales à sa Valeur Warp.</td></tr>
+          <tr data-cat="discretion"><td>Contorsionniste<small>Contortionist</small></td><td class="req">—</td><td>Passe dans des espaces minuscules ; Avantage pour se libérer de liens ou d'une prise.</td></tr>
+          <tr data-cat="combat"><td>Contre-attaque<small>Counter Attack</small></td><td class="req">Mêlée 3</td><td>En gagnant l'opposition en défense, on inflige des dégâts comme si on attaquait. Cumulable.</td></tr>
+          <tr data-cat="savoir"><td>Fouineur de données<small>Data Delver</small></td><td class="req">Logique (Investigation) 2</td><td>Avantage pour fouiller archives et documents, et lecture deux fois plus rapide.</td></tr>
+          <tr data-cat="social"><td>Négociateur<small>Dealmaker</small></td><td class="req">Intuition (Gens) 1, Entregent (Marchandage) 1</td><td>En négociation, un test réussi révèle ce qui ferait céder l'autre ou donne un autre avantage.</td></tr>
+          <tr data-cat="combat"><td>Tireur d'élite<small>Deadeye</small></td><td class="req">Tir 1</td><td>+1 DR en visant ; repris, Avantage pour viser une localisation.</td></tr>
+          <tr data-cat="combat"><td>Expert en démolition<small>Demolition Specialist</small></td><td class="req">Tir (Artillerie) 2 ou Dextérité (Désamorçage) 2</td><td>Peut stabiliser un explosif et règle mieux ses retardateurs.</td></tr>
+          <tr data-cat="divers"><td>Serviteur dévoué<small>Devoted Servant</small></td><td class="req">—</td><td>Avantage dans un métier honnête au choix (agriculteur, agent d'entretien, artiste, chasseur…).</td></tr>
+          <tr data-cat="combat"><td>Frappes dirigées<small>Directed Strikes</small></td><td class="req">Mêlée 3</td><td>Viser une localisation en mêlée sans Désavantage.</td></tr>
+          <tr data-cat="combat"><td>Coups bas<small>Dirty Fighting</small></td><td class="req">Mêlée (Pugilat) 2</td><td>Un coup qui blesse peut aveugler ou assourdir ; avec +3 DR, étourdir.</td></tr>
+          <tr data-cat="combat"><td>Désarmement<small>Disarm</small></td><td class="req">Mêlée 2</td><td>Au lieu de blesser, fait lâcher son arme à un adversaire de taille égale ou inférieure.</td></tr>
+          <tr data-cat="social"><td>Voix dérangeante<small>Disturbing Voice</small></td><td class="req">—</td><td>+2 DR pour intimider ou interroger, mais −2 DR auprès de ceux que la voix met mal à l'aise.</td></tr>
+          <tr data-cat="social"><td>Agaçant<small>Distracting</small></td><td class="req">—</td><td>Une fois par scène, une interruption bien sentie impose le Désavantage au test d'un autre.</td></tr>
+          <tr data-cat="combat"><td>Aguerri<small>Drilled</small></td><td class="req">Discipline 1</td><td>Avantage contre la peur, et +1 DR en Discipline par allié aguerri dans la zone.</td></tr>
+          <tr data-cat="combat"><td>Combat à deux armes<small>Dual Wielder</small></td><td class="req">Ambidextre, Mêlée (Une main) 2</td><td>Attaquer avec deux armes de mêlée sans Désavantage.</td></tr>
+          <tr data-cat="combat"><td>Duelliste<small>Duellist</small></td><td class="req">Mêlée (Une main) 2</td><td>Les armes à une main deviennent défensives ; repris, donne des bottes de duelliste (feinte, etc.).</td></tr>
+          <tr data-cat="savoir"><td>Mémoire eidétique<small>Eidetic Memory</small></td><td class="req">—</td><td>Se souvient parfaitement de tout ce qu'il a vu, sans test.</td></tr>
+          <tr data-cat="discretion"><td>Toujours vigilant<small>Ever Vigilant</small></td><td class="req">Vigilance 2</td><td>+1 DR pour repérer les ennemis cachés et dort d'un œil.</td></tr>
+          <tr data-cat="combat"><td>Exploiter la faiblesse<small>Exploit Vulnerability</small></td><td class="req">Intuition (Gens) 2</td><td>Après avoir étudié l'ennemi, choisit la localisation de sa première attaque réussie.</td></tr>
+          <tr data-cat="divers"><td>Proprioception étendue<small>Extended Proprioception</small></td><td class="req">Pilotage (spécialisation) 3</td><td>Ressent le véhicule piloté comme son propre corps : taille, position, passages possibles.</td></tr>
+          <tr data-cat="foi"><td>Fidèle (Culte impérial)<small>Faithful (Imperial Cult)</small></td><td class="req">Ministorum, ou +2 Influence Ministorum, ou Savoir (Théologie) 2</td><td>Un vrai croyant, capable de manifester sa foi par de petits miracles en dépensant ou brûlant du Destin.</td></tr>
+          <tr data-cat="discretion"><td>Fausse retraite<small>False Retreat</small></td><td class="req">Entregent (Tromperie) 3</td><td>Fait semblant de fuir puis réapparaît ailleurs, au prix d'1 Supériorité.</td></tr>
+          <tr data-cat="discretion"><td>Terrain familier<small>Familiar Terrain</small></td><td class="req">—</td><td>Dans un type de milieu choisi : Avantage en Discrétion et meilleur couvert. Cumulable.</td></tr>
+          <tr data-cat="divers"><td>Prédestiné<small>Fated</small></td><td class="req">Création seulement</td><td>+1 point de Destin. Une seule fois.</td></tr>
+          <tr data-cat="savoir"><td>Médecin de terrain<small>Field Medicae</small></td><td class="req">Médecine 2</td><td>Les tests de soin ne sont jamais plus durs que Normal.</td></tr>
+          <tr data-cat="foi"><td>Flagellant<small>Flagellant</small></td><td class="req">—</td><td>La douleur est une prière : Avantage pour résister à la souffrance et aux interrogatoires.</td></tr>
+          <tr data-cat="combat"><td>Tir de flanc<small>Flanking Fire</small></td><td class="req">Tir 2</td><td>Une cible dans la zone d'un allié profite moins de son couvert.</td></tr>
+          <tr data-cat="divers"><td>La chair est faible<small>Flesh is Weak</small></td><td class="req">Technologie (Augmétiques) 2</td><td>Le nombre maximum d'augmétiques passe à deux fois le BE.</td></tr>
+          <tr data-cat="savoir"><td>Savoir interdit<small>Forbidden Knowledge</small></td><td class="req">Création, ou accord du MJ</td><td>Débloque une spécialisation interdite (langues, savoirs…). Dangereux si l'Inquisition l'apprend.</td></tr>
+          <tr data-cat="social"><td>Faussaire<small>Forger</small></td><td class="req">Linguistique 2, Savoir 2</td><td>Fabrique de faux documents qui donnent de l'Influence auprès d'une faction.</td></tr>
+          <tr data-cat="combat"><td>Fanatique du tir automatique<small>Full-Auto Fanatic</small></td><td class="req">Tir 3</td><td>Peut vider deux fois plus de munitions en tir rapide pour arroser une zone plus large.</td></tr>
+          <tr data-cat="combat"><td>Frénésie<small>Frenzy</small></td><td class="req">—</td><td>Entre en rage : +1 BF, insensible à la peur, mais doit charger l'ennemi le plus proche.</td></tr>
+          <tr data-cat="social"><td>Humour noir<small>Gallows Humour</small></td><td class="req">Entregent (Charme) 2</td><td>Une blague au bon moment remonte le moral d'un allié épuisé ou terrifié.</td></tr>
+          <tr data-cat="social"><td>Charabia gothique<small>Gothic Gibberish</small></td><td class="req">Linguistique 1</td><td>Noie quelqu'un sous un flot de jargon pour le désorienter.</td></tr>
+          <tr data-cat="combat"><td>Gardien<small>Guardian</small></td><td class="req">Réflexes 3</td><td>Protège un allié choisi pendant tout le combat et peut s'interposer.</td></tr>
+          <tr data-cat="combat"><td>Pistolero<small>Gunslinger</small></td><td class="req">Ambidextre, Tir (Pistolets) 2</td><td>Tirer avec deux armes sans Désavantage.</td></tr>
+          <tr data-cat="foi"><td>Haine<small>Hatred</small></td><td class="req">—</td><td>Haine d'un type d'ennemi (xenos, hérétiques…) : s'il cède à sa rage, bonus contre la peur et +1 DR pour l'attaquer, mais doit le détruire à tout prix.</td></tr>
+          <tr data-cat="combat"><td>Frapper et filer<small>Hit and Run</small></td><td class="req">Réflexes (Acrobaties) 3</td><td>Après avoir blessé, peut se désengager et changer de zone gratuitement.</td></tr>
+          <tr data-cat="discretion"><td>Cache secrète<small>Holdout Expert</small></td><td class="req">—</td><td>Dissimule un petit objet sur soi, très difficile à trouver lors d'une fouille.</td></tr>
+          <tr data-cat="divers"><td>Hypno-endoctrinement<small>Hypno-Indoctrination</small></td><td class="req">—</td><td>Un conditionnement oublié se réveille : deux talents aléatoires. Une seule fois.</td></tr>
+          <tr data-cat="foi"><td>Porte-icône<small>Icon Bearer</small></td><td class="req">Savoir (Théologie) 1, Présence 1</td><td>Brandie, son icône sacrée profite à tous les alliés qui la voient.</td></tr>
+          <tr data-cat="foi"><td>L'ignorance est mon bouclier<small>Ignorance is My Shield</small></td><td class="req">Int &lt; 30, aucun savoir interdit</td><td>+4 DR pour résister à la corruption, aux pouvoirs et aux démons, mais −4 DR pour tout savoir sur eux.</td></tr>
+          <tr data-cat="social"><td>Présence inspirante<small>Inspiring Presence</small></td><td class="req">Présence (Commandement) 2</td><td>Les alliés de la zone qui le voient ont l'Avantage en Discipline.</td></tr>
+          <tr data-cat="social"><td>Héritier<small>Inheritor</small></td><td class="req">Création seulement</td><td>Descendant d'une lignée notable : +1 Influence, et parfois un héritage… avec ses fardeaux.</td></tr>
+          <tr data-cat="social"><td>Juriste<small>Lawbringer</small></td><td class="req">Savoir (Adeptus Terra) 2</td><td>Brandir la loi impériale aide à faire pression sur quelqu'un qui l'a enfreinte.</td></tr>
+          <tr data-cat="social"><td>Lèche-bottes<small>Lickspittle</small></td><td class="req">—</td><td>Avantage pour flatter un supérieur.</td></tr>
+          <tr data-cat="foi"><td>Martyre<small>Martyrdom</small></td><td class="req">Résistance 2</td><td>Avec une blessure critique reçue au service de l'Empereur, bonus de DR pour affronter l'ennemi.</td></tr>
+          <tr data-cat="savoir"><td>Médecin non conventionnel<small>Medicae Maverick</small></td><td class="req">Une spécialisation Médecine interdite</td><td>Des techniques interdites qui réparent une fracture en urgence.</td></tr>
+          <tr data-cat="psy"><td>Forteresse mentale<small>Mental Fortress</small></td><td class="req">Discipline (Psychique) 2</td><td>Esprit illisible par la télépathie, et dégâts psychiques réduits du BFM.</td></tr>
+          <tr data-cat="discretion"><td>Imitateur<small>Mimic</small></td><td class="req">Vigilance (Ouïe) 2, Entregent (Tromperie) 2</td><td>Imite la voix de quelqu'un après l'avoir écouté une heure.</td></tr>
+          <tr data-cat="social"><td>Contremaître<small>Overseer</small></td><td class="req">Présence (Commandement) 2</td><td>Guide un allié : il utilise votre compétence à la place de la sienne pour son prochain test.</td></tr>
+          <tr data-cat="savoir"><td>Médecin légiste<small>Pathologist</small></td><td class="req">Médecine (Humain) 2</td><td>Avantage aux autopsies.</td></tr>
+          <tr data-cat="savoir"><td>Saigneur<small>Phlebotomist</small></td><td class="req">Médecine 3</td><td>Analyse le sang ; en mêlée, peut faire saigner au lieu de blesser.</td></tr>
+          <tr data-cat="divers"><td>Porteur<small>Porter</small></td><td class="req">Résistance (Endurance) 2</td><td>L'encombrement max devient deux fois le BF + le BE.</td></tr>
+          <tr data-cat="psy"><td>Châtiment psychique<small>Psychic Castigation</small></td><td class="req">Psyker</td><td>Quand on résiste à un pouvoir, son auteur subit des Blessures.</td></tr>
+          <tr data-cat="psy"><td>Déferlement psychique<small>Psychic Flood</small></td><td class="req">Psyker</td><td>Prend volontairement de la Charge Warp pour renforcer un pouvoir.</td></tr>
+          <tr data-cat="psy"><td>Psyker<small>Psyker</small></td><td class="req">Jamais Paria</td><td>Accès au Warp et aux pouvoirs psychiques, avec tous les risques qui vont avec.</td></tr>
+          <tr data-cat="combat"><td>Dégaine rapide<small>Quickdraw</small></td><td class="req">Tir (Pistolets) 2, Réflexes 2</td><td>Dégaine et tire au pistolet avant tout le monde au début du combat.</td></tr>
+          <tr data-cat="combat"><td>Rechargement rapide<small>Rapid Reload</small></td><td class="req">Dextérité 2, Tir 2</td><td>Recharge gratuitement un type d'arme. Cumulable.</td></tr>
+          <tr data-cat="discretion"><td>Lecture labiale<small>Read Lips</small></td><td class="req">Vigilance (Vue) 1, Linguistique 1</td><td>Comprend ce que disent les gens rien qu'en regardant leurs lèvres.</td></tr>
+          <tr data-cat="social"><td>Marchand patenté<small>Registered Trader</small></td><td class="req">Logique (Évaluation) 2, Entregent (Marchandage) 2</td><td>Revend son matériel au prix fort.</td></tr>
+          <tr data-cat="psy"><td>Psyker sanctionné<small>Sanctioned Psyker</small></td><td class="req">Psyker ; création seulement</td><td>Formé et autorisé par l'Imperium : Seuil Warp doublé (2 × BFM) et un symbole officiel de son statut.</td></tr>
+          <tr data-cat="discretion"><td>Double identité<small>Secret Identity</small></td><td class="req">Accord du MJ</td><td>Se fait passer pour membre d'une autre faction : +1 Influence auprès d'elle tant que la couverture tient.</td></tr>
+          <tr data-cat="combat"><td>Assaut éclair<small>Shock Assault</small></td><td class="req">Ag 45, Discrétion 3</td><td>Deux actions pendant le round de surprise.</td></tr>
+          <tr data-cat="discretion"><td>Fileur<small>Skulker</small></td><td class="req">Navigation 1, Discrétion 1</td><td>Suit quelqu'un sans avoir à tester sa Discrétion.</td></tr>
+          <tr data-cat="combat"><td>Insaisissable<small>Slippery</small></td><td class="req">Réflexes 2</td><td>Désavantage pour qui l'attaque quand il se désengage ; repris, se désengage gratuitement.</td></tr>
+          <tr data-cat="combat"><td>Commandant supérieur<small>Superior Commander</small></td><td class="req">Présence (Commandement) 4</td><td>Donne des ordres : autant d'alliés que la Supériorité agissent ou bougent immédiatement.</td></tr>
+          <tr data-cat="combat"><td>Tir de suppression<small>Suppressing Fire</small></td><td class="req">Tir 2</td><td>En tir rapide, cloue l'ennemi sur place au lieu de le blesser.</td></tr>
+          <tr data-cat="combat"><td>Pied sûr<small>Sure-Footed</small></td><td class="req">Athlétisme 1, Résistance 1, Réflexes 1</td><td>Rapide avec de la Supériorité, difficile à renverser, se relève gratuitement.</td></tr>
+          <tr data-cat="combat"><td>Mouvement tactique<small>Tactical Movement</small></td><td class="req">Athlétisme 1, Discipline 1</td><td>Se met à couvert gratuitement.</td></tr>
+          <tr data-cat="divers"><td>Tenace<small>Tenacious</small></td><td class="req">—</td><td>Peut se remettre immédiatement d'un étourdissement.</td></tr>
+          <tr data-cat="combat"><td>Taille à deux mains<small>Two-handed Cleave</small></td><td class="req">Mêlée (Deux mains) 2</td><td>Les armes à deux mains gagnent Dispersion. Cumulable.</td></tr>
+          <tr data-cat="combat"><td>Présence inébranlable<small>Unflinching Presence</small></td><td class="req">Présence (Commandement) 3</td><td>Un test réussi empêche le groupe de perdre de la Supériorité.</td></tr>
+          <tr data-cat="discretion"><td>Anonyme<small>Unremarkable</small></td><td class="req">Aucun niveau en Présence</td><td>Bien habillé, se fond dans la foule impériale sans test.</td></tr>
+          <tr data-cat="divers"><td>Pied spatial<small>Void Legs</small></td><td class="req">—</td><td>Insensible au mal de l'espace et à l'apesanteur. Cumulable pour d'autres bonus de voyageur du vide.</td></tr>
+          <tr data-cat="divers"><td>Prévoyant<small>Well-Prepared</small></td><td class="req">—</td><td>Une fois par mission, sort de son sac le petit objet dont on a besoin (en le payant après coup).</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const rows = [...document.querySelectorAll("#talent-table tbody tr")];
+      const input = document.querySelector("#talent-search");
+      const count = document.querySelector("#talent-count");
+      const buttons = [...document.querySelectorAll("#filters button")];
+      let cat = "";
+      const update = () => {
+        const q = input.value.trim().toLowerCase();
+        let n = 0;
+        rows.forEach((r) => {
+          const ok = (!cat || r.dataset.cat === cat) && (!q || r.textContent.toLowerCase().includes(q));
+          r.style.display = ok ? "" : "none";
+          if (ok) n++;
+        });
+        count.textContent = `${n} talent(s)`;
+      };
+      buttons.forEach((b) => b.addEventListener("click", () => {
+        buttons.forEach((x) => x.classList.remove("on"));
+        b.classList.add("on");
+        cat = b.dataset.cat;
+        update();
+      }));
+      input.addEventListener("input", update);
+      update();
+    });
+  </script>
+</body>
+</html>

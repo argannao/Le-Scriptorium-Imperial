@@ -11,6 +11,7 @@ const MODULES = [
   { href: "regles.html",      label: "Règles" },
   { href: "creation.html",    label: "Création" },
   { href: "competences.html", label: "Compétences" },
+  { href: "talents.html",     label: "Talents" },
   { href: "factions.html",    label: "Factions" },
   { href: "psy.html",         label: "Psykers" },
   { href: "armurerie.html",   label: "Armurerie" },
