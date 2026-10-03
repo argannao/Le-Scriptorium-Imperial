@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Armurerie — Le Scriptorium Impérial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <main>
+    <header class="page-title">
+      <div class="kicker">Archive VIII — Imperium Maledictum</div>
+      <h1>Armurerie</h1>
+      <p class="lead">Le talent ne suffit pas toujours dans le Secteur Macharien. Un bon équipement fait souvent la différence entre l'agent qui revient et celui qu'on oublie.</p>
+    </header>
+
+    <nav class="toc">
+      <a href="#argent">Argent &amp; disponibilité</a>
+      <a href="#melee">Armes de mêlée</a>
+      <a href="#distance">Armes à distance</a>
+      <a href="#traits">Traits</a>
+      <a href="#armures">Armures</a>
+    </nav>
+
+    <h2 id="argent">Argent et disponibilité</h2>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Le solar macharien</h3>
+        <p>
+          La monnaie la plus proche d'un standard dans le secteur : des pièces de laiton fondues, dit-on, dans les douilles de
+          la croisade de Macharius. Beaucoup de mondes l'acceptent à contrecœur et gardent leur propre monnaie.
+        </p>
+      </div>
+      <div class="panel">
+        <h3>Disponibilité</h3>
+        <p>
+          <span class="tag">Commun</span> se trouve presque partout.<br>
+          <span class="tag">Peu commun</span> <span class="tag">Rare</span> il faut réussir un test de disponibilité, selon le type de monde.<br>
+          <span class="tag">Exotique</span> quasiment introuvable sans relations.
+        </p>
+        <p>L'Influence auprès d'une faction peut ouvrir l'accès à du matériel autrement inaccessible.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Comment lire les tableaux</h3>
+      <p>
+        <strong>Dég.</strong> : dégâts de base, auxquels s'ajoutent les DR de l'attaque. « +BF » ajoute le bonus de Force.
+        <strong>Portée</strong> : courte (votre zone), moyenne (+ zone adjacente), longue (2 zones), extrême (au-delà).
+        Ce n'est qu'une <strong>sélection</strong> : le livre de base contient bien plus d'armes, de modifications et de munitions spéciales.
+      </p>
+    </div>
+
+    <h2 id="melee">Armes de mêlée (sélection)</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Arme</th><th>Spéc.</th><th>Dég.</th><th>Dispo.</th><th>Traits</th></tr></thead>
+        <tbody>
+          <tr><td>Poing nu</td><td>Pugilat</td><td>0 + BF</td><td>—</td><td>Inefficace</td></tr>
+          <tr><td>Couteau</td><td>Une main</td><td>0 + BF</td><td>Commun</td><td>Discret, Lancer (courte)</td></tr>
+          <tr><td>Épée</td><td>Une main</td><td>2 + BF</td><td>Commun</td><td>—</td></tr>
+          <tr><td>Grande arme</td><td>Deux mains</td><td>4 + BF</td><td>Peu commun</td><td>Lourd (4), Deux mains</td></tr>
+          <tr><td>Épée tronçonneuse</td><td>Une main</td><td>3 + BF</td><td>Peu commun</td><td>Bruyant, Lacération (2)</td></tr>
+          <tr><td>Masse à choc</td><td>Une main</td><td>2 + BF</td><td>Peu commun</td><td>Bruyant, Inflige (Étourdi)</td></tr>
+          <tr><td>Épée énergétique</td><td>Une main</td><td>4 + BF</td><td>Rare</td><td>Perforant (4)</td></tr>
+          <tr><td>Gantelet énergétique</td><td>Pugilat</td><td>6 + BF</td><td>Rare</td><td>Lourd (4), Perforant (6)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="distance">Armes à distance (sélection)</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Arme</th><th>Spéc.</th><th>Dég.</th><th>Portée</th><th>Dispo.</th><th>Traits</th></tr></thead>
+        <tbody>
+          <tr><td>Pistolet laser</td><td>Pistolet</td><td>5</td><td>Moyenne</td><td>Commun</td><td>Rafale, Proche, Bruyant, Fiable</td></tr>
+          <tr><td>Fusil laser</td><td>Épaule</td><td>6</td><td>Longue</td><td>Commun</td><td>Rafale, Bruyant, Fiable, Deux mains</td></tr>
+          <tr><td>Pistolet automatique</td><td>Pistolet</td><td>5</td><td>Moyenne</td><td>Commun</td><td>Proche, Bruyant, Tir rapide (3)</td></tr>
+          <tr><td>Revolver</td><td>Pistolet</td><td>6</td><td>Moyenne</td><td>Commun</td><td>Proche, Bruyant, Fiable</td></tr>
+          <tr><td>Fusil à pompe</td><td>Épaule</td><td>6</td><td>Moyenne</td><td>Commun</td><td>Inflige (À terre), Bruyant, Dispersion, Deux mains</td></tr>
+          <tr><td>Fusil de précision</td><td>Épaule</td><td>8</td><td>Extrême</td><td>Peu commun</td><td>Bruyant, Deux mains</td></tr>
+          <tr><td>Lance-flammes</td><td>Épaule</td><td>8</td><td>Moyenne</td><td>Peu commun</td><td>Flammes, Inflige (En feu), Bruyant, Deux mains</td></tr>
+          <tr><td>Pistolet bolter</td><td>Pistolet</td><td>8</td><td>Moyenne</td><td>Rare</td><td>Rafale, Proche, Bruyant, Perforant (4), Dispersion</td></tr>
+          <tr><td>Bolter</td><td>Épaule</td><td>8</td><td>Longue</td><td>Rare</td><td>Bruyant, Perforant (4), Tir rapide (2), Dispersion, Deux mains</td></tr>
+          <tr><td>Pistolet à plasma</td><td>Pistolet</td><td>10</td><td>Moyenne</td><td>Rare</td><td>Proche, Bruyant, Perforant (6), Surcharge (4), Instable</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="traits">Les principaux traits</h2>
+    <div class="grid-2">
+      <div class="panel"><h3>Rafale</h3><p>Tirer une courte rafale : +1 DR au test de Tir, pour une munition de plus.</p></div>
+      <div class="panel"><h3>Tir rapide (X)</h3><p>Vider X munitions pour, au choix, gagner Dispersion, ou tester avec Avantage et ajouter X aux dégâts. Compte aussi comme Rafale (mais pas les deux à la fois).</p></div>
+      <div class="panel"><h3>Dispersion</h3><p>Tous ceux au contact de la cible doivent réussir un test de Réflexes (Esquive) ou subir la moitié des dégâts.</p></div>
+      <div class="panel"><h3>Perforant (X)</h3><p>L'attaque ignore X points d'armure.</p></div>
+      <div class="panel"><h3>Lacération (X)</h3><p>Si l'attaque blesse, l'armure de la zone touchée perd X points jusqu'à réparation. À 0, elle est détruite.</p></div>
+      <div class="panel"><h3>Lourd (X)</h3><p>Il faut un BF d'au moins X, sinon Désavantage (à l'Agilité pour une armure). Une arme lourde calée sur un appui ignore ce trait.</p></div>
+      <div class="panel"><h3>Fiable</h3><p>En cas de maladresse, lancez 1d10 : sur 4 ou plus, on l'ignore.</p></div>
+      <div class="panel"><h3>Proche</h3><p>L'arme à distance peut tirer au contact sans Désavantage.</p></div>
+      <div class="panel"><h3>Bruyant</h3><p>Une arme qui alerte tout le monde jusqu'à portée longue. Une armure bruyante donne Désavantage en Discrétion.</p></div>
+      <div class="panel"><h3>Discret</h3><p>Facile à cacher et silencieux : Désavantage pour le repérer. Une armure discrète se cumule avec une autre armure.</p></div>
+      <div class="panel"><h3>Inflige (État)</h3><p>Si l'attaque blesse, la cible subit l'état indiqué (à terre, en feu, étourdi, empoisonné…).</p></div>
+      <div class="panel"><h3>Inefficace</h3><p>L'armure compte double contre cette arme.</p></div>
+      <div class="panel"><h3>Surcharge (X)</h3><p>On peut surcharger le tir : +X dégâts, mais double consommation de munitions.</p></div>
+      <div class="panel"><h3>Flammes</h3><p>Ignore les couverts, a Dispersion, et peut transformer une zone en danger mineur jusqu'au tour suivant.</p></div>
+    </div>
+
+    <h2 id="armures">Armures</h2>
+    <div class="panel">
+      <p>Chaque pièce protège certaines zones (tête, bras, torse, jambes). Sa valeur est retirée aux dégâts reçus à cet endroit.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Type</th><th>Armure</th><th>Dispo.</th><th>En bref</th></tr></thead>
+        <tbody>
+          <tr><td>Simple (robes, cuirs, combinaison blindée…)</td><td>1–3</td><td>Commun à rare</td><td>Légère, parfois discrète et cumulable.</td></tr>
+          <tr><td>Flak</td><td>2–4</td><td>Commun à rare</td><td>Plaques en couches, l'armure standard de la Garde.</td></tr>
+          <tr><td>Maille (mesh)</td><td>3–4</td><td>Rare</td><td>Des milliers de minuscules plaques entrelacées, souple comme un tissu ; plus légère que la carapace.</td></tr>
+          <tr><td>Carapace</td><td>5–6</td><td>Rare</td><td>Plaques rigides très protectrices, mais lourdes et bruyantes.</td></tr>
+          <tr><td>Énergétique</td><td>8–10</td><td>Exotique</td><td>Une protection inégalée… pour une fortune et une alimentation à surveiller.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="todo">À VENIR : outils, augmétiques, champs de force et services.</div>
+  </main>
+</body>
+</html>

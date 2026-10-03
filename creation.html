@@ -19,113 +19,160 @@
     </header>
 
     <nav class="toc">
-      <a href="#etapes">Les étapes</a>
+      <a href="#etapes">Les 8 étapes</a>
+      <a href="#caracs">Caractéristiques</a>
       <a href="#origines">Origines</a>
       <a href="#factions">Factions</a>
       <a href="#roles">Rôles</a>
+      <a href="#derives">Finitions</a>
+      <a href="#xp">XP de départ</a>
       <a href="#patron">Le patron</a>
     </nav>
 
-    <h2 id="etapes">Les étapes de création</h2>
+    <h2 id="etapes">Les 8 étapes</h2>
     <div class="panel">
       <p>
-        La création se déroule en <strong>huit étapes</strong>. Les trois premières sont les plus importantes,
-        car elles façonnent tout le personnage : l'<strong>Origine</strong>, la <strong>Faction</strong> et le <strong>Rôle</strong>.
-        Viennent ensuite les caractéristiques, les compétences, les talents et l'équipement.
-      </p>
-      <p>
-        Chaque choix peut se faire librement ou au hasard. Tirer au sort rapporte de l'expérience bonus au départ :
-        de quoi tenter les joueurs qui aiment les surprises.
+        On crée d'abord le <a href="#patron">patron</a> en groupe, puis chacun son agent. À plusieurs étapes, on peut
+        choisir librement ou <strong>laisser faire le hasard</strong> : accepter la main invisible de l'Empereur rapporte de l'XP.
       </p>
     </div>
-    <div class="grid-2">
-      <div class="panel"><h3><span class="tag">I</span> Origine</h3><p>Le monde ou le milieu d'où vient l'agent. Elle donne des bonus de caractéristiques et limite les factions accessibles.</p></div>
-      <div class="panel"><h3><span class="tag">II</span> Faction</h3><p>L'institution qui l'a formé. Elle influe sur ses caractéristiques, compétences, talents, Influence et équipement de départ.</p></div>
-      <div class="panel"><h3><span class="tag">III</span> Rôle</h3><p>Sa spécialité dans le groupe, l'équivalent d'une classe. Il donne des choix de talents, des progressions de compétences et du matériel.</p></div>
-      <div class="panel"><h3><span class="tag">IV+</span> Finitions</h3><p>Caractéristiques, compétences, talents et équipement viennent compléter la fiche.</p></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Étape</th><th>Ce qu'on détermine</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Caractéristiques</td><td>Les neuf valeurs de base</td></tr>
+          <tr><td>2</td><td>Origine</td><td>Le monde ou le milieu d'enfance : bonus de caractéristiques et un objet</td></tr>
+          <tr><td>3</td><td>Faction</td><td>L'institution qui vous a formé : bonus, compétences, talent, Influence, équipement</td></tr>
+          <tr><td>4</td><td>Rôle</td><td>Pourquoi le patron vous a recruté : talents, compétences, spécialisations, matériel</td></tr>
+          <tr><td>5</td><td>Équipement</td><td>Le total de ce que donnent l'origine, la faction et le rôle</td></tr>
+          <tr><td>6</td><td>Détails</td><td>Nom, apparence, objectifs à court et long terme</td></tr>
+          <tr><td>7</td><td>Donner vie</td><td>Foi, peurs, secrets, opinion sur le patron…</td></tr>
+          <tr><td>8</td><td>Finitions</td><td>Blessures, critiques max, Initiative, main dominante, Destin</td></tr>
+        </tbody>
+      </table>
     </div>
 
-    <h2 id="origines">Origines</h2>
+    <h2 id="caracs">1. Caractéristiques</h2>
     <div class="grid-2">
       <div class="panel">
-        <h3>Monde agricole</h3>
-        <p>Une planète entière de champs et de silos, qui nourrit les mondes voisins. Ses habitants sont robustes, patients et habitués au labeur.</p>
+        <h3>Au hasard</h3>
+        <p>
+          Lancez <strong>2d10 + 20</strong> pour chacune des neuf caractéristiques, dans l'ordre.
+          Garder tel quel : <span class="tag">+50 XP</span>. Réarranger les neuf résultats : <span class="tag">+25 XP</span>.
+          Relancer encore : pas d'XP.
+        </p>
       </div>
       <div class="panel">
-        <h3>Monde féodal</h3>
-        <p>Une société figée à l'âge des châteaux et des seigneurs. On y respecte la hiérarchie, l'honneur et la parole donnée.</p>
-      </div>
-      <div class="panel">
-        <h3>Monde féral</h3>
-        <p>Un monde resté primitif, où la survie se gagne par la force. Ses natifs sont endurcis mais déroutés par la technologie impériale.</p>
-      </div>
-      <div class="panel">
-        <h3>Monde-forge</h3>
-        <p>Planète-usine dirigée par l'Adeptus Mechanicus. Ses natifs connaissent le métal, la vapeur et les rites techniques.</p>
-        <p><span class="tag">+5 Intelligence</span></p>
-      </div>
-      <div class="panel">
-        <h3>Monde-ruche</h3>
-        <p>Des cités verticales de plusieurs kilomètres, surpeuplées et polluées. On y apprend la débrouille, la méfiance et la vie en foule.</p>
-      </div>
-      <div class="panel">
-        <h3>Monde-sanctuaire</h3>
-        <p>Une planète vouée au culte de l'Empereur, couverte de cathédrales et de reliques. La foi y imprègne chaque geste.</p>
-        <p><span class="tag">+5 Force Mentale</span></p>
-      </div>
-      <div class="panel">
-        <h3>Schola Progenium</h3>
-        <p>Orphelins des serviteurs de l'Imperium, élevés dans une discipline de fer pour devenir ses futurs cadres.</p>
-      </div>
-      <div class="panel">
-        <h3>Né du vide</h3>
-        <p>Élevé à bord d'un vaisseau ou d'une station. Pâle, superstitieux, à l'aise en apesanteur et étranger aux planètes.</p>
+        <h3>Par répartition</h3>
+        <p>
+          Chaque caractéristique part de <strong>20</strong> et vous répartissez <strong>90 points</strong>,
+          avec au moins 4 et au plus 18 par caractéristique. Pas d'XP bonus.
+        </p>
       </div>
     </div>
-    <div class="todo">À COMPLÉTER : bonus de caractéristiques et factions accessibles pour chaque origine.</div>
+    <p style="color:var(--muted);font-style:italic">Les bonus d'origine et de faction s'ajoutent ensuite. Vous pouvez aussi lancer 1d10 pour leur valeur au lieu de +5, sans XP en plus.</p>
 
-    <h2 id="factions">Factions</h2>
+    <h2 id="origines">2. Origines</h2>
+    <div class="panel"><p>Choisissez, ou lancez 1d100 pour <span class="tag">+25 XP</span>. Chaque origine donne +5 à une caractéristique fixe, +5 à une autre au choix parmi trois, et un objet.</p></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>d100</th><th>Origine</th><th>Bonus</th><th>Objet</th></tr></thead>
+        <tbody>
+          <tr><td>01–10</td><td>Monde agricole</td><td>+5 F ; +5 E, Ag ou FM</td><td>Outil de tranchée (de piètre qualité)</td></tr>
+          <tr><td>11–20</td><td>Monde féral</td><td>+5 E ; +5 CC, F ou Per</td><td>Matériel de survie (de piètre qualité)</td></tr>
+          <tr><td>21–30</td><td>Monde féodal</td><td>+5 CC ; +5 F, FM ou Soc</td><td>Nécessaire d'écriture (de piètre qualité)</td></tr>
+          <tr><td>31–40</td><td>Monde-forge</td><td>+5 Int ; +5 CT, E ou Ag</td><td>Fiole d'onguents sacrés</td></tr>
+          <tr><td>41–70</td><td>Monde-ruche</td><td>+5 Ag ; +5 CT, Per ou Soc</td><td>Filtres respiratoires (laids)</td></tr>
+          <tr><td>71–80</td><td>Schola Progenium</td><td>+5 Soc ; +5 CC, CT ou E</td><td>Chrono</td></tr>
+          <tr><td>81–90</td><td>Monde-sanctuaire</td><td>+5 FM ; +5 Int, Per ou Soc</td><td>Icône sacrée</td></tr>
+          <tr><td>91–00</td><td>Né du vide</td><td>+5 Per ; +5 Ag, Int ou FM</td><td>Bottes magnétiques (de piètre qualité)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="grid-2">
+      <div class="panel"><h3>Monde agricole</h3><p>Une planète entière de champs et de silos pour nourrir les mondes-usines. On y forge des corps robustes, habitués au labeur sans fin.</p></div>
+      <div class="panel"><h3>Monde féral</h3><p>Peu ou pas de technologie, une nature hostile : on y survit par la force. Ces mondes fournissent d'excellents guerriers à la Garde.</p></div>
+      <div class="panel"><h3>Monde féodal</h3><p>Une société revenue à l'âge des seigneurs et des châteaux, parfois par isolement, parfois par volonté de ses maîtres. Sa dîme se paie surtout en soldats.</p></div>
+      <div class="panel"><h3>Monde-forge</h3><p>Le domaine de l'Adeptus Mechanicus : usines, temples de données et air irrespirable sans augmétiques. On y grandit au contact des machines sacrées.</p></div>
+      <div class="panel"><h3>Monde-ruche</h3><p>Des cités verticales de milliards d'âmes, très hiérarchisées : les nobles en haut, le labeur au milieu, les gangs et les cultes dans les bas-fonds.</p></div>
+      <div class="panel"><h3>Schola Progenium</h3><p>Orphelin d'un serviteur de l'Imperium, élevé par l'Ecclésiarchie et privé de ses souvenirs d'avant. Un modèle de discipline et de foi.</p></div>
+      <div class="panel"><h3>Monde-sanctuaire</h3><p>Une planète sacrée, couverte de basiliques, sous la coupe de l'Ecclésiarchie. Ses habitants sont fervents et habitués aux pèlerins.</p></div>
+      <div class="panel"><h3>Né du vide</h3><p>Né à bord d'un vaisseau ou d'une station, où des cultures entières naissent et meurent sans jamais fouler un monde.</p></div>
+    </div>
+
+    <h2 id="factions">3. Factions</h2>
     <div class="panel">
-      <p>Neuf factions sont jouables. Leur description détaillée se trouve dans <a href="factions.html">l'Archive III</a>.</p>
       <p>
-        <span class="tag">Adeptus Astra Telepathica</span>
-        <span class="tag">Adeptus Mechanicus</span>
-        <span class="tag">Administratum</span>
-        <span class="tag">Astra Militarum</span>
-        <span class="tag">Ecclésiarchie</span>
-        <span class="tag">Inquisition</span>
-        <span class="tag">Navis Imperialis</span>
-        <span class="tag">Récidivistes</span>
-        <span class="tag">Dynastie de libre-marchand</span>
+        Choisissez, ou lancez 1d100 (la table dépend de l'origine) pour <span class="tag">+75 XP</span>. Chaque faction donne
+        +5 à une caractéristique fixe et +5 à une autre au choix, <strong>5 niveaux de compétence</strong> à répartir dans sa liste,
+        <strong>+1 Influence</strong> auprès d'elle, un talent et de l'équipement. Des « Devoirs » prêts à l'emploi permettent d'aller plus vite.
+        Les descriptions sont dans <a href="factions.html">l'Archive III</a>.
       </p>
     </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Faction</th><th>Bonus</th><th>Compétences</th><th>Talent</th></tr></thead>
+        <tbody>
+          <tr><td>Administratum</td><td>+5 Int ; +5 Per, FM ou Soc</td><td>Dextérité, Linguistique, Logique, Savoir, Médecine, Navigation</td><td>Fouineur de données</td></tr>
+          <tr><td>Astra Telepathica</td><td>+5 FM ; +5 Int, Per ou E</td><td>Vigilance, Discipline, Intuition, Linguistique, Navigation, Maîtrise psychique</td><td>Psyker + Psyker sanctionné, <em>ou</em> Paria, <em>ou</em> Condamner la sorcière + Forteresse mentale</td></tr>
+          <tr><td>Adeptus Mechanicus</td><td>+5 Int ; +5 E, Ag ou Per</td><td>Dextérité, Logique, Savoir, Médecine, Pilotage, Technologie</td><td>Pas de talent, mais deux augmétiques</td></tr>
+          <tr><td>Adeptus Ministorum</td><td>+5 FM ; +5 Int, Per ou Soc</td><td>Discipline, Intuition, Savoir, Médecine, Présence, Entregent</td><td>Fidèle (Culte impérial)</td></tr>
+          <tr><td>Astra Militarum</td><td>+5 E ; +5 CC, CT ou F</td><td>Athlétisme, Discipline, Résistance, Mêlée, Tir, Discrétion</td><td>Aguerri</td></tr>
+          <tr><td>Flotte impériale</td><td>+5 Ag ; +5 F, E ou Per</td><td>Vigilance, Logique, Navigation, Pilotage, Réflexes, Technologie</td><td>Pied spatial</td></tr>
+          <tr><td>Infractionnistes</td><td>+5 Ag ; +5 E, Per ou Soc</td><td>Athlétisme, Dextérité, Résistance, Entregent, Réflexes, Discrétion</td><td>Prévoyant</td></tr>
+          <tr><td>Inquisition</td><td>+5 Per ; +5 E, Int ou FM</td><td>Vigilance, Discipline, Intuition, Logique, Savoir, Présence</td><td>Toujours vigilant</td></tr>
+          <tr><td>Dynastie de libre-marchand</td><td>+5 Soc ; +5 Ag, Int ou Per</td><td>Intuition, Linguistique, Navigation, Présence, Pilotage, Entregent</td><td>Négociateur</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--muted);font-style:italic">Les noms des talents sont des traductions maison. Les prérequis des talents et spécialisations obtenus à la création sont ignorés.</p>
 
-    <h2 id="roles">Rôles</h2>
-    <div class="grid-2">
-      <div class="panel">
-        <h3>Interlocuteur</h3>
-        <p>Le spécialiste de la parole : négocier, convaincre, mentir et lire les gens.</p>
-      </div>
-      <div class="panel">
-        <h3>Mystique</h3>
-        <p>Celui qui comprend les mystères du Warp, qu'il soit psyker ou érudit de l'occulte.</p>
-      </div>
-      <div class="panel">
-        <h3>Pénombre</h3>
-        <p>L'expert de la discrétion et des coups tordus : infiltration, filature, sabotage.</p>
-      </div>
-      <div class="panel">
-        <h3>Savant</h3>
-        <p>L'érudit du groupe : connaissances, recherche, analyse, médecine ou technique.</p>
-      </div>
-      <div class="panel">
-        <h3>Guerrier</h3>
-        <p>Celui qu'on envoie quand la discussion est terminée. Spécialiste du combat sous toutes ses formes.</p>
-      </div>
-      <div class="panel">
-        <h3>Zélote</h3>
-        <p>Un agent animé par une conviction fanatique, que rien n'arrête quand sa cause est en jeu.</p>
-      </div>
+    <h2 id="roles">4. Rôles</h2>
+    <div class="panel">
+      <p>
+        Choisissez, ou laissez votre patron décider pour <span class="tag">+50 XP</span>. Chaque rôle donne des talents au choix,
+        <strong>3 niveaux</strong> à répartir dans ses compétences, <strong>2 niveaux</strong> dans ses spécialisations, et du matériel.
+        À la création, une compétence ne peut pas dépasser 2 niveaux, ni une spécialisation 1 niveau.
+      </p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Rôle</th><th>Talents</th><th>Compétences</th><th>Spécialisations dans…</th></tr></thead>
+        <tbody>
+          <tr><td>Interlocuteur</td><td>4 au choix (autorité, corruption, négoce, humour noir…)</td><td>Vigilance, Discipline, Intuition, Linguistique, Présence, Entregent</td><td>Intuition, Présence, Entregent</td></tr>
+          <tr><td>Mystique</td><td>Psyker (ou un pouvoir mineur s'il l'a déjà) + 2 au choix</td><td>Vigilance, Discipline, Intuition, Savoir, Navigation, Maîtrise psychique</td><td>Discipline (Peur), Linguistique et Savoir interdits</td></tr>
+          <tr><td>Pénombre</td><td>2 au choix (cambrioleur, rôdeur, anonyme, double identité…)</td><td>Athlétisme, Vigilance, Dextérité, Tir, Réflexes, Discrétion</td><td>Tir, Réflexes, Discrétion</td></tr>
+          <tr><td>Savant</td><td>2 au choix (mémoire eidétique, chirurgien, fouineur de données…)</td><td>Logique, Savoir, Médecine, Navigation, Pilotage, Technologie</td><td>Savoir, Médecine, Technologie</td></tr>
+          <tr><td>Guerrier</td><td>2 au choix (tireur d'élite, duelliste, désarmement…)</td><td>Athlétisme, Résistance, Médecine, Mêlée, Tir, Réflexes</td><td>Mêlée, Tir, Réflexes</td></tr>
+          <tr><td>Zélote</td><td>2 au choix (fidèle, flagellant, frénésie, haine, martyre…)</td><td>Discipline, Résistance, Linguistique, Savoir, Mêlée, Présence</td><td>Discipline, Savoir, Mêlée</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="panel warn"><p>Un personnage avec le talent <strong>Paria</strong> (aucune présence dans le Warp) ne peut pas devenir Mystique.</p></div>
+
+    <h2 id="derives">8. Finitions</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Valeur</th><th>Calcul</th></tr></thead>
+        <tbody>
+          <tr><td>Blessures max</td><td>BF + (2 × BE) + BFM</td></tr>
+          <tr><td>Blessures critiques max</td><td>BE : au-delà, l'agent meurt</td></tr>
+          <tr><td>Initiative</td><td>BPer + BAg</td></tr>
+          <tr><td>Encombrement</td><td>BF + BE (ce qu'on porte sur soi compte 1 de moins)</td></tr>
+          <tr><td>Destin</td><td>3</td></tr>
+          <tr><td>Main dominante</td><td>Au choix ; l'autre main teste avec Désavantage</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--muted);font-style:italic">Optionnel : choisir une « divination », une prophétie entendue un jour et qui a marqué l'agent.</p>
+
+    <h2 id="xp">XP de départ</h2>
+    <div class="panel">
+      <p>
+        Tout tirer au hasard rapporte jusqu'à <strong>200 XP</strong> à dépenser avant de jouer
+        (50 + 25 + 75 + 50). Le groupe peut aussi convenir d'agents plus expérimentés : par tranche de 500 XP,
+        +200 solars ; par tranche de 1000 XP, +1 Influence avec une faction.
+      </p>
     </div>
 
     <h2 id="patron">Le patron</h2>
@@ -140,17 +187,16 @@
       <table>
         <thead><tr><th>Élément</th><th>Ce qu'il définit</th></tr></thead>
         <tbody>
-          <tr><td>Faction</td><td>L'institution à laquelle il appartient, parmi les neuf grandes factions. C'est le choix qui pèse le plus sur la campagne.</td></tr>
-          <tr><td>Fonction</td><td>Son rôle précis au sein de cette faction.</td></tr>
-          <tr><td>Motivation</td><td>Ses ambitions et ses objectifs à long terme.</td></tr>
+          <tr><td>Faction et fonction</td><td>L'institution à laquelle il appartient et son rôle précis en son sein. C'est le choix qui pèse le plus.</td></tr>
+          <tr><td>Motivation</td><td>Ses ambitions à long terme.</td></tr>
           <tr><td>Attitude</td><td>Sa façon de traiter le groupe.</td></tr>
-          <tr><td>Faveurs</td><td>Des avantages que le groupe peut mobiliser avant ou pendant une mission : arme rare, fausse identité…</td></tr>
-          <tr><td>Fardeaux</td><td>Pour chaque faveur, le MJ choisit en secret une complication : un vieil ennemi, une faction rivale, une foi qui frôle l'obsession…</td></tr>
-          <tr><td>Influence</td><td>Ses relations avec les autres factions, qui évoluent selon les actions des agents.</td></tr>
+          <tr><td>Rémunération</td><td>Ce que les agents reçoivent pour leurs services.</td></tr>
+          <tr><td>Faveurs</td><td>Des avantages mobilisables avant ou pendant une mission : arme rare, fausse identité…</td></tr>
+          <tr><td>Fardeaux</td><td>Pour chaque faveur, une complication choisie en secret par le MJ : un vieil ennemi, une rivalité, une foi obsessionnelle…</td></tr>
+          <tr><td>Passé et Influence</td><td>Son histoire et ses relations avec les factions, tenues secrètes par le MJ.</td></tr>
         </tbody>
       </table>
     </div>
-    <p style="color:var(--muted);font-style:italic">Motivation et attitude peuvent être choisies ou tirées aux dés. Le livre propose aussi des patrons prêts à jouer.</p>
   </main>
 </body>
 </html>

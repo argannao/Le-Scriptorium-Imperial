@@ -15,115 +15,188 @@
     <header class="page-title">
       <div class="kicker">Archive VII — Imperium Maledictum</div>
       <h1>Pouvoirs psychiques</h1>
-      <p class="lead">Le Warp offre au psyker une puissance immense. Il attend seulement la moindre erreur pour s'engouffrer dans la brèche.</p>
+      <p class="lead">Respecté parfois, craint toujours, maudit à jamais : être psyker dans le Secteur Macharien n'a rien d'un privilège.</p>
     </header>
 
     <nav class="toc">
+      <a href="#psyker">Être psyker</a>
       <a href="#manifester">Manifester</a>
       <a href="#charge">Charge Warp</a>
-      <a href="#phenomenes">Phénomènes &amp; Périls</a>
-      <a href="#exemple">Exemple</a>
+      <a href="#purge">Purgation</a>
+      <a href="#options">Options</a>
+      <a href="#perils">Périls du Warp</a>
       <a href="#disciplines">Disciplines</a>
+      <a href="#exemple">Exemple</a>
     </nav>
+
+    <h2 id="psyker">Être psyker</h2>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Le talent Psyker</h3>
+        <p>
+          Seul un personnage avec le talent <strong>Psyker</strong> peut utiliser des pouvoirs. Il apprend des pouvoirs mineurs
+          (<strong>60 XP</strong> chacun) et des pouvoirs des disciplines auxquelles il a accès (<strong>100 XP</strong> chacun).
+        </p>
+      </div>
+      <div class="panel">
+        <h3>Sanctionné ou non ?</h3>
+        <p>
+          Le <strong>psyker sanctionné</strong> a été formé et autorisé par l'Imperium : il contrôle mieux son don, mais vit sous
+          surveillance permanente. Ce talent s'obtient très rarement en cours de jeu. Le psyker non sanctionné échappe aux registres…
+          tant qu'on ne le démasque pas.
+        </p>
+      </div>
+    </div>
 
     <h2 id="manifester">Manifester un pouvoir</h2>
     <div class="panel">
-      <p>
-        Pour utiliser un pouvoir, le psyker fait un test de <strong>Maîtrise Psychique</strong> (d100 sous la valeur cible),
-        modifié par la difficulté propre au pouvoir. Les degrés de réussite obtenus renforcent souvent l'effet,
-        par exemple les dégâts.
-      </p>
-      <p>Chaque pouvoir a quelques caractéristiques :</p>
+      <p>Manifester un pouvoir est une <strong>Action</strong>, sauf mention contraire. On procède en quatre temps :</p>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Élément</th><th>Rôle</th></tr></thead>
+          <thead><tr><th>#</th><th>Étape</th><th>Détail</th></tr></thead>
           <tbody>
-            <tr><td>Valeur Warp</td><td>La quantité de Charge Warp que le pouvoir génère quand on l'utilise.</td></tr>
-            <tr><td>Difficulté</td><td>Le modificateur appliqué au test de Maîtrise Psychique.</td></tr>
-            <tr><td>Portée</td><td>La distance à laquelle le pouvoir peut agir.</td></tr>
-            <tr><td>Effet</td><td>Ce que fait le pouvoir, et comment les degrés de réussite l'améliorent.</td></tr>
+            <tr><td>1</td><td>Choisir</td><td>Un pouvoir connu, et une cible dont on connaît la position exacte (vue directe ou perception psychique).</td></tr>
+            <tr><td>2</td><td>Tester</td><td>Test de <strong>Maîtrise psychique</strong> à la difficulté du pouvoir : le « test de manifestation ».</td></tr>
+            <tr><td>3</td><td>Charge Warp</td><td>Réussite : on gagne la <strong>Valeur Warp</strong> du pouvoir. Échec : 1 Charge par DR négatif, au maximum la Valeur Warp.</td></tr>
+            <tr><td>4</td><td>Effet</td><td>Si le test est réussi, le pouvoir agit. Sauf exception, il ne peut pas être esquivé.</td></tr>
           </tbody>
         </table>
       </div>
     </div>
+    <div class="grid-2">
+      <div class="panel">
+        <h3><span class="tag">Critique</span></h3>
+        <p>Un double réussi réduit la Valeur Warp du pouvoir du BFM (minimum 1). Les pouvoirs ne font pas de coups critiques, mais peuvent causer des blessures critiques en dépassant les Blessures max.</p>
+      </div>
+      <div class="panel warn">
+        <h3><span class="tag">Maladresse</span></h3>
+        <p>Un double raté <strong>double</strong> la Charge Warp gagnée.</p>
+      </div>
+    </div>
+    <p style="color:var(--muted);font-style:italic">Réussi ou non, l'effort se voit : saignements de nez, tremblements, yeux qui luisent, décharges d'électricité statique…</p>
 
     <h2 id="charge">La Charge Warp</h2>
     <div class="panel">
       <p>
-        Chaque pouvoir utilisé ajoute de la <strong>Charge Warp</strong> au psyker. Tant qu'elle reste sous son
-        <strong>Seuil Warp</strong>, tout va bien. Ce seuil dépend du bonus de Force Mentale du personnage.
-        Au-delà, il doit faire des tests pour garder le contrôle.
+        Chaque psyker a un <strong>Seuil Warp</strong> égal à son <strong>BFM</strong> (certains talents le modifient, comme
+        Psyker sanctionné). Tant que la Charge Warp reste inférieure ou égale au seuil, il est à peu près en sécurité.
       </p>
-    </div>
-    <div class="grid-2">
-      <div class="panel">
-        <h3><span class="tag">Purger</span></h3>
-        <p>
-          Le psyker relâche volontairement l'énergie accumulée. Cela redescend sa Charge Warp, mais provoque un
-          phénomène psychique mineur autour de lui.
-        </p>
-      </div>
-      <div class="panel warn">
-        <h3><span class="tag">Forcer</span></h3>
-        <p>
-          Garder la charge plutôt que la purger rend la manifestation plus facile à réussir… au risque de gagner
-          de la corruption ou de déclencher les Périls du Warp.
-        </p>
-      </div>
-    </div>
-
-    <h2 id="phenomenes">Phénomènes psychiques et Périls du Warp</h2>
-    <div class="grid-2">
-      <div class="panel">
-        <h3>Phénomènes psychiques</h3>
-        <p>
-          Les premiers dérapages restent étranges mais pas catastrophiques : la lumière faiblit, du givre se forme,
-          des murmures hérétiques se font entendre, quelqu'un se met à saigner sans raison.
-        </p>
-      </div>
-      <div class="panel warn">
-        <h3>Périls du Warp</h3>
-        <p>
-          Quand le contrôle est perdu, les conséquences touchent tout le groupe, voire le monde entier : une faille
-          s'ouvre vers l'Immaterium, un démon se manifeste, une force invisible immobilise les personnes présentes…
-          Les pires résultats peuvent changer le cours d'une campagne.
-        </p>
-      </div>
-    </div>
-    <div class="panel">
-      <h3>La miséricorde de l'Empereur</h3>
       <p>
-        Les compagnons d'un psyker qui perd pied ont toujours une solution radicale : l'abattre avant que les Périls
-        ne se déchaînent. Une vérité brutale de l'Imperium, et une source de tension à la table.
+        <strong>À la fin de son tour</strong>, si la Charge dépasse le seuil, il fait un test de Maîtrise psychique Normal.
+        Réussi : il contient l'énergie, mais ça se voit (yeux qui crachent des éclairs, pieds qui décollent du sol) et tous
+        ses pouvoirs deviennent manifestes. Raté : le Warp déferle, ce sont les <a href="#perils">Périls du Warp</a>.
       </p>
     </div>
 
-    <h2 id="exemple">Exemple : Châtiment</h2>
+    <h2 id="purge">La purgation</h2>
+    <div class="panel">
+      <p>
+        Pour évacuer la Charge, le psyker fait une <strong>Action</strong> et un test de <strong>Discipline (Psychique)</strong> Normal.
+        Réussite : il retire jusqu'à <strong>BFM + DR</strong> de Charge Warp. Échec : rien ne part.
+      </p>
+      <p>
+        Chaque purgation réussie déclenche un <strong>phénomène psychique</strong> : on lance sur la table, avec +10 par point de
+        Charge évacué. Le phénomène touche la zone pendant 1d10 minutes ou jusqu'à la fin de la scène : lumière qui baisse,
+        givre, murmures, sang qui coule sans raison… S'il se produit deux fois dans la même zone, la réalité y garde une trace durable.
+      </p>
+      <p>Hors des situations tendues, pas besoin de test : on retire toute la Charge et on fait un seul jet de phénomène, sans bonus.</p>
+    </div>
+
+    <h2 id="options">Options du psyker</h2>
+    <div class="grid-2">
+      <div class="panel warn">
+        <h3>Forcer</h3>
+        <p>
+          Avant le jet, le psyker peut <strong>forcer</strong> : il teste avec <strong>Avantage</strong>, mais gagne
+          <strong>1d10 Charge Warp</strong> en plus, réussite ou non. S'il rate avec une maladresse, les Périls du Warp se déclenchent aussitôt.
+        </p>
+      </div>
+      <div class="panel">
+        <h3>Pouvoirs maintenus</h3>
+        <p>
+          Certains pouvoirs durent tant qu'on se concentre : on les prolonge gratuitement, sans test, tant qu'on est conscient.
+          Mais la Charge Warp ne peut pas descendre sous la somme de leurs Valeurs Warp. Les Périls du Warp les interrompent tous.
+        </p>
+      </div>
+      <div class="panel">
+        <h3>Pouvoirs manifestes</h3>
+        <p>
+          La plupart des pouvoirs sont discrets : impossible de prouver qui en est l'auteur. Les pouvoirs <strong>manifestes</strong>
+          (marqués * ci-dessous) désignent clairement le psyker… et attirent les accusations de sorcellerie.
+        </p>
+      </div>
+      <div class="panel">
+        <h3>Refuser la sorcière !</h3>
+        <p>
+          Quand un autre psyker manifeste un pouvoir à portée courte, on peut tenter de le contrer : test de Maîtrise psychique
+          Normal, chaque DR obtenu retirant 1 DR à son test. Les tentatives suivantes contre le même test subissent −1 DR cumulatif.
+        </p>
+      </div>
+    </div>
+
+    <h2 id="perils">Les Périls du Warp</h2>
+    <div class="panel warn">
+      <p>
+        Quand le contrôle est perdu, les conséquences peuvent toucher tout le groupe, voire le monde entier : une faille
+        s'ouvre vers l'Immaterium, un démon se manifeste, une force invisible immobilise les présents… Les pires résultats
+        peuvent changer le cours d'une campagne.
+      </p>
+      <p>
+        Les compagnons d'un psyker qui perd pied ont toujours une solution radicale : la <strong>miséricorde de l'Empereur</strong>,
+        c'est-à-dire l'abattre avant que le Warp ne se déchaîne.
+      </p>
+    </div>
+
+    <h2 id="disciplines">Disciplines et pouvoirs</h2>
+    <p style="color:var(--muted);font-style:italic">Noms officiels (anglais) des pouvoirs du livre de base. Note : le livre final corrige certains chiffres des aperçus publiés avant sa sortie (Châtiment passe de 3 à 2 en Valeur Warp). Un astérisque indique un pouvoir manifeste.</p>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Pouvoirs mineurs</h3>
+        <p>Accessibles à tous les psykers, moins chers et moins dangereux… toutes proportions gardées.</p>
+        <p style="font-family:var(--font-mono);font-size:0.9rem">Call Vermin · Combustion · Dread Presence* · Dull Pain · Float* · Ignite* · Ill Omen · Jinx · Luck · Lull · Nova* · Preternatural Senses · Psychic Static · Psychic Scrutiny · Seal Wounds* · Sear · Smite* · Soulsight · Spasm · Spectral Hands</p>
+      </div>
+      <div class="panel">
+        <h3>Biomancie</h3>
+        <p>Manipuler la chair et le vivant : soigner, renforcer son corps, ou saboter celui des autres.</p>
+        <p style="font-family:var(--font-mono);font-size:0.9rem">Affliction · Bio-Lightning* · Cleanse* · Ferrocrete Flesh* · Haemorrhage · Iron Limb* · Life Leech* · Metabolic Overdrive* · Wither* · Shape Flesh*</p>
+      </div>
+      <div class="panel">
+        <h3>Divination</h3>
+        <p>Glaner des informations et tordre la chance : sens extrasensoriels et visions de l'avenir.</p>
+        <p style="font-family:var(--font-mono);font-size:0.9rem">Armour Bane · Dowsing · Forewarning · Perfect Timing · Prescience · Question the Warp* · Psychometry* · Scrying Gaze* · Twist Fate · Watchward</p>
+      </div>
+      <div class="panel">
+        <h3>Pyromancie</h3>
+        <p>Créer et contrôler la chaleur et les flammes par la volonté.</p>
+        <p style="font-family:var(--font-mono);font-size:0.9rem">Cauterise* · Command Flames · Fire Storm* · Inferno* · Molten Beam* · Plasma Torch* · Pyrelight* · Smouldercloud* · Sunburst* · Thermal Shroud*</p>
+      </div>
+      <div class="panel">
+        <h3>Télékinésie</h3>
+        <p>Transformer la pensée en force physique : déplacer, protéger, broyer.</p>
+        <p style="font-family:var(--font-mono);font-size:0.9rem">Abjuration Mechanicum · Crush · Deflection* · Gravity Well* · Impel · Psychic Barrier · Psychic Maelstrom* · Vortex of Doom*</p>
+      </div>
+      <div class="panel">
+        <h3>Télépathie</h3>
+        <p>Relier les esprits et manipuler pensées et émotions.</p>
+        <p style="font-family:var(--font-mono);font-size:0.9rem">Beacon · Compel · Erasure · Psychic Fortitude · Psychic Shriek* · Telepathic Link · Terrifying Visions</p>
+      </div>
+    </div>
+
+    <h2 id="exemple">Exemple : Châtiment (Smite)</h2>
     <div class="dataslate" style="max-width:none">
-      <div class="ds-head"><span>POUVOIR // CHÂTIMENT (Smite)</span><span>ARCHIVE VII</span></div>
-      <p>&gt; VALEUR WARP : 3</p>
+      <div class="ds-head"><span>POUVOIR MINEUR // CHÂTIMENT</span><span>MANIFESTE</span></div>
+      <p>&gt; VALEUR WARP : 2</p>
       <p>&gt; DIFFICULTÉ : Difficile (−10)</p>
       <p>&gt; PORTÉE : Moyenne</p>
-      <p>&gt; DÉGÂTS : 2 + bonus de Force Mentale + degrés de réussite du test</p>
-      <p>&gt; SPÉCIAL : ignore l'armure</p>
+      <p>&gt; DÉGÂTS : 2 + BFM + DR du test de manifestation</p>
+      <p>&gt; SPÉCIAL : ignore l'armure ; la spécialisation Télépathie s'applique</p>
     </div>
     <div class="panel">
       <p>
-        Le psyker projette une décharge brute d'énergie warp sur sa cible. Avec une Valeur Warp de 3, il peut
-        généralement le lancer deux fois avant de devoir purger.
+        Une décharge brute d'énergie warp. Reeta a 55 en Maîtrise psychique : à −10, elle doit faire 45 ou moins.
+        Elle obtient 34, soit +1 DR. Elle gagne 2 Charge Warp ; avec un BFM de 4, elle peut le relancer une fois avant de dépasser son seuil.
       </p>
     </div>
-
-    <h2 id="disciplines">Disciplines</h2>
-    <div class="panel">
-      <p>Les pouvoirs sont regroupés par disciplines. Celles confirmées par les aperçus officiels :</p>
-      <p>
-        <span class="tag">Pouvoirs mineurs</span>
-        <span class="tag">Divination</span>
-        <span class="tag">Télépathie</span>
-      </p>
-    </div>
-    <div class="todo">À COMPLÉTER : liste complète des disciplines et de leurs pouvoirs, règles de corruption détaillées (livre de base).</div>
   </main>
 </body>
 </html>

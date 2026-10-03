@@ -19,74 +19,187 @@
     </header>
 
     <nav class="toc">
-      <a href="#principe">Le test</a>
+      <a href="#caracs">Caractéristiques</a>
+      <a href="#test">Le test</a>
       <a href="#degres">Degrés de réussite</a>
+      <a href="#difficulte">Difficulté</a>
+      <a href="#avantage">Avantage</a>
+      <a href="#types">Types de tests</a>
       <a href="#simulateur">Simulateur</a>
       <a href="#combat">Combat</a>
       <a href="#blessures">Blessures</a>
       <a href="#superiorite">Supériorité</a>
       <a href="#destin">Destin</a>
-      <a href="#warp">Psykers &amp; corruption</a>
+      <a href="#corruption">Corruption</a>
       <a href="#influence">Influence</a>
+      <a href="#entre-missions">Entre les missions</a>
     </nav>
 
-    <h2 id="principe">Le test</h2>
+    <h2 id="caracs">Les caractéristiques</h2>
     <div class="panel">
       <p>
-        Quand un agent tente une action risquée, il fait un <strong>test</strong> : on lance deux d10,
-        l'un pour les dizaines et l'autre pour les unités, ce qui donne un résultat de 01 à 100.
-      </p>
-      <p>
-        Le test réussit si le résultat est <strong>inférieur ou égal</strong> à la valeur cible.
-        Celle-ci part de la caractéristique concernée et augmente avec l'entraînement dans la compétence utilisée.
-        Le MJ peut ensuite l'ajuster selon la difficulté de la situation.
+        Chaque personnage a <strong>neuf caractéristiques</strong>, notées de 1 à 100. Un humain moyen se situe
+        entre 30 et 40. Le <strong>chiffre des dizaines</strong> donne le <strong>bonus</strong> de la caractéristique :
+        Force 39 donne un bonus de Force (BF) de 3. Ces bonus servent partout : dégâts, Blessures, prérequis de talents…
       </p>
     </div>
-
-    <h3>Les caractéristiques</h3>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Caractéristique</th><th>Sert à…</th></tr></thead>
+        <thead><tr><th>Caractéristique</th><th>Abrév.</th><th>Sert à…</th></tr></thead>
         <tbody>
-          <tr><td>Capacité de Combat (CC)</td><td>Se battre au corps à corps</td></tr>
-          <tr><td>Capacité de Tir (CT)</td><td>Tirer avec une arme à distance</td></tr>
-          <tr><td>Force (F)</td><td>La puissance physique brute</td></tr>
-          <tr><td>Endurance (E)</td><td>Résister aux coups, aux poisons, à la fatigue</td></tr>
-          <tr><td>Agilité (Ag)</td><td>La vitesse, les réflexes, la coordination</td></tr>
-          <tr><td>Intelligence (Int)</td><td>Le savoir, la logique, la technique</td></tr>
-          <tr><td>Perception (Per)</td><td>Remarquer, observer, deviner</td></tr>
-          <tr><td>Force Mentale (FM)</td><td>La volonté, la foi, la résistance au Warp</td></tr>
-          <tr><td>Sociabilité (Soc)</td><td>Convaincre, mentir, commander</td></tr>
+          <tr><td>Capacité de Combat</td><td>CC</td><td>Attaquer et se défendre au corps à corps</td></tr>
+          <tr><td>Capacité de Tir</td><td>CT</td><td>Toucher avec une arme à distance</td></tr>
+          <tr><td>Force</td><td>F</td><td>Soulever, grimper, frapper fort</td></tr>
+          <tr><td>Endurance</td><td>E</td><td>Encaisser, résister aux toxines et aux milieux hostiles</td></tr>
+          <tr><td>Agilité</td><td>Ag</td><td>Bouger en silence, agir vite, esquiver</td></tr>
+          <tr><td>Intelligence</td><td>Int</td><td>Savoir, raisonner, relier des indices</td></tr>
+          <tr><td>Perception</td><td>Per</td><td>Remarquer un détail, sentir un mensonge, repérer le danger</td></tr>
+          <tr><td>Force Mentale</td><td>FM</td><td>Surmonter la peur, utiliser et résister aux pouvoirs psychiques</td></tr>
+          <tr><td>Sociabilité</td><td>Soc</td><td>Convaincre, marchander, commander</td></tr>
         </tbody>
       </table>
     </div>
-    <div class="todo">À VÉRIFIER : la liste exacte des compétences et de leurs spécialisations dans le livre de base.</div>
+    <p>Les tests se font presque toujours sur une <a href="competences.html">compétence</a> : sa valeur est la caractéristique associée, plus 5 par niveau d'entraînement.</p>
 
-    <h2 id="degres">Degrés de réussite</h2>
+    <h2 id="test">Le test</h2>
     <div class="panel">
       <p>
-        Réussir ne suffit pas toujours : on veut savoir <em>à quel point</em>. Chaque tranche de 10 points
-        entre le jet et la valeur cible compte comme un degré. En pratique, on compare le chiffre des dizaines
-        de la valeur cible et celui du jet.
+        Beaucoup d'actions réussissent sans jet : dégainer, monter une échelle, utiliser normalement une compétence
+        qu'on maîtrise. On ne lance les dés que si le résultat est incertain <em>et</em> qu'il compte.
       </p>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Valeur cible</th><th>Jet</th><th>Calcul</th><th>Résultat</th></tr></thead>
-          <tbody>
-            <tr><td>45</td><td>12</td><td>4 − 1</td><td>Succès, +3</td></tr>
-            <tr><td>45</td><td>41</td><td>4 − 4</td><td>Succès de justesse, +0</td></tr>
-            <tr><td>45</td><td>67</td><td>4 − 6</td><td>Échec, −2</td></tr>
-          </tbody>
-        </table>
+      <p>
+        On lance alors <strong>1d100</strong> (deux d10 : dizaines et unités). Si le résultat est
+        <strong>inférieur ou égal</strong> à la compétence testée, après modification par la difficulté, c'est réussi.
+      </p>
+      <p>
+        <span class="tag">01–05</span> réussite automatique &nbsp;
+        <span class="tag">96–00</span> échec automatique — toujours de justesse (±0).
+      </p>
+    </div>
+
+    <h2 id="degres">Degrés de réussite (DR)</h2>
+    <div class="panel">
+      <p>
+        On soustrait le chiffre des dizaines du jet au chiffre des dizaines de la valeur cible. Le résultat donne
+        les <strong>degrés de réussite</strong> (DR), positifs ou négatifs. On en obtient même sur un échec !
+      </p>
+      <p>
+        Exemple : compétence 72, jet 26 → 7 − 2 = <strong>+5 DR</strong>. Compétence 54, jet 94 → 5 − 9 = <strong>−4 DR</strong>.
+      </p>
+      <p>
+        Un succès tout juste donne <strong>+0</strong>, un échec tout juste <strong>−0</strong>. Les talents, l'Influence et la
+        Supériorité peuvent ajouter ou retirer des DR après le jet, et donc transformer un échec en réussite (ou l'inverse).
+      </p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>DR</th><th>Résultat</th><th>Concrètement</th></tr></thead>
+        <tbody>
+          <tr><td>+5 ou plus</td><td>Réussite éclatante</td><td>Tout se passe au mieux, avec un coup de chance en prime.</td></tr>
+          <tr><td>+3 à +4</td><td>Belle réussite</td><td>Oui, et avec panache.</td></tr>
+          <tr><td>+1 à +2</td><td>Réussite</td><td>Oui, proprement.</td></tr>
+          <tr><td>+0</td><td>Réussite de justesse</td><td>Oui, mais… avec un défaut ou un effet imprévu.</td></tr>
+          <tr><td>−0</td><td>Échec de justesse</td><td>Non, mais… une partie de l'objectif est atteinte.</td></tr>
+          <tr><td>−1 à −2</td><td>Échec</td><td>Non, c'est raté.</td></tr>
+          <tr><td>−3 à −4</td><td>Échec cuisant</td><td>Non, et ça entraîne d'autres ennuis.</td></tr>
+          <tr><td>−5 ou moins</td><td>Échec catastrophique</td><td>Tout part de travers, et le MJ en rajoute.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="difficulte">La difficulté</h2>
+    <div class="panel">
+      <p>Le MJ annonce la difficulté avant le jet. Sans précision, un test est <strong>Normal (+0)</strong>, comme la plupart des tests en combat.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Difficulté</th><th>Modificateur</th><th>Exemple</th></tr></thead>
+        <tbody>
+          <tr><td>Très facile</td><td>+60</td><td>Se réveiller au son d'une alarme</td></tr>
+          <tr><td>Facile</td><td>+40</td><td>Débloquer son arme habituelle</td></tr>
+          <tr><td>Routinier</td><td>+20</td><td>Une recherche simple sur un cogitateur</td></tr>
+          <tr><td>Normal</td><td>+0</td><td>Tirer dans une pièce éclairée, escalader un mur</td></tr>
+          <tr><td>Difficile</td><td>−10</td><td>Se rappeler un détail obscur sur un gouverneur</td></tr>
+          <tr><td>Ardu</td><td>−20</td><td>Nager à contre-courant dans un égout</td></tr>
+          <tr><td>Très ardu</td><td>−30</td><td>Convaincre un Arbitrator de fermer les yeux</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="avantage">Avantage et Désavantage</h2>
+    <div class="grid-2">
+      <div class="panel">
+        <h3><span class="tag">Avantage</span></h3>
+        <p>On <strong>peut</strong> inverser les dizaines et les unités si ça arrange. Un 71 devient un 17 !</p>
       </div>
-      <p>Les degrés ont des effets en cascade : départager une opposition, ajouter des dégâts, provoquer un coup critique…</p>
+      <div class="panel warn">
+        <h3><span class="tag">Désavantage</span></h3>
+        <p>On <strong>doit</strong> inverser les dés si c'est pire. Un 28 devient un 82…</p>
+      </div>
+    </div>
+    <div class="panel">
+      <p>
+        Avantages et Désavantages s'annulent un pour un. Chaque Avantage supplémentaire au-delà du premier donne +10,
+        chaque Désavantage supplémentaire −10. Dépenser un point de Destin permet de tester avec Avantage.
+      </p>
+      <p>
+        <strong>S'entraider :</strong> quand plusieurs personnages coopèrent, celui qui a la meilleure compétence teste avec
+        Avantage. Pour aider, il faut en général au moins un niveau dans la compétence et être à côté.
+        On ne peut pas aider à résister à la peur, au poison, à la maladie…
+      </p>
+    </div>
+
+    <h2 id="types">Types de tests</h2>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Test simple</h3>
+        <p>Une action sans opposition directe, comme sauter un gouffre.</p>
+      </div>
+      <div class="panel">
+        <h3>Test en opposition</h3>
+        <p>
+          Les deux camps testent ; celui qui a le plus de DR gagne, même avec un échec (−1 bat −3).
+          L'écart donne le résultat final. En cas d'égalité, la meilleure compétence l'emporte.
+        </p>
+      </div>
+      <div class="panel">
+        <h3>Test étendu</h3>
+        <p>
+          Pour une tâche longue : le MJ fixe un total de DR à atteindre et un nombre d'essais. Chaque réussite
+          ajoute au moins 1 DR, chaque échec en retire au moins 1. Si le total tombe sous 0, c'est raté.
+          Ici, les aides lancent aussi et ajoutent leurs DR.
+        </p>
+      </div>
+      <div class="panel">
+        <h3>Les doubles</h3>
+        <p>
+          Un jet où les deux dés sont identiques (11, 22, 33…) est un <strong>double</strong>. En combat, il déclenche
+          un <strong>critique</strong> ou une <strong>maladresse</strong>.
+        </p>
+      </div>
     </div>
 
     <h2 id="simulateur">Simulateur de test</h2>
     <div class="panel">
       <div class="dice-box">
-        <label for="roll-target">Valeur cible</label>
+        <label for="roll-target">Compétence</label>
         <input id="roll-target" type="number" min="1" max="100" value="45">
+        <label for="roll-mod">Difficulté</label>
+        <select id="roll-mod" class="select">
+          <option value="60">Très facile (+60)</option>
+          <option value="40">Facile (+40)</option>
+          <option value="20">Routinier (+20)</option>
+          <option value="0" selected>Normal (+0)</option>
+          <option value="-10">Difficile (−10)</option>
+          <option value="-20">Ardu (−20)</option>
+          <option value="-30">Très ardu (−30)</option>
+        </select>
+        <label for="roll-adv">Situation</label>
+        <select id="roll-adv" class="select">
+          <option value="0" selected>Normale</option>
+          <option value="1">Avantage</option>
+          <option value="-1">Désavantage</option>
+        </select>
         <button class="btn" id="roll-btn">Lancer le d100</button>
       </div>
       <div class="dataslate" id="roll-out" style="margin:1rem 0 0;max-width:none">
@@ -97,104 +210,272 @@
     <h2 id="combat">Le combat</h2>
     <div class="grid-2">
       <div class="panel">
-        <h3>Initiative fixe</h3>
+        <h3>Initiative</h3>
         <p>
-          Pas de jet d'initiative : l'ordre du tour dépend d'une valeur fixe tirée de l'Agilité et de la Perception.
-          Un joueur peut dépenser un point de Destin pour passer avant son tour, une fois par tour.
+          Elle est fixe : <strong>BPer + BAg</strong>. On agit du plus haut au plus bas ; en cas d'égalité, la meilleure
+          compétence Réflexes passe devant. Celui qui surprend ses ennemis joue un round de surprise seul
+          (Avantage en mêlée, et +1 Supériorité ensuite).
         </p>
       </div>
       <div class="panel">
-        <h3>Le tour d'un agent</h3>
-        <p>À chaque tour, un personnage dispose de :</p>
+        <h3>Le tour</h3>
         <p>
-          <span class="tag">1 Action</span> attaquer, utiliser un objet…<br>
-          <span class="tag">1 Mouvement</span> se déplacer, se mettre à couvert…<br>
-          <span class="tag">1 Réaction</span> esquiver, parer…
+          <span class="tag">Déplacement</span> changer de zone, se mettre à couvert…<br>
+          <span class="tag">Action</span> attaquer, se cacher, se préparer à esquiver, manifester un pouvoir…<br>
+          <span class="tag">Réaction</span> une fois par round, pendant le tour d'un autre (riposter, esquiver un tir…).
+        </p>
+      </div>
+      <div class="panel">
+        <h3>Zones et portées</h3>
+        <p>
+          Le champ de bataille est découpé en <strong>zones</strong>. Portée <em>courte</em> : votre zone.
+          <em>Moyenne</em> : votre zone ou une zone adjacente. <em>Longue</em> : jusqu'à deux zones.
+          Tirer au-delà de la portée de l'arme donne un Désavantage, tout comme tirer au contact sans le trait <em>Proche</em>.
+        </p>
+      </div>
+      <div class="panel">
+        <h3>Engagé</h3>
+        <p>
+          Au contact d'un ennemi, on est <strong>engagé</strong>. S'éloigner sans précaution lui offre une attaque en Réaction ;
+          l'action <em>Se désengager</em> permet de partir sans risque.
         </p>
       </div>
     </div>
-    <div class="panel warn">
+
+    <h3>Attaquer</h3>
+    <div class="grid-2">
+      <div class="panel">
+        <h3><span class="tag">Mêlée</span></h3>
+        <p>
+          Test de Mêlée <strong>en opposition</strong> contre la Mêlée ou les Réflexes (Esquive) du défenseur, sans lui coûter sa Réaction.
+          Un défenseur sans arme teste avec Désavantage. Si l'attaquant gagne, il inflige les dégâts de l'arme + l'écart de DR.
+        </p>
+      </div>
+      <div class="panel">
+        <h3><span class="tag">Distance</span></h3>
+        <p>
+          Test de Tir Normal. En cas de réussite : dégâts de l'arme + DR. Une cible qui esquive (action ou Réaction)
+          retire ses DR à ceux du tireur ; à +0 ou moins, le tir la rate.
+        </p>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Localisation</h3>
+        <p>Le chiffre des <strong>unités</strong> du jet d'attaque indique la zone touchée. L'armure de cette zone réduit les dégâts.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Unités</th><th>Zone</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Tête</td></tr>
+              <tr><td>2</td><td>Bras gauche</td></tr>
+              <tr><td>3</td><td>Bras droit</td></tr>
+              <tr><td>4</td><td>Jambe gauche</td></tr>
+              <tr><td>5</td><td>Jambe droite</td></tr>
+              <tr><td>6–0</td><td>Torse</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel warn">
+        <h3>Critiques et maladresses</h3>
+        <p>
+          Un <strong>double avec des DR positifs</strong> sur une attaque est un <strong>critique</strong> : la cible subit un
+          coup critique, même si l'attaquant perd l'opposition. Un défenseur en mêlée qui fait un critique riposte ainsi.
+        </p>
+        <p>
+          Un <strong>double avec des DR négatifs</strong> est une <strong>maladresse</strong> : on lance sur la table des maladresses,
+          même si on gagne l'opposition. Un 99 ou un 00 est toujours une maladresse.
+        </p>
+      </div>
+    </div>
+    <div class="panel">
       <p>
-        <strong>Le combat est brutal.</strong> Un tir de fusil laser bien placé peut déjà faire très mal,
-        et un bolter bien davantage. La meilleure stratégie reste d'enquêter sur l'ennemi, de lui tendre
-        une embuscade… et de ne jamais tomber dans la sienne.
+        <span class="tag">Attaque cachée</span> contre une cible qui ne vous a pas repéré : Avantage, et toute attaque réussie est un coup critique.<br>
+        <span class="tag">Surnombre</span> à 2 contre 1 ou plus dans une même mêlée : Avantage aux tests de Mêlée.<br>
+        <span class="tag">Deux armes</span> on peut attaquer avec les deux à la fois, chaque attaque avec Désavantage.<br>
+        <span class="tag">Retenir ses coups</span> pour assommer plutôt que tuer : pas de blessure critique.
       </p>
     </div>
 
-    <h2 id="blessures">Blessures et critiques</h2>
+    <h2 id="blessures">Blessures, critiques et mort</h2>
     <div class="panel">
       <p>
-        Un humain ordinaire commence avec une douzaine de points de <strong>Blessures</strong>. Les armures
-        et les couverts réduisent les dégâts reçus. À zéro Blessure, l'agent reste à peu près opérationnel…
-        mais tout dégât supplémentaire provoque une <strong>blessure critique</strong>.
+        <strong>Blessures max = BF + (2 × BE) + BFM</strong>, soit une douzaine pour un humain ordinaire.
+        Chaque point de dégât après armure donne une Blessure.
       </p>
       <p>
-        Pour la déterminer, on lance 1d10 et on ajoute les dégâts en excès, puis on consulte la table
-        de la zone touchée. Cela va de la lèvre fendue au membre à remplacer par une augmétique, jusqu'à
-        la mort. La tête est de loin la zone la plus dangereuse. En général, deux ou trois critiques
-        suffisent à tuer un personnage débutant.
+        Quand les Blessures atteignent leur maximum, l'agent ne peut plus que se déplacer <em>ou</em> agir à son tour,
+        et doit réussir un test de Résistance (Douleur) Normal pour ne pas s'évanouir, à refaire à chaque nouvelle blessure.
+        Et surtout : <strong>chaque nouveau dégât devient une blessure critique</strong>.
       </p>
-      <p>
-        Côté ennemis, les adversaires d'élite subissent les critiques comme les joueurs, tandis que
-        la piétaille tombe à zéro Blessure ou au premier critique.
-      </p>
+    </div>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Blessure critique</h3>
+        <p>
+          On lance <strong>1d10 + les dégâts en excès</strong> et on lit la table de la zone touchée : de l'œil poché à
+          l'amputation, voire la mort immédiate. Un coup critique (double, attaque cachée) en inflige une même si la cible
+          n'est pas au maximum de Blessures, en général moins grave.
+        </p>
+      </div>
+      <div class="panel warn">
+        <h3>Mourir</h3>
+        <p>
+          On meurt si l'on a plus de blessures critiques <strong>non soignées</strong> que son <strong>BE</strong>
+          (en fin de round), si un ennemi achève un personnage inconscient, ou sur certains résultats des tables de critiques.
+        </p>
+      </div>
     </div>
 
     <h2 id="superiorite">La Supériorité</h2>
     <div class="panel">
       <p>
-        Le groupe dispose d'une réserve de <strong>Supériorité</strong> qui représente l'avantage tactique
-        pris pendant un affrontement. Elle donne des bonus chiffrés à chaque round. Une Supériorité élevée
-        peut pousser l'ennemi à fuir ; à l'inverse, subir des blessures critiques la fait baisser.
+        La <strong>Supériorité</strong> est une réserve commune au groupe, qui représente sa préparation et son élan en combat.
+        Une fois par tour, chaque agent peut ajouter <strong>autant de DR que la Supériorité</strong> à un test de son choix.
+      </p>
+    </div>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Avant le combat (max +3)</h3>
+        <p>Toujours contre un ennemi précis :</p>
+        <p>
+          <span class="tag">Connais ton ennemi</span> une info exploitable sur l'adversaire.<br>
+          <span class="tag">Connais le terrain</span> une embuscade repérée, une hauteur, un accès caché.<br>
+          <span class="tag">Un plan astucieux</span> une idée vraiment inspirée des joueurs.
+        </p>
+      </div>
+      <div class="panel">
+        <h3>Pendant le combat</h3>
+        <p>
+          <strong>+1</strong> en abattant le chef ennemi, une élite, ou assez de troupes en un tour (au moins leur Résolution).<br>
+          <strong>−1</strong> la première fois qu'un agent subit une blessure critique, quand un agent tombe,
+          ou face à une mauvaise surprise (renforts, brèche vers le vide…).
+        </p>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Résolution et désespoir</h3>
+      <p>
+        Chaque PNJ a une <strong>Résolution</strong>. Si la Supériorité du groupe la dépasse, les ennemis deviennent
+        <strong>désespérés</strong> : ils fuient, se rendent… ou se lancent dans une charge suicidaire.
+        C'est souvent le signal que le combat touche à sa fin.
       </p>
     </div>
 
     <h2 id="destin">Le Destin</h2>
     <div class="panel">
-      <p>Chaque agent commence la séance avec <strong>3 points de Destin</strong>.</p>
-      <p><span class="tag">Dépenser</span> relancer un test ou se débarrasser d'un état préjudiciable.</p>
+      <p>Chaque agent a <strong>3 points de Destin</strong>. Les points dépensés reviennent à chaque séance ; les points brûlés sont perdus pour de bon.</p>
+    </div>
+    <div class="grid-2">
+      <div class="panel">
+        <h3><span class="tag">Dépenser</span></h3>
+        <p>
+          Relancer un test raté · tester avec Avantage · ajouter +1 DR après le jet · choisir quand agir dans le round ·
+          ignorer les effets de ses critiques jusqu'au prochain tour · retirer un état.
+        </p>
+      </div>
+      <div class="panel warn">
+        <h3><span class="tag">Brûler</span></h3>
+        <p>
+          Survivre en étant laissé pour mort · éviter totalement une attaque · refuser une mutation ·
+          choisir le résultat d'un jet (et la localisation d'un critique) · donner 1 Supériorité au groupe (2 si elle était à 0).
+        </p>
+      </div>
+    </div>
+
+    <h2 id="corruption">La corruption</h2>
+    <div class="panel">
       <p>
-        <span class="tag">Brûler</span> sacrifier définitivement un point pour survivre à une situation mortelle,
-        repousser la corruption ou choisir le résultat exact d'un jet.
+        Le contact avec le Chaos donne de la <strong>Corruption</strong>, selon la gravité de l'exposition. Un test de Résistance
+        (exposition physique) ou de Discipline (exposition spirituelle) permet d'en retirer autant que ses DR.
+      </p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Exposition</th><th>Corruption</th><th>Exemples</th></tr></thead>
+        <tbody>
+          <tr><td>Mineure</td><td>1</td><td>Apercevoir un démon mineur, feuilleter un ouvrage interdit, céder un instant à une émotion chaotique</td></tr>
+          <tr><td>Modérée</td><td>2</td><td>Voir plusieurs démons, toucher un artefact impie, lire un livre interdit</td></tr>
+          <tr><td>Majeure</td><td>4</td><td>Voir un démon majeur, étudier un ouvrage impie, pactiser avec un démon</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="panel warn">
+      <p>
+        Quand la Corruption dépasse <strong>BFM + BE</strong>, l'agent doit réussir un test de Résistance ou de Discipline à un
+        moment choisi par le MJ. En cas d'échec, il subit une <strong>mutation</strong> (le corps change) ou une
+        <strong>malignité</strong> (l'esprit dérive). Il faudra retester à chaque nouveau gain de Corruption.
       </p>
     </div>
 
-    <h2 id="warp">Psykers et corruption</h2>
+    <h2 id="influence">L'Influence</h2>
+    <div class="panel">
+      <p>
+        L'Influence mesure votre réputation auprès d'une faction, de <strong>−5 à +5</strong>. Elle s'ajoute directement en DR
+        à vos tests sociaux avec ses membres, fixe leur attitude de départ et peut conditionner l'accès à certains biens.
+        Ce n'est pas du contrôle mental : un individu peut toujours refuser.
+      </p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Niveau</th><th>Attitude</th><th>La faction va…</th></tr></thead>
+        <tbody>
+          <tr><td>+5</td><td>Honoré</td><td>vous soutenir en combat et ouvrir l'essentiel de ses ressources</td></tr>
+          <tr><td>+4</td><td>Estimé</td><td>vous confier des secrets et vous présenter des gens influents</td></tr>
+          <tr><td>+3</td><td>De confiance</td><td>vous procurer du matériel rare, du personnel, et passer sur les petits écarts</td></tr>
+          <tr><td>+2</td><td>Apprécié</td><td>vous prêter du matériel courant et des subalternes</td></tr>
+          <tr><td>+1</td><td>Bienvenu</td><td>partager des informations utiles et accélérer les démarches</td></tr>
+          <tr><td>0</td><td>Neutre</td><td>vous traiter comme un rouage sans importance</td></tr>
+          <tr><td>−1</td><td>Indésirable</td><td>vous surveiller et exiger le respect strict des procédures</td></tr>
+          <tr><td>−2</td><td>Suspect</td><td>refuser toute aide et toute information</td></tr>
+          <tr><td>−3</td><td>Méprisé</td><td>chercher activement à vous nuire</td></tr>
+          <tr><td>−4</td><td>Honni</td><td>envoyer ses agents contre vous</td></tr>
+          <tr><td>−5</td><td>Traqué</td><td>vous éliminer à la première occasion</td></tr>
+        </tbody>
+      </table>
+    </div>
     <div class="grid-2">
       <div class="panel">
-        <h3>Les pouvoirs psychiques</h3>
+        <h3>Influence du patron</h3>
         <p>
-          Les psykers puisent dans le Warp, une énergie aussi puissante que dangereuse. Quand un pouvoir tourne mal,
-          on consulte la table des <strong>Phénomènes psychiques</strong> (effets étranges) ou, dans les cas graves,
-          celle des <strong>Périls du Warp</strong> : folie, voire possession démoniaque.
+          Bien plus grande que la vôtre, mais <strong>secrète</strong> : le MJ la tient. Montrer le sceau de votre patron
+          (rosette, insigne, chevalière) permet d'utiliser son Influence à la place de la vôtre… sans savoir s'il est apprécié ou haï.
         </p>
       </div>
       <div class="panel">
-        <h3>La corruption</h3>
+        <h3>Influence personnelle et contacts</h3>
         <p>
-          Le contact avec le Chaos laisse des traces. Au-delà d'un certain seuil, la corruption entraîne des
-          changements permanents : troubles de la personnalité et mutations. Une mutation visible fait de l'agent
-          un paria aux yeux de l'Imperium.
+          Vous commencez à +1 avec votre faction. Ensuite, on gagne ou perd de l'Influence avec des <strong>contacts</strong>
+          individuels. Avec trois contacts positifs dans une même faction, on peut la consolider en +1 auprès de la faction ;
+          trois contacts négatifs la font baisser de 1.
         </p>
       </div>
     </div>
-    <p>Le détail des règles psychiques est dans <a href="psy.html">l'Archive VII</a>.</p>
+    <div class="panel">
+      <p>
+        L'Influence se règle en fin de mission. Elle monte d'un cran au maximum, mais peut chuter bien plus :
+        −1 pour un mensonge découvert ou une couverture grillée, −2 pour avoir attaqué la faction, −3 pour avoir trahi un allié.
+        Rester anonyme évite tout changement. Un pot-de-vin ou un cadeau bien choisi donne une <strong>Influence temporaire</strong>.
+      </p>
+    </div>
 
-    <h2 id="influence">Influence et temps libre</h2>
+    <h2 id="entre-missions">Entre les missions</h2>
     <div class="grid-2">
       <div class="panel">
-        <h3>L'Influence</h3>
+        <h3>Événements et activités</h3>
         <p>
-          Le groupe suit sa réputation auprès de chaque faction. Elle monte ou baisse selon ce que font les agents
-          en mission. Une faction favorable apporte de l'aide ; une faction hostile se méfie et met des bâtons dans les roues.
+          Chaque joueur tire d'abord un <strong>événement</strong> (émeute, épidémie, rumeur…). Puis chaque agent mène en général
+          <strong>deux activités</strong> : se former, gagner de l'argent, fabriquer, se faire soigner, consolider son Influence,
+          prier, enquêter sur les environs, se faire une réputation…
         </p>
       </div>
       <div class="panel">
-        <h3>Entre deux missions</h3>
+        <h3>Progression</h3>
         <p>
-          Pendant le temps libre, les agents peuvent mener des activités : fabriquer du matériel, gagner de l'argent
-          ou se faire soigner. La progression se fait en dépensant de l'expérience pour améliorer caractéristiques,
-          compétences et talents.
+          L'expérience (XP) s'achète en améliorations. Un niveau de compétence (+5) coûte 50, 100, 150 puis 200 XP.
+          Un nouveau talent coûte 100 XP. Une caractéristique monte de +1 par achat, de plus en plus cher
+          (20 XP au début, 140 XP vers 60). Un humain normal ne dépasse pas 60.
         </p>
       </div>
     </div>

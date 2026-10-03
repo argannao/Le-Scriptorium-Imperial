@@ -7,13 +7,15 @@
 
 // Liste des modules : ajouter une ligne ici suffit pour qu'il apparaisse dans le menu.
 const MODULES = [
-  { href: "index.html",    label: "Accueil" },
-  { href: "regles.html",   label: "Règles" },
-  { href: "creation.html", label: "Création" },
-  { href: "factions.html", label: "Factions" },
-  { href: "lexique.html",  label: "Lexique" },
-  { href: "secteur.html",  label: "Secteur" },
-  { href: "psy.html",      label: "Psykers" },
+  { href: "index.html",       label: "Accueil" },
+  { href: "regles.html",      label: "Règles" },
+  { href: "creation.html",    label: "Création" },
+  { href: "competences.html", label: "Compétences" },
+  { href: "factions.html",    label: "Factions" },
+  { href: "psy.html",         label: "Psykers" },
+  { href: "armurerie.html",   label: "Armurerie" },
+  { href: "secteur.html",     label: "Secteur" },
+  { href: "lexique.html",     label: "Lexique" },
 ];
 
 // Sceau du site (roue dentée + plume), dessin original.
@@ -119,22 +121,69 @@ function initGlossarySearch() {
   update();
 }
 
-// Simulateur de test d100 (module Règles)
+// Simulateur de test d100 (module Règles) — règles d'Imperium Maledictum
+// d100 = dé des dizaines + dé des unités ; "00" vaut 100.
+const d100Value = (tens, units) => (tens === 0 && units === 0 ? 100 : tens * 10 + units);
+const fmt = (v) => (v === 100 ? "00" : String(v).padStart(2, "0"));
+
+function outcomeLabel(sl, success) {
+  if (success) {
+    if (sl >= 5) return "RÉUSSITE ÉCLATANTE";
+    if (sl >= 3) return "BELLE RÉUSSITE";
+    if (sl >= 1) return "RÉUSSITE";
+    return "RÉUSSITE DE JUSTESSE";
+  }
+  if (sl <= -5) return "ÉCHEC CATASTROPHIQUE";
+  if (sl <= -3) return "ÉCHEC CUISANT";
+  if (sl <= -1) return "ÉCHEC";
+  return "ÉCHEC DE JUSTESSE";
+}
+
 function initDice() {
   const btn = document.querySelector("#roll-btn");
   if (!btn) return;
   const target = document.querySelector("#roll-target");
+  const modSel = document.querySelector("#roll-mod");
+  const advSel = document.querySelector("#roll-adv");
   const out = document.querySelector("#roll-out");
 
   btn.addEventListener("click", () => {
-    const t = Math.max(1, Math.min(100, parseInt(target.value, 10) || 0));
-    const roll = Math.floor(Math.random() * 100) + 1;
-    const sl = Math.floor(t / 10) - Math.floor(roll / 10);
-    const success = roll <= t;
+    const skill = Math.max(1, Math.min(100, parseInt(target.value, 10) || 0));
+    const mod = modSel ? parseInt(modSel.value, 10) : 0;
+    const adv = advSel ? parseInt(advSel.value, 10) : 0;
+    const t = skill + mod; // valeur cible modifiée (peut dépasser 100 ou tomber sous 1)
+
+    const tens = Math.floor(Math.random() * 10);
+    const units = Math.floor(Math.random() * 10);
+    const raw = d100Value(tens, units);
+    const swapped = d100Value(units, tens);
+
+    let roll = raw;
+    let note = "";
+    if (adv === 1 && swapped < raw) { roll = swapped; note = ` (inversé depuis ${fmt(raw)} grâce à l'Avantage)`; }
+    if (adv === -1 && swapped > raw) { roll = swapped; note = ` (inversé depuis ${fmt(raw)} à cause du Désavantage)`; }
+
+    let success = roll <= t;
+    let sl = Math.floor(t / 10) - Math.floor(roll / 10);
+    let auto = "";
+    if (roll <= 5) { success = true; if (sl < 0) sl = 0; auto = " — réussite automatique"; }
+    if (roll >= 96) { success = false; if (sl > 0) sl = 0; auto = " — échec automatique"; }
+    if (success && sl < 0) sl = 0;   // cas limite : succès toujours >= +0
+    if (!success && sl > 0) sl = 0;  // échec toujours <= -0
+
+    const slText = success ? `+${sl}` : (sl === 0 ? "−0" : `−${Math.abs(sl)}`);
+    const rTens = roll === 100 ? 0 : Math.floor(roll / 10);
+    const rUnits = roll % 10;
+    const isDouble = rTens === rUnits;
+    let dbl = "";
+    if (roll === 99 || roll === 100) dbl = "<p>&gt; 99/00 : MALADRESSE automatique en combat.</p>";
+    else if (isDouble) dbl = `<p>&gt; DOUBLE : ${success ? "CRITIQUE" : "MALADRESSE"} s'il s'agit d'une attaque.</p>`;
+
     out.innerHTML =
-      `<p>&gt; JET : <strong>${String(roll).padStart(2, "0")}</strong> / SEUIL : ${t}</p>` +
-      `<p>&gt; RÉSULTAT : <strong>${success ? "SUCCÈS" : "ÉCHEC"}</strong></p>` +
-      `<p>&gt; DEGRÉS : ${sl >= 0 ? "+" : ""}${sl}</p>`;
+      `<p>&gt; VALEUR CIBLE : ${skill}${mod ? ` ${mod > 0 ? "+" : "−"} ${Math.abs(mod)} = ${t}` : ""}</p>` +
+      `<p>&gt; JET : <strong>${fmt(roll)}</strong>${note}</p>` +
+      `<p>&gt; RÉSULTAT : <strong>${outcomeLabel(sl, success)}</strong> (${slText} DR)${auto}</p>` +
+      dbl;
   });
 }
 

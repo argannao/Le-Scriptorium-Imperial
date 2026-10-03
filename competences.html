@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Compétences — Le Scriptorium Impérial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <main>
+    <header class="page-title">
+      <div class="kicker">Archive VI — Imperium Maledictum</div>
+      <h1>Compétences</h1>
+      <p class="lead">Les caractéristiques disent ce dont l'agent est capable ; les compétences, ce qu'il a appris à faire.</p>
+    </header>
+
+    <h2>Fonctionnement</h2>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Niveaux</h3>
+        <p>
+          Chaque compétence dépend d'une caractéristique. Sa valeur = la caractéristique <strong>+ 5 par niveau</strong>,
+          avec <strong>4 niveaux maximum</strong> (+20). Exemple : Agilité 42 et 2 niveaux en Réflexes → Réflexes 52.
+        </p>
+      </div>
+      <div class="panel">
+        <h3>Spécialisations</h3>
+        <p>
+          Pour aller plus loin, on se spécialise. Les niveaux d'une spécialisation <strong>s'ajoutent</strong> à ceux de la
+          compétence : Agilité 42, Réflexes à 4 niveaux et Réflexes (Esquive) à 1 niveau → 67 pour esquiver.
+          On n'est pas obligé d'avoir le maximum dans la compétence avant de se spécialiser.
+        </p>
+      </div>
+      <div class="panel">
+        <h3>À la création</h3>
+        <p>Au plus <strong>2 niveaux</strong> dans une compétence et <strong>1 niveau</strong> dans une spécialisation.</p>
+      </div>
+      <div class="panel warn">
+        <h3>Spécialisations réservées</h3>
+        <p>
+          Certaines (marquées <span class="tag">R</span>) exigent un talent ou un accès particulier : on n'apprend pas à piloter
+          un vaisseau ou à naviguer dans le Warp sans une institution qui vous forme. Le MJ tranche.
+        </p>
+      </div>
+    </div>
+    <p style="color:var(--muted);font-style:italic">La liste n'est pas fermée : le MJ et les joueurs peuvent créer de nouvelles spécialisations, tant qu'elles restent précises.</p>
+
+    <h2>Les 20 compétences</h2>
+    <input class="search" id="skill-search" type="search" placeholder="> filtrer les compétences..." aria-label="Filtrer les compétences">
+    <div class="table-wrap">
+      <table id="skill-table">
+        <thead><tr><th>Compétence</th><th>Carac.</th><th>Usage</th><th>Spécialisations</th></tr></thead>
+        <tbody>
+          <tr><td>Athlétisme <small>(Athletics)</small></td><td>F</td><td>Surmonter les obstacles physiques</td><td>Escalade, Puissance, Monte, Course, Natation</td></tr>
+          <tr><td>Vigilance <small>(Awareness)</small></td><td>Per</td><td>Remarquer ce qui change ou détonne, avec tous ses sens</td><td>Ouïe, Vue, Odorat, Goût, Toucher, Psyniscience <span class="tag">R</span></td></tr>
+          <tr><td>Dextérité <small>(Dexterity)</small></td><td>Ag</td><td>Travail fin des mains</td><td>Crochetage, Vol à la tire, Prestidigitation, Désamorçage <span class="tag">R</span></td></tr>
+          <tr><td>Discipline <small>(Discipline)</small></td><td>FM</td><td>Garder son sang-froid et sa volonté</td><td>Calme, Peur, Psychique</td></tr>
+          <tr><td>Résistance <small>(Fortitude)</small></td><td>E</td><td>Tenir le coup physiquement</td><td>Endurance, Douleur, Poison</td></tr>
+          <tr><td>Intuition <small>(Intuition)</small></td><td>Per</td><td>Lire les gens et sentir une situation</td><td>Gens, Environnement</td></tr>
+          <tr><td>Linguistique <small>(Linguistics)</small></td><td>Int</td><td>Langues, codes et écrits</td><td>Chiffre, Haut Gothique, Interdit</td></tr>
+          <tr><td>Logique <small>(Logic)</small></td><td>Int</td><td>Déduire, évaluer, enquêter</td><td>Évaluation, Investigation</td></tr>
+          <tr><td>Savoir <small>(Lore)</small></td><td>Int</td><td>Connaissances apprises</td><td>Érudition, Adeptus Terra, Planète, Secteur, Théologie <span class="tag">R</span>, Interdit</td></tr>
+          <tr><td>Médecine <small>(Medicae)</small></td><td>Int</td><td>Soigner blessures et maladies</td><td>Animal, Humain</td></tr>
+          <tr><td>Mêlée <small>(Melee)</small></td><td>CC</td><td>Se battre au contact</td><td>Pugilat, Une main, Deux mains</td></tr>
+          <tr><td>Navigation <small>(Navigation)</small></td><td>Int</td><td>Trouver et suivre son chemin</td><td>Surface, Pistage, Vide, Warp <span class="tag">R</span></td></tr>
+          <tr><td>Présence <small>(Presence)</small></td><td>FM</td><td>S'imposer, commander, faire plier</td><td>Intimidation, Commandement, Interrogatoire</td></tr>
+          <tr><td>Pilotage <small>(Piloting)</small></td><td>Ag</td><td>Conduire véhicules et vaisseaux</td><td>Aéronautica, Civil, Militaire <span class="tag">R</span>, Petit vaisseau <span class="tag">R</span>, Grand vaisseau <span class="tag">R</span></td></tr>
+          <tr><td>Maîtrise psychique <small>(Psychic Mastery)</small></td><td>FM</td><td>Manifester des pouvoirs (talent Psyker requis)</td><td>Une par discipline : Biomancie, Divination, Pyromancie, Télékinésie, Télépathie</td></tr>
+          <tr><td>Tir <small>(Ranged)</small></td><td>CT</td><td>Toucher avec une arme à distance</td><td>Arme d'épaule, Artillerie, Pistolets, Lancer</td></tr>
+          <tr><td>Entregent <small>(Rapport)</small></td><td>Soc</td><td>Se faire bien voir, obtenir ce qu'on veut</td><td>Animaux, Charme, Tromperie, Marchandage, Renseignement</td></tr>
+          <tr><td>Réflexes <small>(Reflexes)</small></td><td>Ag</td><td>Réagir vite, garder l'équilibre</td><td>Acrobaties, Équilibre, Esquive</td></tr>
+          <tr><td>Discrétion <small>(Stealth)</small></td><td>Ag</td><td>Passer inaperçu</td><td>Dissimulation, Se cacher, Déplacement silencieux</td></tr>
+          <tr><td>Technologie <small>(Tech)</small></td><td>Int</td><td>Comprendre et entretenir les machines</td><td>Augmétiques <span class="tag">R</span>, Ingénierie, Sécurité</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--muted);font-style:italic">Les noms français sont des traductions maison ; le nom anglais officiel est entre parenthèses.</p>
+
+    <h2>Progression</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Niveau</th><th>Bonus</th><th>Coût</th><th>Coût cumulé</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>+5</td><td>50 XP</td><td>50 XP</td></tr>
+          <tr><td>2</td><td>+10</td><td>100 XP</td><td>150 XP</td></tr>
+          <tr><td>3</td><td>+15</td><td>150 XP</td><td>300 XP</td></tr>
+          <tr><td>4</td><td>+20</td><td>200 XP</td><td>500 XP</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="todo">À VENIR : un module Talents (une centaine de talents dans le livre de base).</div>
+  </main>
+  <script>
+    // Filtre du tableau des compétences
+    document.addEventListener("DOMContentLoaded", () => {
+      const input = document.querySelector("#skill-search");
+      const rows = [...document.querySelectorAll("#skill-table tbody tr")];
+      input.addEventListener("input", () => {
+        const q = input.value.trim().toLowerCase();
+        rows.forEach((r) => (r.style.display = !q || r.textContent.toLowerCase().includes(q) ? "" : "none"));
+      });
+    });
+  </script>
+</body>
+</html>
