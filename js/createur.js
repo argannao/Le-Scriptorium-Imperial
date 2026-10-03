@@ -18,12 +18,19 @@
     faction: { id: "", rolled: false, choix: "", adv: {}, talentPick: 0, equip: {} },
     role: { id: "", rolled: false, talents: [], adv: {}, specs: {}, equip: {} },
     psy: { discipline: "", minor: [], powers: [] },
+    xp: blankXp(),
   });
+  function blankXp() { return { car: {}, skill: {}, spec: {}, talents: [], minor: [], powers: [] }; }
 
   let S = load() || blank();
 
   function load() {
-    try { const raw = localStorage.getItem(STORE_KEY); return raw ? Object.assign(blank(), JSON.parse(raw)) : null; } catch (e) { return null; }
+    try { const raw = localStorage.getItem(STORE_KEY); return raw ? normalize(JSON.parse(raw)) : null; } catch (e) { return null; }
+  }
+  function normalize(obj) {
+    const st = Object.assign(blank(), obj);
+    st.xp = Object.assign(blankXp(), obj.xp || {});
+    return st;
   }
   function save() {
     try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); } catch (e) { /* stockage indisponible : on continue sans */ }
@@ -41,6 +48,13 @@
   }
 
   function finalCaracs() {
+    const b = creationCaracs();
+    if (!b) return null;
+    CARACS.forEach((c) => { b[c.id] += S.xp.car[c.id] || 0; });
+    return b;
+  }
+
+  function creationCaracs() {
     const b = baseCaracs();
     if (!b) return null;
     const o = origin(), f = faction();
@@ -65,6 +79,7 @@
     const r = role();
     if (r && r.psyker && !list.includes("Psyker")) list.push("Psyker");
     S.role.talents.forEach((t) => { if (!list.includes(t)) list.push(t); });
+    S.xp.talents.forEach((t) => { if (!list.includes(t)) list.push(t); });
     return list;
   }
 
@@ -74,7 +89,25 @@
     return { minor: both ? 2 : 1, disc: both ? 2 : 1 };
   }
 
-  const advTotal = (sk) => (S.faction.adv[sk] || 0) + (S.role.adv[sk] || 0);
+  const advTotal = (sk) => (S.faction.adv[sk] || 0) + (S.role.adv[sk] || 0);   // niveaux obtenus à la création
+  const advAll = (sk) => advTotal(sk) + (S.xp.skill[sk] || 0);                   // + niveaux achetés en XP
+  const specAll = (key) => (S.role.specs[key] || 0) + (S.xp.spec[key] || 0);
+
+  /* Coûts en XP (livre de base, p. 90) */
+  const CAR_COSTS = [[25, 20], [30, 25], [35, 30], [40, 40], [45, 60], [50, 80], [55, 110], [60, 140], [65, 180], [70, 220], [75, 270], [80, 320]];
+  const carCost = (newValue) => (CAR_COSTS.find(([max]) => newValue <= max) || [0, 9999])[1];
+  const levelCost = (level) => 50 * level;   // niveau 1 = 50, 2 = 100, 3 = 150, 4 = 200
+
+  function spent() {
+    let x = 0;
+    const cc = creationCaracs();
+    if (cc) CARACS.forEach((c) => { for (let i = 1; i <= (S.xp.car[c.id] || 0); i++) x += carCost(cc[c.id] + i); });
+    Object.entries(S.xp.skill).forEach(([sk, n]) => { for (let i = 1; i <= n; i++) x += levelCost(advTotal(sk) + i); });
+    Object.entries(S.xp.spec).forEach(([k, n]) => { for (let i = 1; i <= n; i++) x += levelCost((S.role.specs[k] || 0) + i); });
+    x += 100 * S.xp.talents.length + 60 * S.xp.minor.length + 100 * S.xp.powers.length;
+    return x;
+  }
+  const remaining = () => xp() - spent();
   const sum = (o) => Object.values(o).reduce((a, b) => a + b, 0);
 
   function xp() {
@@ -124,7 +157,10 @@
     // les niveaux de compétence ne doivent pas dépasser 2 au total
     Object.keys(S.role.adv).forEach((sk) => { while (advTotal(sk) > 2 && S.role.adv[sk] > 0) S.role.adv[sk]--; });
     if (role() && role().psyker && isBlank()) S.role = { id: "", rolled: false, talents: [], adv: {}, specs: {}, equip: {} };
-    if (!isPsyker()) S.psy = { discipline: "", minor: [], powers: [] };
+    if (!isPsyker()) { S.psy = { discipline: "", minor: [], powers: [] }; S.xp.minor = []; S.xp.powers = []; delete S.xp.skill.psy;
+      Object.keys(S.xp.spec).forEach((k) => { if (k.startsWith("psy:")) delete S.xp.spec[k]; }); }
+    S.xp.talents = S.xp.talents.filter((t) => !factionTalents().includes(t) && !S.role.talents.includes(t));
+    Object.keys(S.xp.skill).forEach((sk) => { while (advAll(sk) > 4 && S.xp.skill[sk] > 0) S.xp.skill[sk]--; });
   }
 
   /* ---------- Rendu des étapes ---------- */
@@ -290,6 +326,70 @@
     }
     $("#step-psy").innerHTML = psy;
 
+    // --- 6. Dépense des XP
+    const budget = xp(), rest = remaining();
+    const fc0 = creationCaracs(), fcx = finalCaracs();
+    let xps = `<div class="xp-bar ${rest < 0 ? "over" : ""}">Budget <strong>${budget}</strong> XP · dépensé <strong>${spent()}</strong> · reste <strong>${rest}</strong></div>`;
+    if (!budget && !spent()) {
+      xps += `<p class="hint">Vous n'avez pas d'XP bonus : ils s'obtiennent en laissant le hasard décider aux étapes 1 à 4. Vous pourrez aussi revenir ici après vos premières parties.</p>`;
+    }
+    if (rest < 0) xps += `<p class="warn-txt">Vous avez dépensé plus que votre budget (une étape précédente a peut-être changé). Retirez des achats ou réinitialisez.</p>`;
+    if (!fcx) xps += `<p class="hint">Déterminez d'abord les caractéristiques.</p>`;
+    else {
+      xps += `<h4>Caractéristiques <span class="hint">(+1 par achat ; 60 maximum)</span></h4><div class="adv-list">${CARACS.map((c) => {
+        const n = S.xp.car[c.id] || 0, v = fcx[c.id], cost = carCost(v + 1);
+        const can = v < 60 && cost <= rest;
+        return `<div class="adv"><span>${c.nom} <small>${v}${n ? ` (+${n})` : ""} · prochain : ${v < 60 ? cost + " XP" : "max"}</small></span>
+          <span class="stepper"><button type="button" data-act="xc-" data-c="${c.id}" ${n ? "" : "disabled"}>−</button><span class="val">${n}</span>
+          <button type="button" data-act="xc+" data-c="${c.id}" ${can ? "" : "disabled"}>+</button></span></div>`;
+      }).join("")}</div>`;
+
+      xps += `<h4>Compétences <span class="hint">(4 niveaux maximum au total)</span></h4><div class="adv-list">${Object.entries(SKILLS).map(([sk, sd]) => {
+        const n = S.xp.skill[sk] || 0, lvl = advAll(sk), cost = levelCost(lvl + 1);
+        const locked = sk === "psy" && !isPsyker();
+        const can = !locked && lvl < 4 && cost <= rest;
+        return `<div class="adv"><span>${sd.nom} <small>niv. ${lvl}${n ? ` (+${n})` : ""} · ${lvl < 4 ? cost + " XP" : "max"}</small></span>
+          <span class="stepper"><button type="button" data-act="xs-" data-sk="${sk}" ${n ? "" : "disabled"}>−</button><span class="val">${n}</span>
+          <button type="button" data-act="xs+" data-sk="${sk}" ${can ? "" : "disabled"}>+</button></span></div>`;
+      }).join("")}</div>`;
+
+      const specKeys = [...new Set([...Object.keys(S.role.specs), ...Object.keys(S.xp.spec)])];
+      xps += `<h4>Spécialisations <span class="hint">(4 niveaux maximum chacune)</span></h4>`;
+      if (specKeys.length) xps += `<div class="adv-list">${specKeys.map((k) => {
+        const [sk, sp] = k.split(":"); const n = S.xp.spec[k] || 0, lvl = specAll(k), cost = levelCost(lvl + 1);
+        return `<div class="adv"><span>${SKILLS[sk].nom} (${esc(sp)}) <small>niv. ${lvl} · ${lvl < 4 ? cost + " XP" : "max"}</small></span>
+          <span class="stepper"><button type="button" data-act="xp-" data-k="${esc(k)}" ${n ? "" : "disabled"}>−</button><span class="val">${n}</span>
+          <button type="button" data-act="xp+" data-k="${esc(k)}" ${lvl < 4 && cost <= rest ? "" : "disabled"}>+</button></span></div>`;
+      }).join("")}</div>`;
+      xps += `<div class="row"><select class="select" id="xp-spec-select"><option value="">— Nouvelle spécialisation —</option>${Object.entries(SKILLS)
+        .filter(([sk]) => sk !== "psy" || isPsyker())
+        .map(([sk, sd]) => `<optgroup label="${sd.nom}">${sd.specs.filter((sp) => !specKeys.includes(`${sk}:${sp}`)).map((sp) => `<option value="${sk}:${esc(sp)}">${sd.nom} (${esc(sp)})</option>`).join("")}</optgroup>`).join("")}</select>
+        <button class="btn ghost" type="button" data-act="xp-spec-add" ${rest >= 50 ? "" : "disabled"}>Ajouter (50 XP)</button></div>`;
+
+      const owned = allTalents();
+      const buyable = TALENTS.filter((t) => !t.creation && t.nom !== "Psyker" && !owned.includes(t.nom) && !(t.nom === "Psyker" && isBlank()));
+      xps += `<h4>Talents <span class="hint">(100 XP chacun ; vérifiez les prérequis)</span></h4>`;
+      if (S.xp.talents.length) xps += `<div class="chips">${S.xp.talents.map((t) => `<span class="chip on">${esc(t)} <button type="button" class="x" data-act="xt-del" data-t="${esc(t)}" aria-label="Retirer">×</button></span>`).join("")}</div>`;
+      xps += `<div class="row"><select class="select" id="xp-tal-select"><option value="">— Choisir un talent —</option>${buyable.map((t) =>
+        `<option value="${esc(t.nom)}">${esc(t.nom)}${t.req && t.req !== "—" ? " — " + esc(t.req) : ""}</option>`).join("")}</select>
+        <button class="btn ghost" type="button" data-act="xt-add" ${rest >= 100 ? "" : "disabled"}>Acheter (100 XP)</button></div>
+        <p class="hint">Le site ne vérifie pas les prérequis à votre place : relisez-les dans <a href="talents.html" target="_blank">l'Archive IX</a>. Psyker, Paria, Prédestiné, Héritier et Psyker sanctionné ne s'achètent pas ici.</p>`;
+
+      if (isPsyker()) {
+        const knownMinor = [...S.psy.minor, ...S.xp.minor];
+        const knownPow = [...S.psy.powers, ...S.xp.powers];
+        xps += `<h4>Pouvoirs psychiques <span class="hint">(mineur 60 XP, discipline 100 XP)</span></h4>`;
+        const bought = [...S.xp.minor.map((p) => [p, "m"]), ...S.xp.powers.map((p) => [p, "d"])];
+        if (bought.length) xps += `<div class="chips">${bought.map(([p, t]) => `<span class="chip on">${p} <button type="button" class="x" data-act="xpw-del" data-p="${p}" data-t="${t}" aria-label="Retirer">×</button></span>`).join("")}</div>`;
+        xps += `<div class="row"><select class="select" id="xp-minor-select"><option value="">— Pouvoir mineur —</option>${PSY_MINOR.filter((p) => !knownMinor.includes(p)).map((p) => `<option>${p}</option>`).join("")}</select>
+          <button class="btn ghost" type="button" data-act="xpm-add" ${rest >= 60 ? "" : "disabled"}>Apprendre (60 XP)</button></div>`;
+        if (S.psy.discipline) xps += `<div class="row"><select class="select" id="xp-power-select"><option value="">— Pouvoir de ${S.psy.discipline} —</option>${PSY_DISCIPLINES[S.psy.discipline].filter((p) => !knownPow.includes(p)).map((p) => `<option>${p}</option>`).join("")}</select>
+          <button class="btn ghost" type="button" data-act="xpd-add" ${rest >= 100 ? "" : "disabled"}>Apprendre (100 XP)</button></div>`;
+      }
+      if (spent()) xps += `<p><button class="btn ghost" type="button" data-act="xp-reset">Annuler toutes les dépenses</button></p>`;
+    }
+    $("#step-xp").innerHTML = xps;
+
     // indicateurs de progression
     const done = {
       car: !!base && (S.car.mode === "hasard" || sum(S.car.points) === 90),
@@ -297,6 +397,7 @@
       faction: !!f && !!S.faction.choix && sum(S.faction.adv) === 5,
       role: !!r && S.role.talents.length === r.talents.n && sum(S.role.adv) === 3 && sum(S.role.specs) === 2,
       psy: pc.minor === 0 || (S.psy.minor.length === pc.minor && S.psy.powers.length === pc.disc),
+      xp: xp() > 0 && remaining() >= 0 && remaining() < 20,
     };
     Object.entries(done).forEach(([k, v]) => { const el = document.querySelector(`[data-step="${k}"]`); if (el) el.classList.toggle("done", v); });
   }
@@ -346,30 +447,34 @@
 
     // compétences
     h += `<h4>Compétences</h4><table class="sheet-skills"><tbody>${Object.entries(SKILLS).map(([sk, s]) => {
-      const a = advTotal(sk);
+      const a = advAll(sk);
       const base = fc ? fc[s.c] : null;
       const val = base !== null ? base + 5 * a : "—";
-      const specs = Object.keys(S.role.specs).filter((k) => S.role.specs[k] && k.startsWith(sk + ":"));
-      const specTxt = specs.map((k) => `<div class="spec">↳ ${esc(k.split(":")[1])} <strong>${base !== null ? val + 5 : "—"}</strong></div>`).join("");
-      return `<tr class="${a ? "trained" : ""}"><td>${s.nom} <small>(${carNom(s.c)})</small>${specTxt}</td><td>${"●".repeat(a)}${"○".repeat(Math.max(0, 2 - a))}</td><td><strong>${val}</strong></td></tr>`;
+      const specs = [...new Set([...Object.keys(S.role.specs), ...Object.keys(S.xp.spec)])].filter((k) => specAll(k) && k.startsWith(sk + ":"));
+      const specTxt = specs.map((k) => `<div class="spec">↳ ${esc(k.split(":")[1])} <strong>${base !== null ? val + 5 * specAll(k) : "—"}</strong></div>`).join("");
+      return `<tr class="${a || specs.length ? "trained" : ""}"><td>${s.nom} <small>(${carNom(s.c)})</small>${specTxt}</td><td>${"●".repeat(a)}${"○".repeat(Math.max(0, 4 - a))}</td><td><strong>${val}</strong></td></tr>`;
     }).join("")}</tbody></table>`;
 
     h += `<h4>Talents</h4><p>${talents.length ? talents.map(esc).join(" · ") : "<span class='hint'>—</span>"}</p>`;
 
     if (isPsyker()) {
-      const pw = [...S.psy.minor.map((p) => p + " (mineur)"), ...S.psy.powers.map((p) => `${p} (${S.psy.discipline})`)];
+      const pw = [...S.psy.minor, ...S.xp.minor].map((p) => p + " (mineur)").concat([...S.psy.powers, ...S.xp.powers].map((p) => `${p} (${S.psy.discipline})`));
       h += `<h4>Pouvoirs psychiques</h4><p>${pw.length ? pw.map(esc).join(" · ") : "<span class='hint'>à choisir</span>"}</p>`;
     }
 
     h += `<h4>Influence</h4><p>${f ? `+1 ${esc(f.influence)}` : "—"}</p>`;
     h += `<h4>Équipement</h4><p>${equipList().map(esc).join(" · ") || "—"}${f ? ` · <strong>${esc(f.solars)} solars</strong>` : ""}</p>`;
-    h += `<h4>XP à dépenser</h4><p><strong>${xp()} XP</strong> <span class="hint">(gagnés en laissant faire le hasard)</span></p>`;
+    h += `<h4>Expérience</h4><p>Gagnés : <strong>${xp()}</strong> · dépensés : <strong>${spent()}</strong> · <strong style="color:${remaining() < 0 ? "var(--crimson-bright)" : "inherit"}">restants : ${remaining()} XP</strong></p>`;
     if (S.notes) h += `<h4>Notes</h4><p class="notes">${esc(S.notes).replace(/\n/g, "<br>")}</p>`;
 
     $("#sheet").innerHTML = h;
   }
 
-  function renderAll() { renderSteps(); renderSheet(); save(); }
+  function renderAll() {
+    // un talent obtenu par la faction ou le rôle n'a plus à être acheté en XP
+    S.xp.talents = S.xp.talents.filter((t) => !factionTalents().includes(t) && !S.role.talents.includes(t));
+    renderSteps(); renderSheet(); save();
+  }
 
   /* ---------- Événements ---------- */
 
@@ -397,6 +502,16 @@
       const sk = b.dataset.sk;
       tgt[sk] = Math.max(0, (tgt[sk] || 0) + (act === "adv+" ? 1 : -1));
     }
+    else if (act === "xc+" || act === "xc-") { const c = b.dataset.c; S.xp.car[c] = Math.max(0, (S.xp.car[c] || 0) + (act === "xc+" ? 1 : -1)); }
+    else if (act === "xs+" || act === "xs-") { const k = b.dataset.sk; S.xp.skill[k] = Math.max(0, (S.xp.skill[k] || 0) + (act === "xs+" ? 1 : -1)); if (!S.xp.skill[k]) delete S.xp.skill[k]; }
+    else if (act === "xp+" || act === "xp-") { const k = b.dataset.k; S.xp.spec[k] = Math.max(0, (S.xp.spec[k] || 0) + (act === "xp+" ? 1 : -1)); if (!S.xp.spec[k]) delete S.xp.spec[k]; }
+    else if (act === "xp-spec-add") { const k = $("#xp-spec-select").value; if (!k) return; S.xp.spec[k] = (S.xp.spec[k] || 0) + 1; }
+    else if (act === "xt-add") { const t = $("#xp-tal-select").value; if (!t) return; S.xp.talents.push(t); }
+    else if (act === "xt-del") { S.xp.talents = S.xp.talents.filter((t) => t !== b.dataset.t); }
+    else if (act === "xpm-add") { const v = $("#xp-minor-select").value; if (!v) return; S.xp.minor.push(v); }
+    else if (act === "xpd-add") { const v = $("#xp-power-select").value; if (!v) return; S.xp.powers.push(v); }
+    else if (act === "xpw-del") { const key = b.dataset.t === "m" ? "minor" : "powers"; S.xp[key] = S.xp[key].filter((x) => x !== b.dataset.p); }
+    else if (act === "xp-reset") { S.xp = blankXp(); }
     else if (act === "reset") { if (confirm("Effacer cet agent et recommencer ?")) S = blank(); }
     else if (act === "print") { window.print(); return; }
     else if (act === "export") { exportJSON(); return; }
@@ -424,7 +539,7 @@
       const cur = store[el.dataset.i] || [];
       store[el.dataset.i] = el.checked ? [...cur, el.value] : cur.filter((x) => x !== el.value);
     }
-    else if (act === "psy-disc") { S.psy.discipline = el.value; S.psy.powers = []; }
+    else if (act === "psy-disc") { S.psy.discipline = el.value; S.psy.powers = []; S.xp.powers = []; }
     else if (act === "psy-minor") { S.psy.minor = el.checked ? [...S.psy.minor, el.value] : S.psy.minor.filter((x) => x !== el.value); }
     else if (act === "psy-power") { S.psy.powers = el.checked ? [...S.psy.powers, el.value] : S.psy.powers.filter((x) => x !== el.value); }
     else return;
@@ -450,7 +565,7 @@
     const file = e.target.files[0];
     if (!file) return;
     file.text().then((txt) => {
-      try { S = Object.assign(blank(), JSON.parse(txt)); syncTextFields(); renderAll(); }
+      try { S = normalize(JSON.parse(txt)); syncTextFields(); renderAll(); }
       catch (err) { alert("Fichier illisible : ce n'est pas un agent exporté depuis le Scriptorium."); }
     });
     e.target.value = "";

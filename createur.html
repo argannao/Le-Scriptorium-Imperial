@@ -72,6 +72,16 @@
     }
     textarea.text-field { min-height: 90px; resize: vertical; }
 
+    .xp-bar {
+      font-family: var(--font-mono); color: var(--slate); background: var(--slate-bg); border: 1px solid var(--slate-dim);
+      border-radius: var(--radius); padding: 0.5rem 0.8rem; margin-bottom: 0.6rem;
+    }
+    .xp-bar.over { color: var(--crimson-bright); border-color: var(--crimson); }
+    .xp-bar strong { color: var(--gold-bright); }
+    .warn-txt { color: var(--crimson-bright); }
+    .chip .x { background: none; border: none; color: var(--gold-bright); cursor: pointer; font-size: 1.1rem; line-height: 1; padding: 0 0 0 0.2rem; }
+    .row .btn { white-space: nowrap; }
+
     /* Fiche */
     .sheet-wrap { position: sticky; top: 120px; }
     @media (max-width: 960px) { .sheet-wrap { position: static; } }
@@ -140,7 +150,8 @@
         <section class="step" data-step="faction"><h2><span class="n">3</span>Faction</h2><div id="step-faction"></div></section>
         <section class="step" data-step="role"><h2><span class="n">4</span>Rôle</h2><div id="step-role"></div></section>
         <section class="step" data-step="psy"><h2><span class="n">5</span>Pouvoirs psychiques</h2><div id="step-psy"></div></section>
-        <p class="hint">Les XP gagnés en laissant faire le hasard se dépensent ensuite (compétences, talents, caractéristiques) : voir <a href="competences.html">Compétences</a> et <a href="talents.html">Talents</a>. Les règles complètes de création sont dans <a href="creation.html">l'Archive II</a>.</p>
+        <section class="step" data-step="xp"><h2><span class="n">6</span>Dépenser l'expérience</h2><div id="step-xp"></div></section>
+        <p class="hint">Les règles complètes de création sont dans <a href="creation.html">l'Archive II</a> ; les coûts en XP dans <a href="regles.html#entre-missions">l'Archive I</a>.</p>
       </div>
 
       <aside class="sheet-wrap">

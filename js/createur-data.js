@@ -170,3 +170,651 @@ const PSY_DISCIPLINES = {
   "Télékinésie": ["Abjuration Mechanicum", "Crush", "Deflection", "Gravity Well", "Impel", "Psychic Barrier", "Psychic Maelstrom", "Vortex of Doom"],
   "Télépathie":  ["Beacon", "Compel", "Erasure", "Psychic Fortitude", "Psychic Shriek", "Telepathic Link", "Terrifying Visions"],
 };
+
+// Talents achetables (nom, prérequis) — repris de talents.html
+const TALENTS = [
+{
+"nom": "Sens aiguisé",
+"en": "Acute Sense",
+"req": "—",
+"cat": "divers",
+"creation": false
+},
+{
+"nom": "Poussée d'adrénaline",
+"en": "Adrenaline Acceleration",
+"req": "—",
+"cat": "divers",
+"creation": false
+},
+{
+"nom": "Attaques agiles",
+"en": "Agile Attacks",
+"req": "Ag 45, Mêlée 2",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Air d'autorité",
+"en": "Air of Authority",
+"req": "Présence 2",
+"cat": "social",
+"creation": false
+},
+{
+"nom": "Ambidextre",
+"en": "Ambidextrous",
+"req": "—",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Anatomie appliquée",
+"en": "Applied Anatomy",
+"req": "Médecine 2",
+"cat": "savoir",
+"creation": false
+},
+{
+"nom": "Artiste",
+"en": "Artistic",
+"req": "—",
+"cat": "divers",
+"creation": false
+},
+{
+"nom": "Assistant attentif",
+"en": "Attentive Assistant",
+"req": "—",
+"cat": "savoir",
+"creation": false
+},
+{
+"nom": "Paria",
+"en": "Blank",
+"req": "Création seulement ; jamais Psyker",
+"cat": "psy",
+"creation": true
+},
+{
+"nom": "Briseur d'os",
+"en": "Bone Breaker",
+"req": "Médecine (spécialisation) 2",
+"cat": "savoir",
+"creation": false
+},
+{
+"nom": "Corrupteur",
+"en": "Briber",
+"req": "Intuition (Gens) 2",
+"cat": "social",
+"creation": false
+},
+{
+"nom": "Rempart",
+"en": "Bulwark",
+"req": "Réflexes 3",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Cambrioleur",
+"en": "Burglar",
+"req": "Athlétisme 1, Discrétion 1",
+"cat": "discretion",
+"creation": false
+},
+{
+"nom": "Chirurgien",
+"en": "Chirurgeon",
+"req": "Médecine 2",
+"cat": "savoir",
+"creation": false
+},
+{
+"nom": "Discipline rapprochée",
+"en": "Close Quarters Discipline",
+"req": "Discipline 2, Tir 2",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Maître d'armes",
+"en": "Combat Master",
+"req": "Mêlée 2",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Condamner la sorcière",
+"en": "Condemn the Witch",
+"req": "FM 40, Psyker (ou accord du MJ)",
+"cat": "psy",
+"creation": false
+},
+{
+"nom": "Contorsionniste",
+"en": "Contortionist",
+"req": "—",
+"cat": "discretion",
+"creation": false
+},
+{
+"nom": "Contre-attaque",
+"en": "Counter Attack",
+"req": "Mêlée 3",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Fouineur de données",
+"en": "Data Delver",
+"req": "Logique (Investigation) 2",
+"cat": "savoir",
+"creation": false
+},
+{
+"nom": "Négociateur",
+"en": "Dealmaker",
+"req": "Intuition (Gens) 1, Entregent (Marchandage) 1",
+"cat": "social",
+"creation": false
+},
+{
+"nom": "Tireur d'élite",
+"en": "Deadeye",
+"req": "Tir 1",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Expert en démolition",
+"en": "Demolition Specialist",
+"req": "Tir (Artillerie) 2 ou Dextérité (Désamorçage) 2",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Serviteur dévoué",
+"en": "Devoted Servant",
+"req": "—",
+"cat": "divers",
+"creation": false
+},
+{
+"nom": "Frappes dirigées",
+"en": "Directed Strikes",
+"req": "Mêlée 3",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Coups bas",
+"en": "Dirty Fighting",
+"req": "Mêlée (Pugilat) 2",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Désarmement",
+"en": "Disarm",
+"req": "Mêlée 2",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Voix dérangeante",
+"en": "Disturbing Voice",
+"req": "—",
+"cat": "social",
+"creation": false
+},
+{
+"nom": "Agaçant",
+"en": "Distracting",
+"req": "—",
+"cat": "social",
+"creation": false
+},
+{
+"nom": "Aguerri",
+"en": "Drilled",
+"req": "Discipline 1",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Combat à deux armes",
+"en": "Dual Wielder",
+"req": "Ambidextre, Mêlée (Une main) 2",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Duelliste",
+"en": "Duellist",
+"req": "Mêlée (Une main) 2",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Mémoire eidétique",
+"en": "Eidetic Memory",
+"req": "—",
+"cat": "savoir",
+"creation": false
+},
+{
+"nom": "Toujours vigilant",
+"en": "Ever Vigilant",
+"req": "Vigilance 2",
+"cat": "discretion",
+"creation": false
+},
+{
+"nom": "Exploiter la faiblesse",
+"en": "Exploit Vulnerability",
+"req": "Intuition (Gens) 2",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Proprioception étendue",
+"en": "Extended Proprioception",
+"req": "Pilotage (spécialisation) 3",
+"cat": "divers",
+"creation": false
+},
+{
+"nom": "Fidèle (Culte impérial)",
+"en": "Faithful (Imperial Cult)",
+"req": "Ministorum, ou +2 Influence Ministorum, ou Savoir (Théologie) 2",
+"cat": "foi",
+"creation": false
+},
+{
+"nom": "Fausse retraite",
+"en": "False Retreat",
+"req": "Entregent (Tromperie) 3",
+"cat": "discretion",
+"creation": false
+},
+{
+"nom": "Terrain familier",
+"en": "Familiar Terrain",
+"req": "—",
+"cat": "discretion",
+"creation": false
+},
+{
+"nom": "Prédestiné",
+"en": "Fated",
+"req": "Création seulement",
+"cat": "divers",
+"creation": true
+},
+{
+"nom": "Médecin de terrain",
+"en": "Field Medicae",
+"req": "Médecine 2",
+"cat": "savoir",
+"creation": false
+},
+{
+"nom": "Flagellant",
+"en": "Flagellant",
+"req": "—",
+"cat": "foi",
+"creation": false
+},
+{
+"nom": "Tir de flanc",
+"en": "Flanking Fire",
+"req": "Tir 2",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "La chair est faible",
+"en": "Flesh is Weak",
+"req": "Technologie (Augmétiques) 2",
+"cat": "divers",
+"creation": false
+},
+{
+"nom": "Savoir interdit",
+"en": "Forbidden Knowledge",
+"req": "Création, ou accord du MJ",
+"cat": "savoir",
+"creation": false
+},
+{
+"nom": "Faussaire",
+"en": "Forger",
+"req": "Linguistique 2, Savoir 2",
+"cat": "social",
+"creation": false
+},
+{
+"nom": "Fanatique du tir automatique",
+"en": "Full-Auto Fanatic",
+"req": "Tir 3",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Frénésie",
+"en": "Frenzy",
+"req": "—",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Humour noir",
+"en": "Gallows Humour",
+"req": "Entregent (Charme) 2",
+"cat": "social",
+"creation": false
+},
+{
+"nom": "Charabia gothique",
+"en": "Gothic Gibberish",
+"req": "Linguistique 1",
+"cat": "social",
+"creation": false
+},
+{
+"nom": "Gardien",
+"en": "Guardian",
+"req": "Réflexes 3",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Pistolero",
+"en": "Gunslinger",
+"req": "Ambidextre, Tir (Pistolets) 2",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Haine",
+"en": "Hatred",
+"req": "—",
+"cat": "foi",
+"creation": false
+},
+{
+"nom": "Frapper et filer",
+"en": "Hit and Run",
+"req": "Réflexes (Acrobaties) 3",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Cache secrète",
+"en": "Holdout Expert",
+"req": "—",
+"cat": "discretion",
+"creation": false
+},
+{
+"nom": "Hypno-endoctrinement",
+"en": "Hypno-Indoctrination",
+"req": "—",
+"cat": "divers",
+"creation": false
+},
+{
+"nom": "Porte-icône",
+"en": "Icon Bearer",
+"req": "Savoir (Théologie) 1, Présence 1",
+"cat": "foi",
+"creation": false
+},
+{
+"nom": "L'ignorance est mon bouclier",
+"en": "Ignorance is My Shield",
+"req": "Int < 30, aucun savoir interdit",
+"cat": "foi",
+"creation": false
+},
+{
+"nom": "Présence inspirante",
+"en": "Inspiring Presence",
+"req": "Présence (Commandement) 2",
+"cat": "social",
+"creation": false
+},
+{
+"nom": "Héritier",
+"en": "Inheritor",
+"req": "Création seulement",
+"cat": "social",
+"creation": true
+},
+{
+"nom": "Juriste",
+"en": "Lawbringer",
+"req": "Savoir (Adeptus Terra) 2",
+"cat": "social",
+"creation": false
+},
+{
+"nom": "Lèche-bottes",
+"en": "Lickspittle",
+"req": "—",
+"cat": "social",
+"creation": false
+},
+{
+"nom": "Martyre",
+"en": "Martyrdom",
+"req": "Résistance 2",
+"cat": "foi",
+"creation": false
+},
+{
+"nom": "Médecin non conventionnel",
+"en": "Medicae Maverick",
+"req": "Une spécialisation Médecine interdite",
+"cat": "savoir",
+"creation": false
+},
+{
+"nom": "Forteresse mentale",
+"en": "Mental Fortress",
+"req": "Discipline (Psychique) 2",
+"cat": "psy",
+"creation": false
+},
+{
+"nom": "Imitateur",
+"en": "Mimic",
+"req": "Vigilance (Ouïe) 2, Entregent (Tromperie) 2",
+"cat": "discretion",
+"creation": false
+},
+{
+"nom": "Contremaître",
+"en": "Overseer",
+"req": "Présence (Commandement) 2",
+"cat": "social",
+"creation": false
+},
+{
+"nom": "Médecin légiste",
+"en": "Pathologist",
+"req": "Médecine (Humain) 2",
+"cat": "savoir",
+"creation": false
+},
+{
+"nom": "Saigneur",
+"en": "Phlebotomist",
+"req": "Médecine 3",
+"cat": "savoir",
+"creation": false
+},
+{
+"nom": "Porteur",
+"en": "Porter",
+"req": "Résistance (Endurance) 2",
+"cat": "divers",
+"creation": false
+},
+{
+"nom": "Châtiment psychique",
+"en": "Psychic Castigation",
+"req": "Psyker",
+"cat": "psy",
+"creation": false
+},
+{
+"nom": "Déferlement psychique",
+"en": "Psychic Flood",
+"req": "Psyker",
+"cat": "psy",
+"creation": false
+},
+{
+"nom": "Psyker",
+"en": "Psyker",
+"req": "Jamais Paria",
+"cat": "psy",
+"creation": false
+},
+{
+"nom": "Dégaine rapide",
+"en": "Quickdraw",
+"req": "Tir (Pistolets) 2, Réflexes 2",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Rechargement rapide",
+"en": "Rapid Reload",
+"req": "Dextérité 2, Tir 2",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Lecture labiale",
+"en": "Read Lips",
+"req": "Vigilance (Vue) 1, Linguistique 1",
+"cat": "discretion",
+"creation": false
+},
+{
+"nom": "Marchand patenté",
+"en": "Registered Trader",
+"req": "Logique (Évaluation) 2, Entregent (Marchandage) 2",
+"cat": "social",
+"creation": false
+},
+{
+"nom": "Psyker sanctionné",
+"en": "Sanctioned Psyker",
+"req": "Psyker ; création seulement",
+"cat": "psy",
+"creation": true
+},
+{
+"nom": "Double identité",
+"en": "Secret Identity",
+"req": "Accord du MJ",
+"cat": "discretion",
+"creation": false
+},
+{
+"nom": "Assaut éclair",
+"en": "Shock Assault",
+"req": "Ag 45, Discrétion 3",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Fileur",
+"en": "Skulker",
+"req": "Navigation 1, Discrétion 1",
+"cat": "discretion",
+"creation": false
+},
+{
+"nom": "Insaisissable",
+"en": "Slippery",
+"req": "Réflexes 2",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Commandant supérieur",
+"en": "Superior Commander",
+"req": "Présence (Commandement) 4",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Tir de suppression",
+"en": "Suppressing Fire",
+"req": "Tir 2",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Pied sûr",
+"en": "Sure-Footed",
+"req": "Athlétisme 1, Résistance 1, Réflexes 1",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Mouvement tactique",
+"en": "Tactical Movement",
+"req": "Athlétisme 1, Discipline 1",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Tenace",
+"en": "Tenacious",
+"req": "—",
+"cat": "divers",
+"creation": false
+},
+{
+"nom": "Taille à deux mains",
+"en": "Two-handed Cleave",
+"req": "Mêlée (Deux mains) 2",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Présence inébranlable",
+"en": "Unflinching Presence",
+"req": "Présence (Commandement) 3",
+"cat": "combat",
+"creation": false
+},
+{
+"nom": "Anonyme",
+"en": "Unremarkable",
+"req": "Aucun niveau en Présence",
+"cat": "discretion",
+"creation": false
+},
+{
+"nom": "Pied spatial",
+"en": "Void Legs",
+"req": "—",
+"cat": "divers",
+"creation": false
+},
+{
+"nom": "Prévoyant",
+"en": "Well-Prepared",
+"req": "—",
+"cat": "divers",
+"creation": false
+}
+];
