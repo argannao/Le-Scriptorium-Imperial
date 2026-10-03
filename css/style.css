@@ -504,3 +504,9 @@ th {
 
 /* Les ancres ne se cachent pas sous l'en-tête collant */
 [id] { scroll-margin-top: 120px; }
+
+/* Menu plus compact sur grand écran (beaucoup de modules) */
+@media (min-width: 1081px) {
+  .header-inner { max-width: 1320px; }
+  .site-nav a { padding: 0.3rem 0.6rem; letter-spacing: 0.08em; }
+}
