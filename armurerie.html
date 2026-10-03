@@ -18,12 +18,28 @@
       <p class="lead">Le talent ne suffit pas toujours dans le Secteur Macharien. Un bon équipement fait souvent la différence entre l'agent qui revient et celui qu'on oublie.</p>
     </header>
 
+    <div class="panel warn">
+      <h3>Liste non exhaustive</h3>
+      <p>
+        Cette page est un <strong>aperçu</strong> de l'équipement, pas une copie de l'armurerie officielle. Elle présente les grandes
+        familles d'armes et d'objets, avec quelques exemples chiffrés pour donner des repères. Le chapitre 5 du livre de base contient
+        beaucoup d'autres armes, armures, outils et augmétiques, ainsi que les prix, l'encombrement et les règles complètes.
+      </p>
+    </div>
+
     <nav class="toc">
-      <a href="#argent">Argent &amp; disponibilité</a>
-      <a href="#melee">Armes de mêlée</a>
+      <a href="#argent">Argent</a>
+      <a href="#lecture">Lire les fiches</a>
       <a href="#distance">Armes à distance</a>
+      <a href="#melee">Armes de mêlée</a>
+      <a href="#munitions">Munitions spéciales</a>
+      <a href="#explosifs">Explosifs</a>
+      <a href="#modifs">Modifications</a>
       <a href="#traits">Traits</a>
       <a href="#armures">Armures</a>
+      <a href="#champs">Champs de force</a>
+      <a href="#outils">Outils</a>
+      <a href="#augmetiques">Augmétiques</a>
     </nav>
 
     <h2 id="argent">Argent et disponibilité</h2>
@@ -46,49 +62,153 @@
       </div>
     </div>
 
+    <h2 id="lecture">Lire les fiches</h2>
     <div class="panel">
-      <h3>Comment lire les tableaux</h3>
       <p>
         <strong>Dég.</strong> : dégâts de base, auxquels s'ajoutent les DR de l'attaque. « +BF » ajoute le bonus de Force.
         <strong>Portée</strong> : courte (votre zone), moyenne (+ zone adjacente), longue (2 zones), extrême (au-delà).
-        Ce n'est qu'une <strong>sélection</strong> : le livre de base contient bien plus d'armes, de modifications et de munitions spéciales.
+        Les mots en italique sont des <a href="#traits">traits</a>.
       </p>
     </div>
 
-    <h2 id="melee">Armes de mêlée (sélection)</h2>
+    <h2 id="distance">Armes à distance, par famille</h2>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Armes laser</h3>
+        <p>L'arme emblématique de l'Imperium : simple, robuste, rechargeable presque partout. Peu de puissance, mais <em>Fiable</em>.</p>
+        <p style="font-family:var(--font-mono);font-size:0.9rem">Pistolet laser — 5 dég. — moyenne<br>Fusil laser — 6 dég. — longue</p>
+        <p>Variantes : carabine, long-las de tireur d'élite, versions « hot-shot » plus perforantes, canon laser antichar.</p>
+      </div>
+      <div class="panel">
+        <h3>Projectiles solides</h3>
+        <p>Pistolets et fusils à balles, fusils à pompe, revolvers : bon marché, très répandus, souvent capables de <em>Tir rapide</em>.</p>
+        <p style="font-family:var(--font-mono);font-size:0.9rem">Pistolet automatique — 5 dég. — moyenne<br>Fusil à pompe — 6 dég. — moyenne</p>
+        <p>Variantes : revolver, canon à main, fusil de précision, mitrailleuse lourde.</p>
+      </div>
+      <div class="panel">
+        <h3>Armes bolter</h3>
+        <p>Des projectiles autopropulsés qui explosent dans la cible. Rares et coûteuses, elles <em>perforent</em> l'armure et ont <em>Dispersion</em>.</p>
+        <p style="font-family:var(--font-mono);font-size:0.9rem">Pistolet bolter — 8 dég. — moyenne<br>Bolter — 8 dég. — longue</p>
+      </div>
+      <div class="panel">
+        <h3>Lance-flammes</h3>
+        <p>Un jet de prométhium qui ignore les couverts, touche les voisins de la cible et met le feu. Portée réduite.</p>
+        <p style="font-family:var(--font-mono);font-size:0.9rem">Lance-flammes — 8 dég. — moyenne</p>
+        <p>Variante : lance-flammes de poing.</p>
+      </div>
+      <div class="panel">
+        <h3>Armes à fusion</h3>
+        <p>Une chaleur extrême à très courte portée, qui fait fondre les blindages (<em>Lacération</em> élevée). Dévastatrices et rares.</p>
+        <p style="font-family:var(--font-mono);font-size:0.9rem">Fuseur — 16 dég. — moyenne</p>
+      </div>
+      <div class="panel">
+        <h3>Armes à plasma</h3>
+        <p>Très puissantes et très perforantes, avec la possibilité de <em>Surcharger</em>… mais <em>Instables</em> : elles peuvent blesser leur porteur.</p>
+        <p style="font-family:var(--font-mono);font-size:0.9rem">Pistolet à plasma — 10 dég. — moyenne</p>
+      </div>
+      <div class="panel">
+        <h3>Armes spécialisées</h3>
+        <p>
+          Armes à aiguilles (presque pas de dégâts, mais un poison qui traverse l'armure, idéales pour un assassinat discret) et
+          lance-toiles (pour capturer vivant).
+        </p>
+      </div>
+      <div class="panel">
+        <h3>Armes lourdes et lanceurs</h3>
+        <p>Bolter lourd, canon laser, lance-grenades et lance-missiles : spécialisation <em>Artillerie</em>, souvent <em>Lourdes</em>. Ils tirent les <a href="#explosifs">munitions explosives</a>.</p>
+      </div>
+    </div>
+
+    <h2 id="melee">Armes de mêlée, par famille</h2>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Armes ordinaires</h3>
+        <p>Couteaux, épées, haches, masses, bâtons, grandes armes : ce que tout le monde peut se procurer.</p>
+        <p style="font-family:var(--font-mono);font-size:0.9rem">Couteau — 0 + BF<br>Épée — 2 + BF<br>Grande arme — 4 + BF</p>
+      </div>
+      <div class="panel">
+        <h3>Armes tronçonneuses</h3>
+        <p>Des dents rotatives qui déchiquettent chair et armure (<em>Lacération</em>), au prix d'un vacarme impossible à ignorer.</p>
+        <p style="font-family:var(--font-mono);font-size:0.9rem">Épée tronçonneuse — 3 + BF</p>
+        <p>Variantes : hache tronçonneuse, éviscérateur à deux mains.</p>
+      </div>
+      <div class="panel">
+        <h3>Armes à choc</h3>
+        <p>Matraques et fouets électriques des forces de l'ordre, conçus pour <em>étourdir</em> plutôt que tuer.</p>
+        <p style="font-family:var(--font-mono);font-size:0.9rem">Masse à choc — 2 + BF</p>
+      </div>
+      <div class="panel">
+        <h3>Armes énergétiques</h3>
+        <p>Une lame ou une tête entourée d'un champ disrupteur qui traverse presque toutes les armures. Rares et chères.</p>
+        <p style="font-family:var(--font-mono);font-size:0.9rem">Épée énergétique — 4 + BF<br>Gantelet énergétique — 6 + BF</p>
+      </div>
+      <div class="panel">
+        <h3>Armes de force</h3>
+        <p>Des armes psychoactives (épée, bâton) réservées aux psykers, d'une valeur exotique.</p>
+      </div>
+      <div class="panel">
+        <h3>Armes improvisées</h3>
+        <p>Une chaise, une crosse de fusil : <em>Inefficaces</em> contre l'armure, mais toujours sous la main.</p>
+      </div>
+    </div>
+
+    <h2 id="munitions">Munitions spéciales</h2>
+    <div class="panel">
+      <p>Chaque arme achetée est livrée avec deux chargeurs. Certaines armes acceptent des munitions spéciales, plus chères et plus rares :</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Munition</th><th>Effet</th></tr></thead>
+          <tbody>
+            <tr><td>Balles hémorragiques</td><td>La cible se met à saigner.</td></tr>
+            <tr><td>Munitions « Exécuteur »</td><td>Projectiles guidés à portée extrême.</td></tr>
+            <tr><td>Recharges hot-shot</td><td>Las surpuissant : plus de dégâts et perforant, mais chargeur réduit de moitié et perte du trait <em>Fiable</em>.</td></tr>
+            <tr><td>Obus incendiaires</td><td>Mettent la cible en feu.</td></tr>
+            <tr><td>Balles anti-blindage</td><td>Conçues pour traverser les protections.</td></tr>
+            <tr><td>Munitions toxiques</td><td>Empoisonnent la cible.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h2 id="explosifs">Grenades et explosifs</h2>
+    <div class="panel">
+      <p>
+        Usage unique et toujours <em>Instables</em>. Selon le cas, on les lance (<em>Lancer</em>), on les tire avec un lanceur
+        (<em>Artillerie</em>) ou on les pose (<em>Technologie (Ingénierie)</em>, avec retardateur ou détonateur). Lancer une grenade
+        par-dessus un couvert est plus difficile selon sa solidité.
+      </p>
+    </div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Arme</th><th>Spéc.</th><th>Dég.</th><th>Dispo.</th><th>Traits</th></tr></thead>
+        <thead><tr><th>Explosif</th><th>Ce qu'il fait</th></tr></thead>
         <tbody>
-          <tr><td>Poing nu</td><td>Pugilat</td><td>0 + BF</td><td>—</td><td>Inefficace</td></tr>
-          <tr><td>Couteau</td><td>Une main</td><td>0 + BF</td><td>Commun</td><td>Discret, Lancer (courte)</td></tr>
-          <tr><td>Épée</td><td>Une main</td><td>2 + BF</td><td>Commun</td><td>—</td></tr>
-          <tr><td>Grande arme</td><td>Deux mains</td><td>4 + BF</td><td>Peu commun</td><td>Lourd (4), Deux mains</td></tr>
-          <tr><td>Épée tronçonneuse</td><td>Une main</td><td>3 + BF</td><td>Peu commun</td><td>Bruyant, Lacération (2)</td></tr>
-          <tr><td>Masse à choc</td><td>Une main</td><td>2 + BF</td><td>Peu commun</td><td>Bruyant, Inflige (Étourdi)</td></tr>
-          <tr><td>Épée énergétique</td><td>Une main</td><td>4 + BF</td><td>Rare</td><td>Perforant (4)</td></tr>
-          <tr><td>Gantelet énergétique</td><td>Pugilat</td><td>6 + BF</td><td>Rare</td><td>Lourd (4), Perforant (6)</td></tr>
+          <tr><td>Frag (grenade, missile)</td><td>Une gerbe d'éclats sur une large zone : l'anti-personnel standard.</td></tr>
+          <tr><td>Krak (grenade, missile)</td><td>Charge perforante contre blindages, portes et véhicules ; petit rayon.</td></tr>
+          <tr><td>Bombe à fusion</td><td>Se colle à la cible et fait fondre presque tout.</td></tr>
+          <tr><td>Charge de mine / de démolition</td><td>Explosifs industriels à poser, puissants mais à rayon limité.</td></tr>
+          <tr><td>Cocktail incendiaire</td><td>Met le feu à une cible ou transforme une zone en danger pendant quelques rounds.</td></tr>
+          <tr><td>Grenade asphyxiante</td><td>Un nuage qui étourdit ceux qui ratent un test de Résistance.</td></tr>
+          <tr><td>Grenade aveuglante</td><td>Un éclair qui aveugle ceux qui ratent un test de Réflexes.</td></tr>
+          <tr><td>Grenade fumigène</td><td>Bloque la vue (mais pas l'infrarouge ni le son) pendant quelques rounds.</td></tr>
+          <tr><td>Grenade-toile</td><td>Immobilise tout le monde dans la zone ; s'en libérer demande un test étendu.</td></tr>
         </tbody>
       </table>
     </div>
 
-    <h2 id="distance">Armes à distance (sélection)</h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Arme</th><th>Spéc.</th><th>Dég.</th><th>Portée</th><th>Dispo.</th><th>Traits</th></tr></thead>
-        <tbody>
-          <tr><td>Pistolet laser</td><td>Pistolet</td><td>5</td><td>Moyenne</td><td>Commun</td><td>Rafale, Proche, Bruyant, Fiable</td></tr>
-          <tr><td>Fusil laser</td><td>Épaule</td><td>6</td><td>Longue</td><td>Commun</td><td>Rafale, Bruyant, Fiable, Deux mains</td></tr>
-          <tr><td>Pistolet automatique</td><td>Pistolet</td><td>5</td><td>Moyenne</td><td>Commun</td><td>Proche, Bruyant, Tir rapide (3)</td></tr>
-          <tr><td>Revolver</td><td>Pistolet</td><td>6</td><td>Moyenne</td><td>Commun</td><td>Proche, Bruyant, Fiable</td></tr>
-          <tr><td>Fusil à pompe</td><td>Épaule</td><td>6</td><td>Moyenne</td><td>Commun</td><td>Inflige (À terre), Bruyant, Dispersion, Deux mains</td></tr>
-          <tr><td>Fusil de précision</td><td>Épaule</td><td>8</td><td>Extrême</td><td>Peu commun</td><td>Bruyant, Deux mains</td></tr>
-          <tr><td>Lance-flammes</td><td>Épaule</td><td>8</td><td>Moyenne</td><td>Peu commun</td><td>Flammes, Inflige (En feu), Bruyant, Deux mains</td></tr>
-          <tr><td>Pistolet bolter</td><td>Pistolet</td><td>8</td><td>Moyenne</td><td>Rare</td><td>Rafale, Proche, Bruyant, Perforant (4), Dispersion</td></tr>
-          <tr><td>Bolter</td><td>Épaule</td><td>8</td><td>Longue</td><td>Rare</td><td>Bruyant, Perforant (4), Tir rapide (2), Dispersion, Deux mains</td></tr>
-          <tr><td>Pistolet à plasma</td><td>Pistolet</td><td>10</td><td>Moyenne</td><td>Rare</td><td>Proche, Bruyant, Perforant (6), Surcharge (4), Instable</td></tr>
-        </tbody>
-      </table>
+    <h2 id="modifs">Modifications d'armes</h2>
+    <div class="panel">
+      <p>
+        Toucher au modèle sacré d'une arme offense son esprit-machine… mais quelques accessoires sont tolérés presque partout :
+      </p>
+      <p>
+        <span class="tag">Lunette / viseur laser / omnispex</span> pour mieux viser, parfois même dans l'obscurité.<br>
+        <span class="tag">Silencieux</span> pour les armes à projectiles solides.<br>
+        <span class="tag">Baïonnette</span> une lame fixée sur une arme à distance.<br>
+        <span class="tag">Cartouche d'extermination</span> un mini lance-flammes à usage unique, fixé sur une arme.<br>
+        <span class="tag">Bipied</span> pour caler une arme lourde.<br>
+        <span class="tag">Réserve dorsale</span> pour multiplier les munitions disponibles.<br>
+        <span class="tag">Sélecteur de tir</span> pour charger plusieurs types de munitions à la fois.
+      </p>
     </div>
 
     <h2 id="traits">Les principaux traits</h2>
@@ -125,7 +245,72 @@
         </tbody>
       </table>
     </div>
-    <div class="todo">À VENIR : outils, augmétiques, champs de force et services.</div>
+    <p style="color:var(--muted);font-style:italic">Il existe aussi des boucliers, qui ajoutent de l'armure quand on s'abrite derrière.</p>
+
+    <h2 id="champs">Champs de force</h2>
+    <div class="panel">
+      <p>
+        Une technologie ancienne et vénérée, souvent portée comme un bijou ou un insigne. Un champ protège tout le corps contre
+        toutes les attaques : on lance ses dés de <strong>protection</strong> et on retire le résultat aux dégâts, avant l'armure.
+        Si une attaque atteint son seuil de <strong>surcharge</strong>, elle est quand même absorbée, mais le champ grille et doit être réparé.
+        Un seul champ actif à la fois.
+      </p>
+      <p>
+        <span class="tag">Champ réfracteur</span> brille et crépite : adieu la discrétion.<br>
+        <span class="tag">Champ de conversion</span> transforme l'impact en éclair aveuglant. Certains prêtres en portent une version sacrée, le rosarius.
+      </p>
+    </div>
+
+    <h2 id="outils">Outils utiles en mission (sélection)</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Outil</th><th>À quoi il sert</th></tr></thead>
+        <tbody>
+          <tr><td>Trousse de chirurgien</td><td>Indispensable pour soigner de nombreuses blessures critiques ; nombre d'utilisations limité.</td></tr>
+          <tr><td>Diagnostor</td><td>Scanner médical portatif, à combiner avec Médecine.</td></tr>
+          <tr><td>Auspex / scanner</td><td>Détecte ce qui se cache aux alentours.</td></tr>
+          <tr><td>Data-ardoise</td><td>Lire, stocker et transporter des données. On en trouve partout.</td></tr>
+          <tr><td>Perce-vox</td><td>Intercepter les communications vox.</td></tr>
+          <tr><td>Brouilleur</td><td>Saturer les transmissions dans la zone.</td></tr>
+          <tr><td>Passe-partout</td><td>Aide à crocheter (avec Dextérité).</td></tr>
+          <tr><td>Découpeur laser</td><td>Percer portes et cloisons, et éclairer.</td></tr>
+          <tr><td>Kit de déguisement</td><td>Se faire passer pour un autre.</td></tr>
+          <tr><td>Magnoculaires</td><td>Observer à longue distance.</td></tr>
+          <tr><td>Lance-grappin, harnais, parachute gravitique</td><td>Monter, descendre et franchir les gouffres des ruches.</td></tr>
+          <tr><td>Étouffeur</td><td>Absorber les bruits pour se déplacer en silence.</td></tr>
+          <tr><td>Menottes, kit d'interrogatoire</td><td>Capturer… puis faire parler (avec Présence).</td></tr>
+          <tr><td>Cape caméléoline</td><td>Se fondre dans le décor.</td></tr>
+          <tr><td>Respirateur, masque à gaz, combinaison du vide</td><td>Survivre aux atmosphères toxiques ou au vide spatial.</td></tr>
+          <tr><td>Icône sacrée, tarot de l'Empereur</td><td>Des objets de foi aux effets bien réels pour qui y croit.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="augmetiques">Augmétiques</h2>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Principe</h3>
+        <p>
+          Remplacer la chair par la machine est courant dans l'Imperium. On se fait poser une augmétique par un médecin ou un prêtre
+          de la Machine. Un agent ne peut pas avoir plus d'augmétiques que son <strong>BE</strong>, sauf avec un talent dédié.
+          Une augmétique abîmée se répare avec un test de Technologie.
+        </p>
+      </div>
+      <div class="panel">
+        <h3>Remplacements</h3>
+        <p>Bras, jambe (ou chenilles et roues), cœur, système respiratoire, organes sensoriels : de quoi survivre à une amputation… et parfois faire mieux qu'avant.</p>
+      </div>
+      <div class="panel">
+        <h3>Implants du Mechanicus</h3>
+        <p>
+          Matrice d'augures (sens d'auspex intégrés), interface biomécanique (donner des ordres aux serviteurs), calculus logi
+          (un cogitateur dans le crâne), implant vocal, et toute une gamme de <strong>mécadendrites</strong> : bras supplémentaires
+          armés, médicaux, optiques, de manipulation ou utilitaires.
+        </p>
+      </div>
+    </div>
+
+    <div class="todo">RAPPEL : liste non exhaustive. Pour les prix, l'encombrement, les chiffres exacts et le reste de l'équipement, voir le chapitre 5 du livre de base.</div>
   </main>
 </body>
 </html>
