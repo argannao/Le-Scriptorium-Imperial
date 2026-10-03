@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Règles de base — Le Scriptorium Impérial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <main>
+    <header class="page-title">
+      <div class="kicker">Archive I</div>
+      <h1>Règles de base</h1>
+      <p class="lead">Les principes du système d100 : tout se joue sur un jet de dés, sous une valeur cible.</p>
+    </header>
+
+    <nav class="toc">
+      <a href="#principe">Le principe</a>
+      <a href="#degres">Degrés de réussite</a>
+      <a href="#difficulte">Difficulté</a>
+      <a href="#simulateur">Simulateur</a>
+    </nav>
+
+    <h2 id="principe">Le principe du test</h2>
+    <div class="panel">
+      <p>
+        Quand un agent tente une action risquée, il fait un <strong>test</strong>. Le joueur lance
+        deux dés à dix faces : l'un donne les dizaines, l'autre les unités, ce qui donne un résultat
+        entre 01 et 100.
+      </p>
+      <p>
+        Le test réussit si le résultat est <strong>inférieur ou égal</strong> à la valeur cible.
+        Cette valeur cible vient de la caractéristique utilisée, à laquelle s'ajoute l'entraînement
+        dans la compétence concernée.
+      </p>
+    </div>
+
+    <h2 id="degres">Degrés de réussite</h2>
+    <div class="panel">
+      <p>
+        Réussir ne suffit pas toujours : on veut savoir <em>à quel point</em>. On compare le chiffre
+        des dizaines de la valeur cible et celui du jet. La différence donne les degrés de réussite
+        (positifs) ou d'échec (négatifs).
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Valeur cible</th><th>Jet</th><th>Calcul</th><th>Résultat</th></tr></thead>
+          <tbody>
+            <tr><td>45</td><td>12</td><td>4 − 1</td><td>Succès, +3</td></tr>
+            <tr><td>45</td><td>41</td><td>4 − 4</td><td>Succès de justesse, +0</td></tr>
+            <tr><td>45</td><td>67</td><td>4 − 6</td><td>Échec, −2</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Les degrés servent à départager deux personnages en opposition ou à mesurer l'ampleur d'un succès.</p>
+    </div>
+    <div class="todo">À COMPLÉTER : réussites et échecs critiques, tests opposés, aide entre agents — vérifier dans le livre de base de la gamme choisie.</div>
+
+    <h2 id="difficulte">La difficulté</h2>
+    <div class="panel">
+      <p>
+        Le MJ ajuste la valeur cible selon les circonstances : un bonus si l'action est facilitée
+        (bon équipement, temps devant soi), un malus si elle est compliquée (obscurité, blessure,
+        pression).
+      </p>
+    </div>
+    <div class="todo">À COMPLÉTER : tableau des modificateurs de difficulté de la gamme utilisée.</div>
+
+    <h2 id="simulateur">Simulateur de test</h2>
+    <div class="panel">
+      <div class="dice-box">
+        <label for="roll-target">Valeur cible</label>
+        <input id="roll-target" type="number" min="1" max="100" value="45">
+        <button class="btn" id="roll-btn">Lancer le d100</button>
+      </div>
+      <div class="dataslate" id="roll-out" style="margin:1rem 0 0;max-width:none">
+        <p>&gt; En attente d'un jet... <span class="cursor">&nbsp;</span></p>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
