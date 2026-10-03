@@ -14,7 +14,7 @@
   <style>
     main { max-width: 1280px; }
     .forge { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); gap: 1.5rem; align-items: start; }
-    @media (max-width: 960px) { .forge { grid-template-columns: 1fr; } }
+    @media (max-width: 960px) { .forge { grid-template-columns: minmax(0, 1fr); } }
 
     .step { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem 1.2rem 1.2rem; margin-bottom: 1rem; }
     .step > h2 { margin: 0 0 0.8rem; font-size: 1.2rem; display: flex; align-items: center; gap: 0.6rem; }
@@ -26,7 +26,8 @@
     .step h4 { font-family: var(--font-title); color: var(--gold); margin: 1.1rem 0 0.5rem; font-size: 0.95rem; letter-spacing: 0.05em; }
     .hint { color: var(--muted); font-style: italic; font-size: 1rem; }
     .row { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; margin-bottom: 0.6rem; }
-    .row .select { flex: 1 1 220px; }
+    .row .select { flex: 1 1 220px; min-width: 0; max-width: 100%; }
+    .steps .select { max-width: 100%; }
     .seg { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; margin: 0.4rem 0; }
     .seg.col { flex-direction: column; }
     .seg label { cursor: pointer; }
