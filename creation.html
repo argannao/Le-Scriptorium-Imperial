@@ -13,76 +13,144 @@
 <body>
   <main>
     <header class="page-title">
-      <div class="kicker">Archive II</div>
+      <div class="kicker">Archive II — Imperium Maledictum</div>
       <h1>Création d'agent</h1>
-      <p class="lead">Un agent n'est qu'un rouage parmi des milliards. Voici d'où il vient, qui il sert et ce qu'il sait faire.</p>
+      <p class="lead">Un agent n'est qu'un rouage parmi des milliards. Voici d'où il vient, qui l'a formé et ce qu'il sait faire.</p>
     </header>
 
     <nav class="toc">
       <a href="#etapes">Les étapes</a>
-      <a href="#origines">Mondes d'origine</a>
+      <a href="#origines">Origines</a>
+      <a href="#factions">Factions</a>
+      <a href="#roles">Rôles</a>
       <a href="#patron">Le patron</a>
     </nav>
 
     <h2 id="etapes">Les étapes de création</h2>
-    <div class="grid-2">
-      <div class="panel">
-        <h3><span class="tag">I</span> Origine</h3>
-        <p>Le type de monde où l'agent a grandi. Il façonne son corps, son caractère et ses premiers talents.</p>
-      </div>
-      <div class="panel">
-        <h3><span class="tag">II</span> Affiliation</h3>
-        <p>L'institution impériale qui l'a formé : clergé, garde, culte de la machine, administration…</p>
-      </div>
-      <div class="panel">
-        <h3><span class="tag">III</span> Rôle</h3>
-        <p>Sa fonction dans le groupe : combattant, érudit, négociateur, infiltré, psyker…</p>
-      </div>
-      <div class="panel">
-        <h3><span class="tag">IV</span> Caractéristiques &amp; équipement</h3>
-        <p>On détermine les valeurs chiffrées, les compétences et le matériel de départ.</p>
-      </div>
+    <div class="panel">
+      <p>
+        La création se déroule en <strong>huit étapes</strong>. Les trois premières sont les plus importantes,
+        car elles façonnent tout le personnage : l'<strong>Origine</strong>, la <strong>Faction</strong> et le <strong>Rôle</strong>.
+        Viennent ensuite les caractéristiques, les compétences, les talents et l'équipement.
+      </p>
+      <p>
+        Chaque choix peut se faire librement ou au hasard. Tirer au sort rapporte de l'expérience bonus au départ :
+        de quoi tenter les joueurs qui aiment les surprises.
+      </p>
     </div>
-    <div class="todo">À COMPLÉTER : liste des affiliations et des rôles, avec leurs bonus, selon la gamme retenue.</div>
+    <div class="grid-2">
+      <div class="panel"><h3><span class="tag">I</span> Origine</h3><p>Le monde ou le milieu d'où vient l'agent. Elle donne des bonus de caractéristiques et limite les factions accessibles.</p></div>
+      <div class="panel"><h3><span class="tag">II</span> Faction</h3><p>L'institution qui l'a formé. Elle influe sur ses caractéristiques, compétences, talents, Influence et équipement de départ.</p></div>
+      <div class="panel"><h3><span class="tag">III</span> Rôle</h3><p>Sa spécialité dans le groupe, l'équivalent d'une classe. Il donne des choix de talents, des progressions de compétences et du matériel.</p></div>
+      <div class="panel"><h3><span class="tag">IV+</span> Finitions</h3><p>Caractéristiques, compétences, talents et équipement viennent compléter la fiche.</p></div>
+    </div>
 
-    <h2 id="origines">Mondes d'origine</h2>
+    <h2 id="origines">Origines</h2>
     <div class="grid-2">
       <div class="panel">
-        <h3>Monde-ruche</h3>
-        <p>Des cités verticales de plusieurs kilomètres, surpeuplées et polluées. On y apprend la débrouille, la méfiance et la vie en foule.</p>
+        <h3>Monde agricole</h3>
+        <p>Une planète entière de champs et de silos, qui nourrit les mondes voisins. Ses habitants sont robustes, patients et habitués au labeur.</p>
       </div>
       <div class="panel">
-        <h3>Monde-forge</h3>
-        <p>Planète-usine dirigée par les prêtres de la Machine. Ses habitants connaissent le métal, la vapeur et le respect des rites techniques.</p>
-      </div>
-      <div class="panel">
-        <h3>Monde-sanctuaire</h3>
-        <p>Une planète entière vouée au culte de l'Empereur, couverte de cathédrales et de reliques. La foi y imprègne chaque geste.</p>
+        <h3>Monde féodal</h3>
+        <p>Une société figée à l'âge des châteaux et des seigneurs. On y respecte la hiérarchie, l'honneur et la parole donnée.</p>
       </div>
       <div class="panel">
         <h3>Monde féral</h3>
         <p>Un monde resté primitif, où la survie se gagne par la force. Ses natifs sont endurcis mais déroutés par la technologie impériale.</p>
       </div>
       <div class="panel">
+        <h3>Monde-forge</h3>
+        <p>Planète-usine dirigée par l'Adeptus Mechanicus. Ses natifs connaissent le métal, la vapeur et les rites techniques.</p>
+        <p><span class="tag">+5 Intelligence</span></p>
+      </div>
+      <div class="panel">
+        <h3>Monde-ruche</h3>
+        <p>Des cités verticales de plusieurs kilomètres, surpeuplées et polluées. On y apprend la débrouille, la méfiance et la vie en foule.</p>
+      </div>
+      <div class="panel">
+        <h3>Monde-sanctuaire</h3>
+        <p>Une planète vouée au culte de l'Empereur, couverte de cathédrales et de reliques. La foi y imprègne chaque geste.</p>
+        <p><span class="tag">+5 Force Mentale</span></p>
+      </div>
+      <div class="panel">
+        <h3>Schola Progenium</h3>
+        <p>Orphelins des serviteurs de l'Imperium, élevés dans une discipline de fer pour devenir ses futurs cadres.</p>
+      </div>
+      <div class="panel">
         <h3>Né du vide</h3>
         <p>Élevé à bord d'un vaisseau ou d'une station. Pâle, superstitieux, à l'aise en apesanteur et étranger aux planètes.</p>
       </div>
+    </div>
+    <div class="todo">À COMPLÉTER : bonus de caractéristiques et factions accessibles pour chaque origine.</div>
+
+    <h2 id="factions">Factions</h2>
+    <div class="panel">
+      <p>Neuf factions sont jouables. Leur description détaillée se trouve dans <a href="factions.html">l'Archive III</a>.</p>
+      <p>
+        <span class="tag">Adeptus Astra Telepathica</span>
+        <span class="tag">Adeptus Mechanicus</span>
+        <span class="tag">Administratum</span>
+        <span class="tag">Astra Militarum</span>
+        <span class="tag">Ecclésiarchie</span>
+        <span class="tag">Inquisition</span>
+        <span class="tag">Navis Imperialis</span>
+        <span class="tag">Récidivistes</span>
+        <span class="tag">Dynastie de libre-marchand</span>
+      </p>
+    </div>
+
+    <h2 id="roles">Rôles</h2>
+    <div class="grid-2">
       <div class="panel">
-        <h3>Monde impérial</h3>
-        <p>Une planète ordinaire de l'Imperium, ni extrême ni remarquable. Ses habitants sont polyvalents et habitués à l'autorité.</p>
+        <h3>Interlocuteur</h3>
+        <p>Le spécialiste de la parole : négocier, convaincre, mentir et lire les gens.</p>
+      </div>
+      <div class="panel">
+        <h3>Mystique</h3>
+        <p>Celui qui comprend les mystères du Warp, qu'il soit psyker ou érudit de l'occulte.</p>
+      </div>
+      <div class="panel">
+        <h3>Pénombre</h3>
+        <p>L'expert de la discrétion et des coups tordus : infiltration, filature, sabotage.</p>
+      </div>
+      <div class="panel">
+        <h3>Savant</h3>
+        <p>L'érudit du groupe : connaissances, recherche, analyse, médecine ou technique.</p>
+      </div>
+      <div class="panel">
+        <h3>Guerrier</h3>
+        <p>Celui qu'on envoie quand la discussion est terminée. Spécialiste du combat sous toutes ses formes.</p>
+      </div>
+      <div class="panel">
+        <h3>Zélote</h3>
+        <p>Un agent animé par une conviction fanatique, que rien n'arrête quand sa cause est en jeu.</p>
       </div>
     </div>
-    <div class="todo">À COMPLÉTER : effets de jeu de chaque origine (modificateurs, talents).</div>
 
     <h2 id="patron">Le patron</h2>
     <div class="panel">
       <p>
-        Les agents ne travaillent pas pour eux-mêmes : ils servent un <strong>patron</strong>, un personnage
-        puissant (inquisiteur, cardinal, noble, magos…) qui les envoie là où ses propres forces ne peuvent pas aller.
-        Le patron fournit des moyens et une protection, mais ses intérêts restent souvent obscurs.
+        Les agents servent un <strong>patron</strong> : un personnage puissant qui les recrute et les équipe pour des missions
+        hors de la chaîne de commandement habituelle. Pour lui, ils sont un atout que l'on peut désavouer… et sacrifier.
+        Le patron se crée <strong>à plusieurs</strong>, joueurs et MJ ensemble, car il oriente toute la campagne.
       </p>
-      <p>Choisir un patron, c'est aussi choisir des alliés, des ennemis et le ton des missions.</p>
     </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Élément</th><th>Ce qu'il définit</th></tr></thead>
+        <tbody>
+          <tr><td>Faction</td><td>L'institution à laquelle il appartient, parmi les neuf grandes factions. C'est le choix qui pèse le plus sur la campagne.</td></tr>
+          <tr><td>Fonction</td><td>Son rôle précis au sein de cette faction.</td></tr>
+          <tr><td>Motivation</td><td>Ses ambitions et ses objectifs à long terme.</td></tr>
+          <tr><td>Attitude</td><td>Sa façon de traiter le groupe.</td></tr>
+          <tr><td>Faveurs</td><td>Des avantages que le groupe peut mobiliser avant ou pendant une mission : arme rare, fausse identité…</td></tr>
+          <tr><td>Fardeaux</td><td>Pour chaque faveur, le MJ choisit en secret une complication : un vieil ennemi, une faction rivale, une foi qui frôle l'obsession…</td></tr>
+          <tr><td>Influence</td><td>Ses relations avec les autres factions, qui évoluent selon les actions des agents.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--muted);font-style:italic">Motivation et attitude peuvent être choisies ou tirées aux dés. Le livre propose aussi des patrons prêts à jouer.</p>
   </main>
 </body>
 </html>

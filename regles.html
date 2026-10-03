@@ -13,38 +13,61 @@
 <body>
   <main>
     <header class="page-title">
-      <div class="kicker">Archive I</div>
+      <div class="kicker">Archive I — Imperium Maledictum</div>
       <h1>Règles de base</h1>
-      <p class="lead">Les principes du système d100 : tout se joue sur un jet de dés, sous une valeur cible.</p>
+      <p class="lead">Un système d100 où l'on jette sous une valeur cible. Deux dés à dix faces suffisent pour toute la partie.</p>
     </header>
 
     <nav class="toc">
-      <a href="#principe">Le principe</a>
+      <a href="#principe">Le test</a>
       <a href="#degres">Degrés de réussite</a>
-      <a href="#difficulte">Difficulté</a>
       <a href="#simulateur">Simulateur</a>
+      <a href="#combat">Combat</a>
+      <a href="#blessures">Blessures</a>
+      <a href="#superiorite">Supériorité</a>
+      <a href="#destin">Destin</a>
+      <a href="#warp">Psykers &amp; corruption</a>
+      <a href="#influence">Influence</a>
     </nav>
 
-    <h2 id="principe">Le principe du test</h2>
+    <h2 id="principe">Le test</h2>
     <div class="panel">
       <p>
-        Quand un agent tente une action risquée, il fait un <strong>test</strong>. Le joueur lance
-        deux dés à dix faces : l'un donne les dizaines, l'autre les unités, ce qui donne un résultat
-        entre 01 et 100.
+        Quand un agent tente une action risquée, il fait un <strong>test</strong> : on lance deux d10,
+        l'un pour les dizaines et l'autre pour les unités, ce qui donne un résultat de 01 à 100.
       </p>
       <p>
         Le test réussit si le résultat est <strong>inférieur ou égal</strong> à la valeur cible.
-        Cette valeur cible vient de la caractéristique utilisée, à laquelle s'ajoute l'entraînement
-        dans la compétence concernée.
+        Celle-ci part de la caractéristique concernée et augmente avec l'entraînement dans la compétence utilisée.
+        Le MJ peut ensuite l'ajuster selon la difficulté de la situation.
       </p>
     </div>
+
+    <h3>Les caractéristiques</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Caractéristique</th><th>Sert à…</th></tr></thead>
+        <tbody>
+          <tr><td>Capacité de Combat (CC)</td><td>Se battre au corps à corps</td></tr>
+          <tr><td>Capacité de Tir (CT)</td><td>Tirer avec une arme à distance</td></tr>
+          <tr><td>Force (F)</td><td>La puissance physique brute</td></tr>
+          <tr><td>Endurance (E)</td><td>Résister aux coups, aux poisons, à la fatigue</td></tr>
+          <tr><td>Agilité (Ag)</td><td>La vitesse, les réflexes, la coordination</td></tr>
+          <tr><td>Intelligence (Int)</td><td>Le savoir, la logique, la technique</td></tr>
+          <tr><td>Perception (Per)</td><td>Remarquer, observer, deviner</td></tr>
+          <tr><td>Force Mentale (FM)</td><td>La volonté, la foi, la résistance au Warp</td></tr>
+          <tr><td>Sociabilité (Soc)</td><td>Convaincre, mentir, commander</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="todo">À VÉRIFIER : la liste exacte des compétences et de leurs spécialisations dans le livre de base.</div>
 
     <h2 id="degres">Degrés de réussite</h2>
     <div class="panel">
       <p>
-        Réussir ne suffit pas toujours : on veut savoir <em>à quel point</em>. On compare le chiffre
-        des dizaines de la valeur cible et celui du jet. La différence donne les degrés de réussite
-        (positifs) ou d'échec (négatifs).
+        Réussir ne suffit pas toujours : on veut savoir <em>à quel point</em>. Chaque tranche de 10 points
+        entre le jet et la valeur cible compte comme un degré. En pratique, on compare le chiffre des dizaines
+        de la valeur cible et celui du jet.
       </p>
       <div class="table-wrap">
         <table>
@@ -56,19 +79,8 @@
           </tbody>
         </table>
       </div>
-      <p>Les degrés servent à départager deux personnages en opposition ou à mesurer l'ampleur d'un succès.</p>
+      <p>Les degrés ont des effets en cascade : départager une opposition, ajouter des dégâts, provoquer un coup critique…</p>
     </div>
-    <div class="todo">À COMPLÉTER : réussites et échecs critiques, tests opposés, aide entre agents — vérifier dans le livre de base de la gamme choisie.</div>
-
-    <h2 id="difficulte">La difficulté</h2>
-    <div class="panel">
-      <p>
-        Le MJ ajuste la valeur cible selon les circonstances : un bonus si l'action est facilitée
-        (bon équipement, temps devant soi), un malus si elle est compliquée (obscurité, blessure,
-        pression).
-      </p>
-    </div>
-    <div class="todo">À COMPLÉTER : tableau des modificateurs de difficulté de la gamme utilisée.</div>
 
     <h2 id="simulateur">Simulateur de test</h2>
     <div class="panel">
@@ -79,6 +91,111 @@
       </div>
       <div class="dataslate" id="roll-out" style="margin:1rem 0 0;max-width:none">
         <p>&gt; En attente d'un jet... <span class="cursor">&nbsp;</span></p>
+      </div>
+    </div>
+
+    <h2 id="combat">Le combat</h2>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Initiative fixe</h3>
+        <p>
+          Pas de jet d'initiative : l'ordre du tour dépend d'une valeur fixe tirée de l'Agilité et de la Perception.
+          Un joueur peut dépenser un point de Destin pour passer avant son tour, une fois par tour.
+        </p>
+      </div>
+      <div class="panel">
+        <h3>Le tour d'un agent</h3>
+        <p>À chaque tour, un personnage dispose de :</p>
+        <p>
+          <span class="tag">1 Action</span> attaquer, utiliser un objet…<br>
+          <span class="tag">1 Mouvement</span> se déplacer, se mettre à couvert…<br>
+          <span class="tag">1 Réaction</span> esquiver, parer…
+        </p>
+      </div>
+    </div>
+    <div class="panel warn">
+      <p>
+        <strong>Le combat est brutal.</strong> Un tir de fusil laser bien placé peut déjà faire très mal,
+        et un bolter bien davantage. La meilleure stratégie reste d'enquêter sur l'ennemi, de lui tendre
+        une embuscade… et de ne jamais tomber dans la sienne.
+      </p>
+    </div>
+
+    <h2 id="blessures">Blessures et critiques</h2>
+    <div class="panel">
+      <p>
+        Un humain ordinaire commence avec une douzaine de points de <strong>Blessures</strong>. Les armures
+        et les couverts réduisent les dégâts reçus. À zéro Blessure, l'agent reste à peu près opérationnel…
+        mais tout dégât supplémentaire provoque une <strong>blessure critique</strong>.
+      </p>
+      <p>
+        Pour la déterminer, on lance 1d10 et on ajoute les dégâts en excès, puis on consulte la table
+        de la zone touchée. Cela va de la lèvre fendue au membre à remplacer par une augmétique, jusqu'à
+        la mort. La tête est de loin la zone la plus dangereuse. En général, deux ou trois critiques
+        suffisent à tuer un personnage débutant.
+      </p>
+      <p>
+        Côté ennemis, les adversaires d'élite subissent les critiques comme les joueurs, tandis que
+        la piétaille tombe à zéro Blessure ou au premier critique.
+      </p>
+    </div>
+
+    <h2 id="superiorite">La Supériorité</h2>
+    <div class="panel">
+      <p>
+        Le groupe dispose d'une réserve de <strong>Supériorité</strong> qui représente l'avantage tactique
+        pris pendant un affrontement. Elle donne des bonus chiffrés à chaque round. Une Supériorité élevée
+        peut pousser l'ennemi à fuir ; à l'inverse, subir des blessures critiques la fait baisser.
+      </p>
+    </div>
+
+    <h2 id="destin">Le Destin</h2>
+    <div class="panel">
+      <p>Chaque agent commence la séance avec <strong>3 points de Destin</strong>.</p>
+      <p><span class="tag">Dépenser</span> relancer un test ou se débarrasser d'un état préjudiciable.</p>
+      <p>
+        <span class="tag">Brûler</span> sacrifier définitivement un point pour survivre à une situation mortelle,
+        repousser la corruption ou choisir le résultat exact d'un jet.
+      </p>
+    </div>
+
+    <h2 id="warp">Psykers et corruption</h2>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Les pouvoirs psychiques</h3>
+        <p>
+          Les psykers puisent dans le Warp, une énergie aussi puissante que dangereuse. Quand un pouvoir tourne mal,
+          on consulte la table des <strong>Phénomènes psychiques</strong> (effets étranges) ou, dans les cas graves,
+          celle des <strong>Périls du Warp</strong> : folie, voire possession démoniaque.
+        </p>
+      </div>
+      <div class="panel">
+        <h3>La corruption</h3>
+        <p>
+          Le contact avec le Chaos laisse des traces. Au-delà d'un certain seuil, la corruption entraîne des
+          changements permanents : troubles de la personnalité et mutations. Une mutation visible fait de l'agent
+          un paria aux yeux de l'Imperium.
+        </p>
+      </div>
+    </div>
+    <div class="todo">À COMPLÉTER : disciplines psychiques et seuils de corruption (voir futur module « Pouvoirs psychiques »).</div>
+
+    <h2 id="influence">Influence et temps libre</h2>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>L'Influence</h3>
+        <p>
+          Le groupe suit sa réputation auprès de chaque faction. Elle monte ou baisse selon ce que font les agents
+          en mission. Une faction favorable apporte de l'aide ; une faction hostile se méfie et met des bâtons dans les roues.
+        </p>
+      </div>
+      <div class="panel">
+        <h3>Entre deux missions</h3>
+        <p>
+          Pendant le temps libre, les agents peuvent mener des activités : fabriquer du matériel, gagner de l'argent
+          ou se faire soigner. La progression se fait en dépensant de l'expérience pour améliorer caractéristiques,
+          compétences et talents.
+        </p>
       </div>
     </div>
   </main>
