@@ -8,14 +8,14 @@
 // Liste des modules : ajouter une ligne ici suffit pour qu'il apparaisse dans le menu.
 const MODULES = [
   { href: "index.html",       label: "Accueil" },
+  { href: "createur.html",    label: "Créateur" },
   { href: "regles.html",      label: "Règles" },
   { href: "creation.html",    label: "Création" },
-  { href: "createur.html",    label: "Créateur" },
   { href: "competences.html", label: "Compétences" },
   { href: "talents.html",     label: "Talents" },
-  { href: "factions.html",    label: "Factions" },
-  { href: "psy.html",         label: "Psykers" },
   { href: "armurerie.html",   label: "Armurerie" },
+  { href: "psy.html",         label: "Psykers" },
+  { href: "factions.html",    label: "Factions" },
   { href: "secteur.html",     label: "Secteur" },
   { href: "lexique.html",     label: "Lexique" },
 ];

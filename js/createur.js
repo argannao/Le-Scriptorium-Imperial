@@ -288,7 +288,7 @@
           const dis = has || (!on && S.role.talents.length >= r.talents.n);
           return `<label class="chip ${on ? "on" : ""} ${dis ? "dis" : ""}"${tip("talent", t)}><input type="checkbox" data-act="rtalent" value="${esc(t)}" ${on ? "checked" : ""} ${dis ? "disabled" : ""}>${esc(t)}${has ? " ✓" : ""}${info("talent", t)}</label>`;
         }).join("")}</div>
-        <p class="hint">Détails des talents : <a href="talents.html" target="_blank">Archive IX</a>.</p>
+        <p class="hint">Détails des talents : <a href="talents.html" target="_blank">Archive IV</a>.</p>
         <h4>3 niveaux de compétence <span class="hint">(reste ${3 - used} ; 2 maximum par compétence au total)</span></h4>
         <div class="adv-list">${r.skills.map((sk) => {
           const v = S.role.adv[sk] || 0;
@@ -376,7 +376,7 @@
         `<option value="${esc(t.nom)}">${esc(t.nom)}${t.req && t.req !== "—" ? " — " + esc(t.req) : ""}</option>`).join("")}</select>
         <button class="btn ghost" type="button" data-act="xt-add" ${rest >= 100 ? "" : "disabled"}>Acheter (100 XP)</button></div>
         <div class="preview" data-preview-for="xp-tal-select" data-kind="talent"></div>
-        <p class="hint">Le site ne vérifie pas les prérequis à votre place : relisez-les dans <a href="talents.html" target="_blank">l'Archive IX</a>. Psyker, Paria, Prédestiné, Héritier et Psyker sanctionné ne s'achètent pas ici.</p>`;
+        <p class="hint">Le site ne vérifie pas les prérequis à votre place : relisez-les dans <a href="talents.html" target="_blank">l'Archive IV</a>. Psyker, Paria, Prédestiné, Héritier et Psyker sanctionné ne s'achètent pas ici.</p>`;
 
       if (isPsyker()) {
         const knownMinor = [...S.psy.minor, ...S.xp.minor];
