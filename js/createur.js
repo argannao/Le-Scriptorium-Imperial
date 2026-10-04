@@ -173,21 +173,31 @@
     </span>`;
   }
 
+  // attribut de pop-up + petite icône « i » (utile au toucher)
+  const tip = (kind, key) => ` data-tip="${esc(kind + "|" + key)}"`;
+  const info = (kind, key) => `<span class="info"${tip(kind, key)} role="button" tabindex="0" aria-label="Voir la fiche">i</span>`;
+
+  // un groupe de cartes radio, avec pop-up
+  function cards(act, name, list, cur, kind, disabled = () => false) {
+    return `<div class="chips cards">${list.map((x) => {
+      const on = cur === x.id, dis = disabled(x);
+      return `<label class="chip card ${on ? "on" : ""} ${dis ? "dis" : ""}"${tip(kind, x.id)}><input type="radio" name="${name}" data-act="${act}" value="${x.id}" ${on ? "checked" : ""} ${dis ? "disabled" : ""}>${esc(x.nom)}${info(kind, x.id)}</label>`;
+    }).join("")}</div>`;
+  }
+
   function equipPicker(scope, items, picks) {
     return items.map((it, i) => {
-      if (typeof it === "string") return `<li>${esc(it)}</li>`;
+      if (typeof it === "string") return `<li><span class="tipped"${tip("item", it)}>${esc(it)}</span>${info("item", it)}</li>`;
       if (it.one) {
         const cur = picks[i] ?? "";
-        return `<li><select class="select" data-act="equip-one" data-scope="${scope}" data-i="${i}">
-          <option value="">— au choix —</option>
-          ${it.one.map((o) => `<option ${cur === o ? "selected" : ""}>${esc(o)}</option>`).join("")}
-        </select></li>`;
+        return `<li>1 au choix :<div class="chips">${it.one.map((o) =>
+          `<label class="chip ${cur === o ? "on" : ""}"${tip("item", o)}><input type="radio" name="eq-${scope}-${i}" data-act="equip-one" data-scope="${scope}" data-i="${i}" value="${esc(o)}" ${cur === o ? "checked" : ""}>${esc(o)}${info("item", o)}</label>`).join("")}</div></li>`;
       }
       const cur = picks[i] || [];
       return `<li>${it.pick} au choix :<div class="chips">${it.options.map((o) => {
         const on = cur.includes(o);
         const dis = !on && cur.length >= it.pick;
-        return `<label class="chip ${on ? "on" : ""} ${dis ? "dis" : ""}"><input type="checkbox" data-act="equip-pick" data-scope="${scope}" data-i="${i}" value="${esc(o)}" ${on ? "checked" : ""} ${dis ? "disabled" : ""}>${esc(o)}</label>`;
+        return `<label class="chip ${on ? "on" : ""} ${dis ? "dis" : ""}"${tip("item", o)}><input type="checkbox" data-act="equip-pick" data-scope="${scope}" data-i="${i}" value="${esc(o)}" ${on ? "checked" : ""} ${dis ? "disabled" : ""}>${esc(o)}${info("item", o)}</label>`;
       }).join("")}</div></li>`;
     }).join("");
   }
@@ -222,14 +232,12 @@
     $("#step-car").innerHTML = car;
 
     // --- 2. Origine
-    let org = `<div class="row">
-      <select class="select" data-act="origin">${["<option value=''>— Choisir une origine —</option>",
-        ...ORIGINS.map((x) => `<option value="${x.id}" ${S.origin.id === x.id ? "selected" : ""}>${x.nom}</option>`)].join("")}</select>
-      <button class="btn" type="button" data-act="roll-origin">Lancer 1d100 (+25 XP)</button></div>`;
+    let org = `${cards("origin", "org", ORIGINS, S.origin.id, "origin")}
+      <div class="row"><button class="btn" type="button" data-act="roll-origin">Lancer 1d100 (+25 XP)</button></div>`;
     if (o) {
       org += `<p>${S.origin.rolled ? "<span class='tag'>Tirée au sort</span> " : ""}<strong>+5 ${carNom(o.fixe)}</strong>, et +5 au choix :</p>
         <div class="seg">${o.choix.map((c) => `<label><input type="radio" name="ochoix" value="${c}" data-act="ochoix" ${S.origin.choix === c ? "checked" : ""}> ${carNom(c)}</label>`).join("")}</div>
-        <p class="hint">Objet : ${esc(o.objet)}</p>`;
+        <p class="hint">Objet : <span class="tipped"${tip("item", o.objet)}>${esc(o.objet)}</span>${info("item", o.objet)}</p>`;
     }
     $("#step-origin").innerHTML = org;
 
@@ -237,10 +245,8 @@
     let fac = "";
     if (!o) fac = `<p class="hint">Choisissez d'abord une origine (la table de faction en dépend).</p>`;
     else {
-      fac = `<div class="row">
-        <select class="select" data-act="faction">${["<option value=''>— Choisir une faction —</option>",
-          ...FACTIONS.map((x) => `<option value="${x.id}" ${S.faction.id === x.id ? "selected" : ""}>${x.nom}</option>`)].join("")}</select>
-        <button class="btn" type="button" data-act="roll-faction">Lancer 1d100 (+75 XP)</button></div>`;
+      fac = `${cards("faction", "fac", FACTIONS, S.faction.id, "faction")}
+        <div class="row"><button class="btn" type="button" data-act="roll-faction">Lancer 1d100 (+75 XP)</button></div>`;
       if (f) {
         const used = sum(S.faction.adv);
         fac += `<p>${S.faction.rolled ? "<span class='tag'>Tirée au sort</span> " : ""}<strong>+5 ${carNom(f.fixe)}</strong>, et +5 au choix :</p>
@@ -253,9 +259,9 @@
           }).join("")}</div>`;
         if (f.talentChoices) {
           fac += `<h4>Talent(s)</h4><div class="seg col">${f.talentChoices.map((t, i) =>
-            `<label><input type="radio" name="tpick" value="${i}" data-act="tpick" ${S.faction.talentPick === i ? "checked" : ""}> ${t.join(" + ")}</label>`).join("")}</div>`;
+            `<label><input type="radio" name="tpick" value="${i}" data-act="tpick" ${S.faction.talentPick === i ? "checked" : ""}> ${t.map((x) => `<span class="tipped"${tip("talent", x)}>${esc(x)}</span>${info("talent", x)}`).join(" + ")}</label>`).join("")}</div>`;
         } else if (f.talents.length) {
-          fac += `<p>Talent : <strong>${f.talents.join(", ")}</strong></p>`;
+          fac += `<p>Talent : ${f.talents.map((x) => `<strong class="tipped"${tip("talent", x)}>${esc(x)}</strong>${info("talent", x)}`).join(", ")}</p>`;
         } else {
           fac += `<p class="hint">Pas de talent de faction : l'Adeptus Mechanicus donne deux augmétiques (voir l'équipement).</p>`;
         }
@@ -266,13 +272,9 @@
     $("#step-faction").innerHTML = fac;
 
     // --- 4. Rôle
-    let rol = `<div class="row">
-      <select class="select" data-act="role">${["<option value=''>— Choisir un rôle —</option>",
-        ...ROLES.map((x) => {
-          const dis = x.psyker && isBlank();
-          return `<option value="${x.id}" ${S.role.id === x.id ? "selected" : ""} ${dis ? "disabled" : ""}>${x.nom}${dis ? " (impossible pour un Paria)" : ""}</option>`;
-        })].join("")}</select>
-      <button class="btn" type="button" data-act="roll-role">Laisser le patron choisir (+50 XP)</button></div>`;
+    let rol = `${cards("role", "rol", ROLES, S.role.id, "role", (x) => x.psyker && isBlank())}
+      ${isBlank() ? `<p class="hint">Un Paria ne peut pas être Mystique.</p>` : ""}
+      <div class="row"><button class="btn" type="button" data-act="roll-role">Laisser le patron choisir (+50 XP)</button></div>`;
     if (r) {
       const owned = factionTalents();
       const used = sum(S.role.adv);
@@ -284,7 +286,7 @@
           const has = owned.includes(t);
           const on = S.role.talents.includes(t);
           const dis = has || (!on && S.role.talents.length >= r.talents.n);
-          return `<label class="chip ${on ? "on" : ""} ${dis ? "dis" : ""}" title="${has ? "Déjà obtenu par la faction" : ""}"><input type="checkbox" data-act="rtalent" value="${esc(t)}" ${on ? "checked" : ""} ${dis ? "disabled" : ""}>${esc(t)}${has ? " ✓" : ""}</label>`;
+          return `<label class="chip ${on ? "on" : ""} ${dis ? "dis" : ""}"${tip("talent", t)}><input type="checkbox" data-act="rtalent" value="${esc(t)}" ${on ? "checked" : ""} ${dis ? "disabled" : ""}>${esc(t)}${has ? " ✓" : ""}${info("talent", t)}</label>`;
         }).join("")}</div>
         <p class="hint">Détails des talents : <a href="talents.html" target="_blank">Archive IX</a>.</p>
         <h4>3 niveaux de compétence <span class="hint">(reste ${3 - used} ; 2 maximum par compétence au total)</span></h4>
@@ -314,13 +316,13 @@
         <h4>Pouvoirs mineurs <span class="hint">(${S.psy.minor.length}/${pc.minor})</span></h4>
         <div class="chips">${PSY_MINOR.map((p) => {
           const on = S.psy.minor.includes(p); const dis = !on && S.psy.minor.length >= pc.minor;
-          return `<label class="chip ${on ? "on" : ""} ${dis ? "dis" : ""}"><input type="checkbox" data-act="psy-minor" value="${p}" ${on ? "checked" : ""} ${dis ? "disabled" : ""}>${p}</label>`;
+          return `<label class="chip ${on ? "on" : ""} ${dis ? "dis" : ""}"${tip("power", p)}><input type="checkbox" data-act="psy-minor" value="${p}" ${on ? "checked" : ""} ${dis ? "disabled" : ""}>${p}${info("power", p)}</label>`;
         }).join("")}</div>`;
       if (S.psy.discipline) {
         psy += `<h4>Pouvoirs de ${S.psy.discipline} <span class="hint">(${S.psy.powers.length}/${pc.disc})</span></h4>
           <div class="chips">${PSY_DISCIPLINES[S.psy.discipline].map((p) => {
             const on = S.psy.powers.includes(p); const dis = !on && S.psy.powers.length >= pc.disc;
-            return `<label class="chip ${on ? "on" : ""} ${dis ? "dis" : ""}"><input type="checkbox" data-act="psy-power" value="${p}" ${on ? "checked" : ""} ${dis ? "disabled" : ""}>${p}</label>`;
+            return `<label class="chip ${on ? "on" : ""} ${dis ? "dis" : ""}"${tip("power", p)}><input type="checkbox" data-act="psy-power" value="${p}" ${on ? "checked" : ""} ${dis ? "disabled" : ""}>${p}${info("power", p)}</label>`;
           }).join("")}</div>`;
       }
     }
@@ -369,10 +371,11 @@
       const owned = allTalents();
       const buyable = TALENTS.filter((t) => !t.creation && t.nom !== "Psyker" && !owned.includes(t.nom) && !(t.nom === "Psyker" && isBlank()));
       xps += `<h4>Talents <span class="hint">(100 XP chacun ; vérifiez les prérequis)</span></h4>`;
-      if (S.xp.talents.length) xps += `<div class="chips">${S.xp.talents.map((t) => `<span class="chip on">${esc(t)} <button type="button" class="x" data-act="xt-del" data-t="${esc(t)}" aria-label="Retirer">×</button></span>`).join("")}</div>`;
+      if (S.xp.talents.length) xps += `<div class="chips">${S.xp.talents.map((t) => `<span class="chip on"${tip("talent", t)}>${esc(t)} <button type="button" class="x" data-act="xt-del" data-t="${esc(t)}" aria-label="Retirer">×</button></span>`).join("")}</div>`;
       xps += `<div class="row"><select class="select" id="xp-tal-select"><option value="">— Choisir un talent —</option>${buyable.map((t) =>
         `<option value="${esc(t.nom)}">${esc(t.nom)}${t.req && t.req !== "—" ? " — " + esc(t.req) : ""}</option>`).join("")}</select>
         <button class="btn ghost" type="button" data-act="xt-add" ${rest >= 100 ? "" : "disabled"}>Acheter (100 XP)</button></div>
+        <div class="preview" data-preview-for="xp-tal-select" data-kind="talent"></div>
         <p class="hint">Le site ne vérifie pas les prérequis à votre place : relisez-les dans <a href="talents.html" target="_blank">l'Archive IX</a>. Psyker, Paria, Prédestiné, Héritier et Psyker sanctionné ne s'achètent pas ici.</p>`;
 
       if (isPsyker()) {
@@ -380,11 +383,13 @@
         const knownPow = [...S.psy.powers, ...S.xp.powers];
         xps += `<h4>Pouvoirs psychiques <span class="hint">(mineur 60 XP, discipline 100 XP)</span></h4>`;
         const bought = [...S.xp.minor.map((p) => [p, "m"]), ...S.xp.powers.map((p) => [p, "d"])];
-        if (bought.length) xps += `<div class="chips">${bought.map(([p, t]) => `<span class="chip on">${p} <button type="button" class="x" data-act="xpw-del" data-p="${p}" data-t="${t}" aria-label="Retirer">×</button></span>`).join("")}</div>`;
+        if (bought.length) xps += `<div class="chips">${bought.map(([p, t]) => `<span class="chip on"${tip("power", p)}>${p} <button type="button" class="x" data-act="xpw-del" data-p="${p}" data-t="${t}" aria-label="Retirer">×</button></span>`).join("")}</div>`;
         xps += `<div class="row"><select class="select" id="xp-minor-select"><option value="">— Pouvoir mineur —</option>${PSY_MINOR.filter((p) => !knownMinor.includes(p)).map((p) => `<option>${p}</option>`).join("")}</select>
-          <button class="btn ghost" type="button" data-act="xpm-add" ${rest >= 60 ? "" : "disabled"}>Apprendre (60 XP)</button></div>`;
+          <button class="btn ghost" type="button" data-act="xpm-add" ${rest >= 60 ? "" : "disabled"}>Apprendre (60 XP)</button></div>
+          <div class="preview" data-preview-for="xp-minor-select" data-kind="power"></div>`;
         if (S.psy.discipline) xps += `<div class="row"><select class="select" id="xp-power-select"><option value="">— Pouvoir de ${S.psy.discipline} —</option>${PSY_DISCIPLINES[S.psy.discipline].filter((p) => !knownPow.includes(p)).map((p) => `<option>${p}</option>`).join("")}</select>
-          <button class="btn ghost" type="button" data-act="xpd-add" ${rest >= 100 ? "" : "disabled"}>Apprendre (100 XP)</button></div>`;
+          <button class="btn ghost" type="button" data-act="xpd-add" ${rest >= 100 ? "" : "disabled"}>Apprendre (100 XP)</button></div>
+          <div class="preview" data-preview-for="xp-power-select" data-kind="power"></div>`;
       }
       if (spent()) xps += `<p><button class="btn ghost" type="button" data-act="xp-reset">Annuler toutes les dépenses</button></p>`;
     }
@@ -455,15 +460,15 @@
       return `<tr class="${a || specs.length ? "trained" : ""}"><td>${s.nom} <small>(${carNom(s.c)})</small>${specTxt}</td><td>${"●".repeat(a)}${"○".repeat(Math.max(0, 4 - a))}</td><td><strong>${val}</strong></td></tr>`;
     }).join("")}</tbody></table>`;
 
-    h += `<h4>Talents</h4><p>${talents.length ? talents.map(esc).join(" · ") : "<span class='hint'>—</span>"}</p>`;
+    h += `<h4>Talents</h4><p>${talents.length ? talents.map((t) => `<span class="tipped"${tip("talent", t)}>${esc(t)}</span>`).join(" · ") : "<span class='hint'>—</span>"}</p>`;
 
     if (isPsyker()) {
-      const pw = [...S.psy.minor, ...S.xp.minor].map((p) => p + " (mineur)").concat([...S.psy.powers, ...S.xp.powers].map((p) => `${p} (${S.psy.discipline})`));
-      h += `<h4>Pouvoirs psychiques</h4><p>${pw.length ? pw.map(esc).join(" · ") : "<span class='hint'>à choisir</span>"}</p>`;
+      const pw = [...S.psy.minor, ...S.xp.minor].map((p) => [p, "mineur"]).concat([...S.psy.powers, ...S.xp.powers].map((p) => [p, S.psy.discipline]));
+      h += `<h4>Pouvoirs psychiques</h4><p>${pw.length ? pw.map(([p, d]) => `<span class="tipped"${tip("power", p)}>${esc(p)}</span> <small>(${esc(d)})</small>`).join(" · ") : "<span class='hint'>à choisir</span>"}</p>`;
     }
 
     h += `<h4>Influence</h4><p>${f ? `+1 ${esc(f.influence)}` : "—"}</p>`;
-    h += `<h4>Équipement</h4><p>${equipList().map(esc).join(" · ") || "—"}${f ? ` · <strong>${esc(f.solars)} solars</strong>` : ""}</p>`;
+    h += `<h4>Équipement</h4><p>${equipList().map((x) => x.startsWith("[") ? esc(x) : `<span class="tipped"${tip("item", x)}>${esc(x)}</span>`).join(" · ") || "—"}${f ? ` · <strong>${esc(f.solars)} solars</strong>` : ""}</p>`;
     h += `<h4>Expérience</h4><p>Gagnés : <strong>${xp()}</strong> · dépensés : <strong>${spent()}</strong> · <strong style="color:${remaining() < 0 ? "var(--crimson-bright)" : "inherit"}">restants : ${remaining()} XP</strong></p>`;
     if (S.notes) h += `<h4>Notes</h4><p class="notes">${esc(S.notes).replace(/\n/g, "<br>")}</p>`;
 
@@ -572,6 +577,121 @@
   });
 
   function syncTextFields() { $("#agent-name").value = S.name || ""; $("#agent-notes").value = S.notes || ""; }
+
+
+  /* ---------- Fiches descriptives (pop-ups) ---------- */
+
+  const field = (label, val) => (val ? `<div class="tt-row"><span>${label}</span><strong>${val}</strong></div>` : "");
+  const plusCar = (fixe, choix) => `+5 ${carNom(fixe)} ; +5 ${choix.map(carNom).join(", ")} au choix`;
+  const skillNames = (list) => list.map((sk) => SKILLS[sk].nom).join(", ");
+  const equipText = (items) => items.map((it) => typeof it === "string" ? it : it.one ? it.one.join(" ou ") : `${it.pick} parmi : ${it.options.join(", ")}`).join(" · ");
+  function disciplineOf(p) {
+    if (PSY_MINOR.includes(p)) return "Pouvoir mineur";
+    const d = Object.keys(PSY_DISCIPLINES).find((k) => PSY_DISCIPLINES[k].includes(p));
+    return d || "";
+  }
+
+  function tipContent(kind, key) {
+    if (kind === "origin") {
+      const o = byId(ORIGINS, key); if (!o) return "";
+      return `<div class="tt-kicker">Origine</div><div class="tt-title">${esc(o.nom)}</div>
+        <p>${esc(ORIGIN_DESC[o.id] || "")}</p>${field("Bonus", plusCar(o.fixe, o.choix))}${field("Objet", esc(o.objet))}`;
+    }
+    if (kind === "faction") {
+      const f = byId(FACTIONS, key); if (!f) return "";
+      const tal = f.talentChoices ? f.talentChoices.map((t) => t.join(" + ")).join(" ou ") : (f.talents.join(", ") || "aucun (deux augmétiques)");
+      return `<div class="tt-kicker">Faction</div><div class="tt-title">${esc(f.nom)}</div>
+        <p>${esc(FACTION_DESC[f.id] || "")}</p>${field("Bonus", plusCar(f.fixe, f.choix))}
+        ${field("Compétences (5 niveaux)", skillNames(f.skills))}${field("Talent", esc(tal))}${field("Influence", "+1 " + esc(f.influence))}
+        ${field("Équipement", esc(equipText(f.equip)) + " · " + esc(f.solars) + " solars")}`;
+    }
+    if (kind === "role") {
+      const r = byId(ROLES, key); if (!r) return "";
+      const specs = r.specList ? r.specList.map((k) => { const [sk, sp] = k.split(":"); return `${SKILLS[sk].nom} (${sp})`; }).join(", ")
+                               : "toutes celles de " + skillNames(r.specSkills);
+      return `<div class="tt-kicker">Rôle</div><div class="tt-title">${esc(r.nom)}</div>
+        <p>${esc(r.desc)}${r.psyker ? " Donne le talent Psyker." : ""}</p>
+        ${field(`Talents (${r.talents.n} au choix)`, esc(r.talents.list.join(", ")))}
+        ${field("Compétences (3 niveaux)", skillNames(r.skills))}${field("Spécialisations (2 niveaux)", esc(specs))}
+        ${field("Équipement", esc(equipText(r.equip)))}`;
+    }
+    if (kind === "talent") {
+      const t = TALENTS.find((x) => x.nom === key);
+      if (!t) return `<div class="tt-kicker">Talent</div><div class="tt-title">${esc(key)}</div><p class="hint">Pas de fiche détaillée.</p>`;
+      return `<div class="tt-kicker">Talent${t.creation ? " · création seulement" : ""}</div><div class="tt-title">${esc(t.nom)}</div>
+        <div class="tt-en">${esc(t.en)}</div><p>${t.eff}</p>${field("Prérequis", t.req && t.req !== "—" ? esc(t.req) : "aucun")}
+        ${field("Coût", t.creation ? "uniquement à la création" : "100 XP")}`;
+    }
+    if (kind === "power") {
+      const pw = POWER_INFO[key] || {};
+      return `<div class="tt-kicker">${esc(disciplineOf(key))}${pw.m ? " · manifeste" : ""}</div><div class="tt-title">${esc(key)}</div>
+        ${pw.d ? `<p>${esc(pw.d)}</p>` : `<p class="hint">Pas de fiche détaillée.</p>`}
+        <div class="tt-grid">${field("Valeur Warp", pw.vw)}${field("Difficulté", pw.diff)}${field("Portée", pw.po)}${field("Durée", pw.du)}</div>
+        ${field("Coût", PSY_MINOR.includes(key) ? "60 XP" : "100 XP")}`;
+    }
+    if (kind === "item") {
+      const it = ITEM_INFO[key];
+      if (!it) return `<div class="tt-kicker">Équipement</div><div class="tt-title">${esc(key)}</div><p class="hint">Pas de fiche détaillée.</p>`;
+      return `<div class="tt-kicker">${esc(it.t)}</div><div class="tt-title">${esc(key)}</div><p>${esc(it.d)}</p>${field("En jeu", esc(it.s))}`;
+    }
+    return "";
+  }
+
+  const tt = document.createElement("div");
+  tt.id = "tooltip"; tt.setAttribute("role", "tooltip"); tt.hidden = true;
+  document.body.append(tt);
+  let pinned = null;
+
+  function showTip(el, x, y) {
+    const [kind, ...rest] = el.dataset.tip.split("|");
+    const html = tipContent(kind, rest.join("|"));
+    if (!html) return hideTip();
+    tt.innerHTML = html; tt.hidden = false;
+    const r = el.getBoundingClientRect();
+    const w = tt.offsetWidth, h = tt.offsetHeight, vw = window.innerWidth, vh = window.innerHeight;
+    let left = x !== undefined ? x + 14 : r.left;
+    let top = y !== undefined ? y + 16 : r.bottom + 8;
+    if (left + w > vw - 8) left = Math.max(8, (x !== undefined ? x - w - 14 : r.right - w));
+    if (top + h > vh - 8) top = Math.max(8, (y !== undefined ? y - h - 12 : r.top - h - 8));
+    tt.style.left = left + "px"; tt.style.top = top + "px";
+  }
+  function hideTip() { tt.hidden = true; pinned = null; tt.classList.remove("pinned"); }
+
+  // Survol à la souris
+  let mx = -1, my = -1;
+  function tipAt(x, y) {
+    if (pinned) return;
+    const under = document.elementFromPoint(x, y);
+    const el = under && under.closest("[data-tip]");
+    if (el) showTip(el, x, y); else if (!tt.hidden) tt.hidden = true;
+  }
+  document.addEventListener("mousemove", (e) => { mx = e.clientX; my = e.clientY; tipAt(mx, my); });
+  // Clic / toucher sur le « i » : épingle la fiche (sans cocher la case)
+  document.addEventListener("click", (e) => {
+    const i = e.target.closest(".info");
+    if (i) {
+      e.preventDefault(); e.stopPropagation();
+      if (pinned === i) return hideTip();
+      showTip(i); pinned = i; tt.classList.add("pinned"); return;
+    }
+    if (pinned && !e.target.closest("#tooltip")) hideTip();
+  }, true);
+  // Clavier : la fiche suit le focus
+  document.addEventListener("focusin", (e) => { const el = e.target.closest("[data-tip]"); if (el) showTip(el); });
+  document.addEventListener("focusout", () => { if (!pinned) tt.hidden = true; });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") hideTip();
+    if ((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("info")) { e.preventDefault(); e.target.click(); }
+  });
+  // au défilement, la fiche suit ce qui se trouve sous le curseur
+  window.addEventListener("scroll", () => { if (mx >= 0) tipAt(mx, my); }, { passive: true });
+
+  // Aperçu sous les listes déroulantes de l'étape XP
+  document.addEventListener("change", (e) => {
+    const box = document.querySelector(`.preview[data-preview-for="${e.target.id}"]`);
+    if (!box) return;
+    box.innerHTML = e.target.value ? tipContent(box.dataset.kind, e.target.value) : "";
+  });
 
   syncTextFields();
   renderAll();

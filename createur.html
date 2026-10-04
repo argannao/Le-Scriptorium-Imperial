@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="css/style.css">
   <script src="js/main.js" defer></script>
   <script src="js/createur-data.js" defer></script>
+  <script src="js/createur-infos.js" defer></script>
   <script src="js/createur.js" defer></script>
   <style>
     main { max-width: 1280px; }
@@ -83,6 +84,34 @@
     .chip .x { background: none; border: none; color: var(--gold-bright); cursor: pointer; font-size: 1.1rem; line-height: 1; padding: 0 0 0 0.2rem; }
     .row .btn { white-space: nowrap; }
 
+    /* Pop-ups descriptifs */
+    .chips.cards .card { padding: 0.3rem 0.8rem; }
+    .tipped { border-bottom: 1px dotted var(--gold-soft); cursor: help; }
+    .info {
+      display: inline-grid; place-items: center; width: 1.05rem; height: 1.05rem; margin-left: 0.3rem; flex-shrink: 0;
+      border: 1px solid var(--gold-soft); border-radius: 50%; color: var(--gold); cursor: pointer;
+      font: italic 700 0.7rem/1 Georgia, serif;
+    }
+    .info:hover, .info:focus-visible { background: var(--gold-soft); color: var(--bg); outline: none; }
+    #tooltip {
+      position: fixed; z-index: 200; width: min(360px, calc(100vw - 16px)); pointer-events: none;
+      background: linear-gradient(170deg, #221c15, #14100c); border: 1px solid var(--gold-soft);
+      border-radius: var(--radius); box-shadow: 0 0 0 3px #0b0907, 0 14px 40px rgba(0,0,0,0.6);
+      padding: 0.8rem 0.95rem; font-size: 1rem; line-height: 1.45; color: var(--text);
+    }
+    #tooltip[hidden] { display: none; }
+    #tooltip.pinned { pointer-events: auto; }
+    #tooltip p { margin: 0.35rem 0; }
+    .tt-kicker { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--crimson-bright); }
+    .tt-title { font-family: var(--font-title); color: var(--gold-bright); font-size: 1.1rem; letter-spacing: 0.04em; }
+    .tt-en { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); }
+    .tt-row { display: flex; gap: 0.6rem; justify-content: space-between; border-top: 1px dotted var(--line); padding: 0.2rem 0; font-size: 0.95rem; }
+    .tt-row span { color: var(--muted); flex-shrink: 0; }
+    .tt-row strong { font-weight: 600; color: var(--parchment); text-align: right; }
+    .tt-grid { display: block; }
+    .preview:not(:empty) { border: 1px solid var(--line); border-left: 3px solid var(--gold-soft); border-radius: var(--radius); padding: 0.6rem 0.8rem; margin: 0.2rem 0 0.8rem; background: var(--panel-2); }
+    @media print { #tooltip, .info { display: none !important; } .tipped { border: none; } }
+
     /* Fiche */
     .sheet-wrap { position: sticky; top: 120px; }
     @media (max-width: 960px) { .sheet-wrap { position: static; } }
@@ -135,7 +164,7 @@
     <header class="page-title">
       <div class="kicker">Forge des agents — Imperium Maledictum</div>
       <h1>Créateur d'agent</h1>
-      <p class="lead">Suivez les étapes : la fiche se remplit à mesure. Elle est enregistrée dans votre navigateur, et vous pouvez l'exporter ou l'imprimer.</p>
+      <p class="lead">Suivez les étapes : la fiche se remplit à mesure. Survolez une origine, une faction, un rôle, un talent, un pouvoir ou un objet (ou touchez le <span class="info" style="pointer-events:none">i</span>) pour voir sa fiche. Elle est enregistrée dans votre navigateur, et vous pouvez l'exporter ou l'imprimer.</p>
     </header>
 
     <div class="forge">
