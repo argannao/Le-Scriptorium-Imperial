@@ -12,7 +12,7 @@
   const byId = (list, id) => list.find((x) => x.id === id);
 
   const blank = () => ({
-    name: "", notes: "",
+    name: "", notes: "", species: "humain",
     car: { mode: "hasard", values: null, rolls: 0, swapped: false, swapSel: null, points: Object.fromEntries(CARACS.map((c) => [c.id, 10])) },
     origin: { id: "", rolled: false, choix: "" },
     faction: { id: "", rolled: false, choix: "", adv: {}, talentPick: 0, equip: {} },
@@ -41,6 +41,9 @@
   const faction = () => byId(FACTIONS, S.faction.id);
   const role = () => byId(ROLES, S.role.id);
   const origin = () => byId(ORIGINS, S.origin.id);
+  const species = () => byId(SPECIES, S.species) || SPECIES[0];
+  const xenosOrigin = () => !!species().remplaceOrigine;           // l'espèce tient lieu d'origine
+  const factionAllowed = (id) => !species().factions || species().factions.includes(id);
 
   function baseCaracs() {
     if (S.car.mode === "repartition") return Object.fromEntries(CARACS.map((c) => [c.id, 20 + (S.car.points[c.id] || 0)]));
@@ -58,7 +61,8 @@
     const b = baseCaracs();
     if (!b) return null;
     const o = origin(), f = faction();
-    if (o) { b[o.fixe] += 5; if (S.origin.choix) b[S.origin.choix] += 5; }
+    Object.entries(species().mods || {}).forEach(([c, v]) => { b[c] += v; });
+    if (o && !xenosOrigin()) { b[o.fixe] += 5; if (S.origin.choix) b[S.origin.choix] += 5; }
     if (f) { b[f.fixe] += 5; if (S.faction.choix) b[S.faction.choix] += 5; }
     return b;
   }
@@ -72,10 +76,10 @@
   }
   const isBlank = () => factionTalents().includes("Paria");
   const psykerFromFaction = () => factionTalents().includes("Psyker");
-  const isPsyker = () => psykerFromFaction() || (role() && role().psyker);
+  const isPsyker = () => species().psyker !== false && (psykerFromFaction() || (role() && role().psyker));
 
   function allTalents() {
-    const list = [...factionTalents()];
+    const list = [...(species().talents || []), ...factionTalents().filter((t) => !(species().psyker === false && t.startsWith("Psyker")))];
     const r = role();
     if (r && r.psyker && !list.includes("Psyker")) list.push("Psyker");
     S.role.talents.forEach((t) => { if (!list.includes(t)) list.push(t); });
@@ -113,7 +117,7 @@
   function xp() {
     let x = 0;
     if (S.car.mode === "hasard" && S.car.rolls === 1) x += S.car.swapped ? 25 : 50;
-    if (S.origin.rolled) x += 25;
+    if (S.origin.rolled && !xenosOrigin()) x += 25;
     if (S.faction.rolled) x += 75;
     if (S.role.rolled) x += 50;
     return x;
@@ -141,13 +145,16 @@
   }
   function rollFaction() {
     const r = d100();
-    const f = FACTIONS.find((x) => r <= x.roll[S.origin.id]);
+    // un xenos tire au sort parmi les factions qui l'acceptent
+    const f = xenosOrigin() || !S.origin.id
+      ? (() => { const ok = FACTIONS.filter((x) => factionAllowed(x.id)); return ok[Math.floor(Math.random() * ok.length)]; })()
+      : FACTIONS.find((x) => r <= x.roll[S.origin.id]);
     S.faction = { id: f.id, rolled: true, choix: "", adv: {}, talentPick: 0, equip: {} };
     resetRoleIfBlocked();
     return r;
   }
   function rollRole() {
-    const options = ROLES.filter((r) => !(r.psyker && isBlank()));
+    const options = ROLES.filter((r) => !(r.psyker && (isBlank() || species().psyker === false)));
     const r = options[Math.floor(Math.random() * options.length)];
     S.role = { id: r.id, rolled: true, talents: [], adv: {}, specs: {}, equip: {} };
     S.psy = { discipline: "", minor: [], powers: [] };
@@ -156,7 +163,8 @@
   function resetRoleIfBlocked() {
     // les niveaux de compétence ne doivent pas dépasser 2 au total
     Object.keys(S.role.adv).forEach((sk) => { while (advTotal(sk) > 2 && S.role.adv[sk] > 0) S.role.adv[sk]--; });
-    if (role() && role().psyker && isBlank()) S.role = { id: "", rolled: false, talents: [], adv: {}, specs: {}, equip: {} };
+    if (S.faction.id && !factionAllowed(S.faction.id)) S.faction = { id: "", rolled: false, choix: "", adv: {}, talentPick: 0, equip: {} };
+    if (role() && role().psyker && (isBlank() || species().psyker === false)) S.role = { id: "", rolled: false, talents: [], adv: {}, specs: {}, equip: {} };
     if (!isPsyker()) { S.psy = { discipline: "", minor: [], powers: [] }; S.xp.minor = []; S.xp.powers = []; delete S.xp.skill.psy;
       Object.keys(S.xp.spec).forEach((k) => { if (k.startsWith("psy:")) delete S.xp.spec[k]; }); }
     S.xp.talents = S.xp.talents.filter((t) => !factionTalents().includes(t) && !S.role.talents.includes(t));
@@ -231,10 +239,27 @@
     }
     $("#step-car").innerHTML = car;
 
+    // --- Espèce
+    const sp = species();
+    let spc = `${cards("species", "spc", SPECIES, sp.id, "species")}
+      <p class="hint">Les espèces xenos sont une <strong>règle maison</strong> du Scriptorium : Imperium Maledictum ne prévoit pas d'agents xenos. Validez-les avec votre MJ. Voir <a href="xenos.html#jouer">Jouer un xenos</a>.</p>`;
+    if (sp.id !== "humain") {
+      const mods = Object.entries(sp.mods).map(([c, v]) => `${v > 0 ? "+" : "−"}${Math.abs(v)} ${carNom(c)}`).join(", ");
+      spc += `<p><em>${esc(sp.desc)}</em></p><p>Caractéristiques : <strong>${mods}</strong></p>
+        <h4>Traits d'espèce</h4><div class="chips">${sp.traits.map((t) => `<span class="chip on"${tip("trait", sp.id + "|" + t.nom)}>${esc(t.nom)}${info("trait", sp.id + "|" + t.nom)}</span>`).join("")}</div>
+        ${sp.talents.length ? `<p>Talent offert : ${sp.talents.map((x) => `<strong class="tipped"${tip("talent", x)}>${esc(x)}</strong>${info("talent", x)}`).join(", ")}</p>` : ""}
+        ${sp.equip.length ? `<p>Équipement d'espèce : ${sp.equip.map((x) => `<span class="tipped"${tip("item", x)}>${esc(x)}</span>${info("item", x)}`).join(", ")}</p>` : ""}
+        <p>Factions possibles : <strong>${sp.factions ? sp.factions.map((id) => byId(FACTIONS, id).nom).join(", ") : "toutes"}</strong>${sp.psyker === false ? " · ne peut pas être psyker" : ""}</p>
+        <p>Relations : ${esc(sp.relations)}</p>`;
+    }
+    $("#step-species").innerHTML = spc;
+
     // --- 2. Origine
-    let org = `${cards("origin", "org", ORIGINS, S.origin.id, "origin")}
+    let org = "";
+    if (xenosOrigin()) org = `<p>Un xenos n'a pas d'origine impériale : <strong>l'espèce en tient lieu</strong> (pas de bonus d'origine, pas de tirage).</p><p><em>${esc(sp.remplaceOrigine)}</em></p>`;
+    else org = `${cards("origin", "org", ORIGINS, S.origin.id, "origin")}
       <div class="row"><button class="btn" type="button" data-act="roll-origin">Lancer 1d100 (+25 XP)</button></div>`;
-    if (o) {
+    if (o && !xenosOrigin()) {
       org += `<p>${S.origin.rolled ? "<span class='tag'>Tirée au sort</span> " : ""}<strong>+5 ${carNom(o.fixe)}</strong>, et +5 au choix :</p>
         <div class="seg">${o.choix.map((c) => `<label><input type="radio" name="ochoix" value="${c}" data-act="ochoix" ${S.origin.choix === c ? "checked" : ""}> ${carNom(c)}</label>`).join("")}</div>
         <p class="hint">Objet : <span class="tipped"${tip("item", o.objet)}>${esc(o.objet)}</span>${info("item", o.objet)}</p>`;
@@ -243,9 +268,10 @@
 
     // --- 3. Faction
     let fac = "";
-    if (!o) fac = `<p class="hint">Choisissez d'abord une origine (la table de faction en dépend).</p>`;
+    if (!o && !xenosOrigin()) fac = `<p class="hint">Choisissez d'abord une origine (la table de faction en dépend).</p>`;
     else {
-      fac = `${cards("faction", "fac", FACTIONS, S.faction.id, "faction")}
+      fac = `${cards("faction", "fac", FACTIONS, S.faction.id, "faction", (x) => !factionAllowed(x.id))}
+        ${species().factions ? `<p class="hint">Seules les factions qui acceptent un ${esc(species().nom.split(" (")[0])} sont disponibles.</p>` : ""}
         <div class="row"><button class="btn" type="button" data-act="roll-faction">Lancer 1d100 (+75 XP)</button></div>`;
       if (f) {
         const used = sum(S.faction.adv);
@@ -258,7 +284,8 @@
             return `<div class="adv"><span>${SKILLS[sk].nom}${locked ? " <small>(psyker requis)</small>" : ""}</span>${stepper("faction", sk, v, !locked && used < 5 && advTotal(sk) < 2)}</div>`;
           }).join("")}</div>`;
         if (f.talentChoices) {
-          fac += `<h4>Talent(s)</h4><div class="seg col">${f.talentChoices.map((t, i) =>
+          fac += `<h4>Talent(s)</h4><div class="seg col">${f.talentChoices.filter((t) => !(species().psyker === false && t.includes("Psyker"))).map((t) =>
+            [t, f.talentChoices.indexOf(t)]).map(([t, i]) =>
             `<label><input type="radio" name="tpick" value="${i}" data-act="tpick" ${S.faction.talentPick === i ? "checked" : ""}> ${t.map((x) => `<span class="tipped"${tip("talent", x)}>${esc(x)}</span>${info("talent", x)}`).join(" + ")}</label>`).join("")}</div>`;
         } else if (f.talents.length) {
           fac += `<p>Talent : ${f.talents.map((x) => `<strong class="tipped"${tip("talent", x)}>${esc(x)}</strong>${info("talent", x)}`).join(", ")}</p>`;
@@ -272,8 +299,8 @@
     $("#step-faction").innerHTML = fac;
 
     // --- 4. Rôle
-    let rol = `${cards("role", "rol", ROLES, S.role.id, "role", (x) => x.psyker && isBlank())}
-      ${isBlank() ? `<p class="hint">Un Paria ne peut pas être Mystique.</p>` : ""}
+    let rol = `${cards("role", "rol", ROLES, S.role.id, "role", (x) => x.psyker && (isBlank() || species().psyker === false))}
+      ${isBlank() ? `<p class="hint">Un Paria ne peut pas être Mystique.</p>` : species().psyker === false ? `<p class="hint">Cette espèce ne peut pas être Mystique.</p>` : ""}
       <div class="row"><button class="btn" type="button" data-act="roll-role">Laisser le patron choisir (+50 XP)</button></div>`;
     if (r) {
       const owned = factionTalents();
@@ -398,7 +425,8 @@
     // indicateurs de progression
     const done = {
       car: !!base && (S.car.mode === "hasard" || sum(S.car.points) === 90),
-      origin: !!o && !!S.origin.choix,
+      species: true,
+      origin: xenosOrigin() || (!!o && !!S.origin.choix),
       faction: !!f && !!S.faction.choix && sum(S.faction.adv) === 5,
       role: !!r && S.role.talents.length === r.talents.n && sum(S.role.adv) === 3 && sum(S.role.specs) === 2,
       psy: pc.minor === 0 || (S.psy.minor.length === pc.minor && S.psy.powers.length === pc.disc),
@@ -412,7 +440,8 @@
   function equipList() {
     const out = [];
     const o = origin(), f = faction(), r = role();
-    if (o) out.push(o.objet);
+    if (o && !xenosOrigin()) out.push(o.objet);
+    (species().equip || []).forEach((x) => out.push(x));
     const collect = (items, picks) => items.forEach((it, i) => {
       if (typeof it === "string") out.push(it);
       else if (it.one) out.push(picks[i] || `[${it.one.join(" / ")}]`);
@@ -431,7 +460,7 @@
 
     let h = `<div class="sheet-head">
       <div class="sheet-name">${esc(S.name) || "Agent sans nom"}</div>
-      <div class="sheet-sub">${[o && o.nom, f && f.nom, r && r.nom].filter(Boolean).join(" · ") || "Origine · Faction · Rôle"}</div>
+      <div class="sheet-sub">${[species().id !== "humain" && species().nom, !xenosOrigin() && o && o.nom, f && f.nom, r && r.nom].filter(Boolean).join(" · ") || "Origine · Faction · Rôle"}</div>
     </div>`;
 
     h += `<div class="sheet-caracs">${CARACS.map((c) => `<div><span>${c.ab}</span><strong>${fc ? fc[c.id] : "—"}</strong><small>${fc ? "B" + bonus(fc[c.id]) : ""}</small></div>`).join("")}</div>`;
@@ -460,6 +489,7 @@
       return `<tr class="${a || specs.length ? "trained" : ""}"><td>${s.nom} <small>(${carNom(s.c)})</small>${specTxt}</td><td>${"●".repeat(a)}${"○".repeat(Math.max(0, 4 - a))}</td><td><strong>${val}</strong></td></tr>`;
     }).join("")}</tbody></table>`;
 
+    if (species().traits.length) h += `<h4>Traits d'espèce</h4><p>${species().traits.map((t) => `<span class="tipped"${tip("trait", species().id + "|" + t.nom)}>${esc(t.nom)}</span>`).join(" · ")}</p>`;
     h += `<h4>Talents</h4><p>${talents.length ? talents.map((t) => `<span class="tipped"${tip("talent", t)}>${esc(t)}</span>`).join(" · ") : "<span class='hint'>—</span>"}</p>`;
 
     if (isPsyker()) {
@@ -467,7 +497,7 @@
       h += `<h4>Pouvoirs psychiques</h4><p>${pw.length ? pw.map(([p, d]) => `<span class="tipped"${tip("power", p)}>${esc(p)}</span> <small>(${esc(d)})</small>`).join(" · ") : "<span class='hint'>à choisir</span>"}</p>`;
     }
 
-    h += `<h4>Influence</h4><p>${f ? `+1 ${esc(f.influence)}` : "—"}</p>`;
+    h += `<h4>Influence</h4><p>${f ? `+1 ${esc(f.influence)}` : "—"}${species().relations ? `<br><small>${esc(species().relations)}</small>` : ""}</p>`;
     h += `<h4>Équipement</h4><p>${equipList().map((x) => x.startsWith("[") ? esc(x) : `<span class="tipped"${tip("item", x)}>${esc(x)}</span>`).join(" · ") || "—"}${f ? ` · <strong>${esc(f.solars)} solars</strong>` : ""}</p>`;
     h += `<h4>Expérience</h4><p>Gagnés : <strong>${xp()}</strong> · dépensés : <strong>${spent()}</strong> · <strong style="color:${remaining() < 0 ? "var(--crimson-bright)" : "inherit"}">restants : ${remaining()} XP</strong></p>`;
     if (S.notes) h += `<h4>Notes</h4><p class="notes">${esc(S.notes).replace(/\n/g, "<br>")}</p>`;
@@ -530,6 +560,11 @@
     const act = el.dataset.act;
     if (!act) return;
     if (act === "carmode") { S.car.mode = el.value; }
+    else if (act === "species") {
+      S.species = el.value;
+      if (xenosOrigin()) S.origin = { id: "", rolled: false, choix: "" };
+      resetRoleIfBlocked();
+    }
     else if (act === "origin") { S.origin = { id: el.value, rolled: false, choix: "" }; resetFaction(); }
     else if (act === "ochoix") S.origin.choix = el.value;
     else if (act === "faction") { S.faction = { id: el.value, rolled: false, choix: "", adv: {}, talentPick: 0, equip: {} }; resetRoleIfBlocked(); }
@@ -592,6 +627,20 @@
   }
 
   function tipContent(kind, key) {
+    if (kind === "species") {
+      const sp = byId(SPECIES, key); if (!sp) return "";
+      const mods = Object.entries(sp.mods).map(([c, v]) => `${v > 0 ? "+" : "−"}${Math.abs(v)} ${carNom(c)}`).join(", ");
+      return `<div class="tt-kicker">Espèce${sp.id !== "humain" ? " · règle maison" : ""}</div><div class="tt-title">${esc(sp.nom)}</div><p>${esc(sp.desc)}</p>
+        ${field("Caractéristiques", mods || "aucun modificateur")}${sp.traits.length ? field("Traits", esc(sp.traits.map((t) => t.nom).join(", "))) : ""}
+        ${field("Factions", sp.factions ? esc(sp.factions.map((id) => byId(FACTIONS, id).nom).join(", ")) : "toutes")}
+        ${sp.relations ? field("Relations", esc(sp.relations)) : ""}`;
+    }
+    if (kind === "trait") {
+      const [sid, ...rest] = key.split("|"); const nom = rest.join("|");
+      const sp = byId(SPECIES, sid), t = sp && sp.traits.find((x) => x.nom === nom);
+      if (!t) return "";
+      return `<div class="tt-kicker">Trait d'espèce · ${esc(sp.nom)}</div><div class="tt-title">${esc(t.nom)}</div><p>${esc(t.d)}</p>`;
+    }
     if (kind === "origin") {
       const o = byId(ORIGINS, key); if (!o) return "";
       return `<div class="tt-kicker">Origine</div><div class="tt-title">${esc(o.nom)}</div>

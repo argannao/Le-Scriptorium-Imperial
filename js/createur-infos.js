@@ -164,6 +164,14 @@ const ITEM_INFO = {
   "Brouilleur":                    { t: "Outil", s: "Rare", d: "Sature les transmissions dans la zone." },
   "Outil combiné":                 { t: "Outil", s: "—", d: "Un outil multifonction pour réparer et bricoler les machines." },
   "Diagnostor":                    { t: "Outil médical", s: "Rare", d: "Un scanner médical portatif, à combiner avec Médecine." },
+  // Équipement xenos (espèces jouables, règle maison sauf mention)
+  "Pistolet shuriken":             { t: "Arme xenos", s: "Dég. 6 · Portée moyenne · Proche, Perforant (4) (profil du Ranger du livre)", d: "Il tire des disques monomoléculaires à grande cadence. Illégal et très recherché." },
+  "Maille aeldari":                { t: "Armure xenos", s: "Armure 4 · bras, torse, jambes (comme la maille xenos du livre)", d: "Une maille souple et légère, d'une finesse impossible à reproduire." },
+  "Lame drukhari":                 { t: "Arme xenos", s: "Dég. 2 + BF · Perforant (1), Discret", d: "Une lame fine et cruelle, conçue pour faire durer la souffrance." },
+  "Armure kabalite":               { t: "Armure xenos", s: "Armure 5 (valeur du Kabalite du livre)", d: "Des plaques effilées, hérissées de pointes : une protection et une menace." },
+  "Fusil kroot":                   { t: "Arme xenos", s: "Tir : dég. 7, portée longue, Lourd (4) · Lames : dég. 6 en mêlée, Deux mains (profil du livre)", d: "Un long fusil à projectiles, garni de lames pour le corps à corps." },
+  "Pistolet à impulsions":         { t: "Arme xenos", s: "Dég. 7 · Portée moyenne · Proche, Perforant (2) (règle maison)", d: "Une arme à plasma t'au, compacte et fiable." },
+  "Drone traducteur":              { t: "Équipement xenos", s: "Avantage aux tests de Linguistique pour comprendre une langue (règle maison)", d: "Un petit drone flottant qui traduit et enregistre les conversations." },
   // Augmétiques
   "Matrice d'augures":             { t: "Augmétique", s: "Compte dans la limite d'augmétiques (BE)", d: "Des capteurs intégrés qui donnent les sens d'un auspex." },
   "Implant vocal":                 { t: "Augmétique", s: "Compte dans la limite (BE)", d: "Une voix amplifiée et modulable, idéale pour prêcher ou commander." },
