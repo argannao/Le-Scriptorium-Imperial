@@ -1,0 +1,177 @@
+/* ==========================================================
+   Archive Xenos — habillage organique (surcharge de style.css)
+   Concept : dossier de spécimens de l'Ordo Xenos, tissus vivants
+   observés au microscope.
+   ========================================================== */
+
+body.xenos {
+  --bg: #0f1c1a;          /* abysse */
+  --bg-2: #132421;
+  --panel: #162a27;       /* membrane */
+  --panel-2: #1b3330;
+  --line: #2b4a44;
+  --gold: #7fe0c3;        /* bioluminescence (remplace l'or impérial) */
+  --gold-soft: #4f9e88;
+  --gold-bright: #b5f2df;
+  --crimson-bright: #a07ad6; /* spore */
+  --amber: #d9a441;       /* ichor : niveau de menace */
+  --parchment: #e6dcc6;   /* os */
+  --text: #d7d2c2;
+  --muted: #8fa59d;
+  --font-title: "Fraunces", Georgia, serif;
+  --font-body: "Alegreya Sans", "Segoe UI", sans-serif;
+
+  font-size: 1.12rem;
+  line-height: 1.65;
+  background:
+    radial-gradient(60rem 40rem at 85% -10%, rgba(160, 122, 214, 0.16), transparent 70%),
+    radial-gradient(50rem 36rem at 0% 110%, rgba(127, 224, 195, 0.10), transparent 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='none' stroke='%237fe0c3' stroke-opacity='0.035' stroke-width='1.2'%3E%3Cpath d='M20 30c18-14 40-8 46 10s-6 36-26 38-36-10-34-26 2-14 14-22z'/%3E%3Cpath d='M104 18c20-6 40 8 38 28s-22 30-40 24-26-24-18-38c4-8 10-12 20-14z'/%3E%3Cpath d='M90 98c22-10 50 2 52 24s-20 34-42 30-32-20-28-34c2-10 8-16 18-20z'/%3E%3Cpath d='M18 108c14-8 34-2 38 14s-8 28-24 28-26-12-24-24c1-8 4-14 10-18z'/%3E%3C/g%3E%3C/svg%3E"),
+    var(--bg);
+  background-attachment: fixed;
+}
+
+/* L'en-tête commun prend une teinte organique sur cette page */
+body.xenos .site-header {
+  background: linear-gradient(to bottom, #0f1c1a 70%, rgba(15, 28, 26, 0.92));
+  box-shadow: 0 2px 0 rgba(127, 224, 195, 0.12);
+}
+body.xenos .brand { font-family: "Cinzel", Georgia, serif; } /* la marque reste impériale */
+body.xenos .site-nav a { font-family: "Cinzel", Georgia, serif; }
+
+body.xenos h1, body.xenos h2, body.xenos h3 {
+  font-family: var(--font-title);
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  letter-spacing: 0;
+  text-transform: none;
+}
+body.xenos h2 { font-size: 1.9rem; font-weight: 600; margin: 3.5rem 0 1rem; color: var(--gold-bright); }
+body.xenos h3 { font-size: 1.3rem; font-weight: 600; }
+body.xenos main a { color: var(--gold); text-decoration: underline; text-decoration-color: var(--gold-soft); text-underline-offset: 3px; }
+body.xenos main { max-width: 1060px; }
+body.xenos :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 6px; }
+
+/* ---------- En-tête : la cellule ---------- */
+.specimen-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 2rem;
+  align-items: center;
+  padding: 2.5rem 0 1rem;
+}
+.specimen-hero svg { width: 100%; max-width: 420px; justify-self: center; overflow: visible; }
+.specimen-hero h1 {
+  font-size: clamp(3rem, 9vw, 6rem);
+  font-weight: 700;
+  line-height: 0.95;
+  margin: 0 0 0.6rem;
+  color: var(--parchment);
+}
+.specimen-hero .ref { font-family: var(--font-title); font-style: italic; color: var(--crimson-bright); font-size: 1.1rem; margin: 0 0 1rem; }
+.specimen-hero p.lead { color: var(--text); max-width: 34rem; margin: 0; font-size: 1.2rem; }
+.cell-membrane { animation: breathe 9s ease-in-out infinite; transform-origin: 50% 50%; transform-box: fill-box; }
+.cell-nucleus { animation: breathe 9s ease-in-out infinite reverse; transform-origin: 50% 50%; transform-box: fill-box; }
+@keyframes breathe { 50% { transform: scale(1.035) rotate(1.5deg); } }
+@media (prefers-reduced-motion: reduce) { .cell-membrane, .cell-nucleus { animation: none; } }
+@media (max-width: 760px) {
+  .specimen-hero { grid-template-columns: 1fr; text-align: left; }
+  .specimen-hero svg { max-width: 240px; }
+}
+
+/* ---------- Avertissement de l'Ordo ---------- */
+.ordo-note {
+  margin: 2rem 0;
+  padding: 1.2rem 1.4rem;
+  background: rgba(160, 122, 214, 0.08);
+  border-radius: 28px 10px 32px 12px;
+  border: 1px solid rgba(160, 122, 214, 0.35);
+  max-width: 46rem;
+}
+.ordo-note p { margin: 0.3rem 0; }
+.ordo-note strong { color: var(--parchment); }
+
+.two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem 2.5rem; }
+.two-col p { margin-top: 0; }
+
+/* ---------- Dossiers de spécimens ---------- */
+.dossier {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: 1.6rem;
+  align-items: start;
+  padding: 1.6rem 0;
+  border-top: 1px solid var(--line);
+}
+.dossier:nth-of-type(even) { grid-template-columns: minmax(0, 1fr) 170px; }
+.dossier:nth-of-type(even) .glyph { order: 2; border-radius: 44% 56% 47% 53% / 55% 41% 59% 45%; }
+.glyph {
+  width: 170px; height: 170px;
+  border-radius: 58% 42% 51% 49% / 46% 57% 43% 54%;
+  display: grid; place-items: center;
+  background: radial-gradient(circle at 40% 35%, rgba(127, 224, 195, 0.16), rgba(22, 42, 39, 0.9) 70%);
+  border: 1px solid var(--line);
+}
+.glyph svg { width: 70%; height: 70%; }
+body.xenos .dossier h3 { margin: 0; font-size: 2rem; line-height: 1.15; color: var(--parchment); }
+.dossier .alias { font-family: var(--font-title); font-style: italic; color: var(--muted); margin: 0.1rem 0 0.6rem; }
+.dossier > div > p { margin: 0.4rem 0; max-width: 40rem; }
+
+.threat { display: flex; align-items: center; gap: 0.6rem; margin: 0.4rem 0 0.8rem; color: var(--muted); font-size: 0.98rem; }
+.threat .pips { display: inline-flex; gap: 4px; }
+.threat .pips i { width: 14px; height: 14px; border-radius: 50% 40% 55% 45%; background: #26413c; display: block; }
+.threat .pips i.on { background: var(--amber); box-shadow: 0 0 8px rgba(217, 164, 65, 0.5); }
+
+.dossier details {
+  margin-top: 0.8rem;
+  border-radius: 18px 6px 20px 8px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+.dossier summary {
+  cursor: pointer; list-style: none;
+  padding: 0.6rem 1rem;
+  font-family: var(--font-title); font-weight: 600; color: var(--gold);
+}
+.dossier summary::-webkit-details-marker { display: none; }
+.dossier summary::before { content: "+"; display: inline-block; width: 1.2rem; transition: transform 0.2s; }
+.dossier details[open] summary::before { transform: rotate(45deg); }
+.dossier .dissect { padding: 0 1rem 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.8rem 1.4rem; }
+.dissect h4 { margin: 0.4rem 0 0.2rem; font-family: var(--font-title); color: var(--gold-bright); font-size: 1.02rem; font-weight: 600; }
+.dissect p, .dissect ul { margin: 0; font-size: 1.02rem; }
+.dissect ul { padding-left: 1.1rem; }
+@media (prefers-reduced-motion: reduce) { .dossier summary::before { transition: none; } }
+
+@media (max-width: 680px) {
+  .dossier, .dossier:nth-of-type(even) { grid-template-columns: 1fr; }
+  .dossier:nth-of-type(even) .glyph { order: 0; }
+  .glyph { width: 110px; height: 110px; }
+}
+
+/* ---------- Fiches d'autopsie (profils) ---------- */
+.autopsies { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem; }
+.autopsy {
+  padding: 1.1rem 1.2rem 1.2rem;
+  background: linear-gradient(160deg, var(--panel-2), var(--panel));
+  border: 1px solid var(--line);
+  border-radius: 36px 12px 30px 14px;
+}
+body.xenos .autopsy h3 { margin: 0 0 0.2rem; font-size: 1.25rem; color: var(--parchment); }
+.autopsy .rank { color: var(--crimson-bright); font-style: italic; margin: 0 0 0.6rem; }
+.autopsy dl { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.3rem; margin: 0 0 0.8rem; text-align: center; }
+.autopsy dt { font-size: 0.78rem; color: var(--muted); }
+.autopsy dd { margin: 0; font-family: var(--font-title); font-size: 1.35rem; color: var(--gold-bright); }
+.autopsy dl > div { background: rgba(15, 28, 26, 0.6); border-radius: 12px; padding: 0.3rem 0; }
+.autopsy p { margin: 0.3rem 0; font-size: 1rem; }
+
+/* ---------- Encadrés ---------- */
+.membrane-box {
+  margin: 1.5rem 0;
+  padding: 1.3rem 1.5rem;
+  border-radius: 40px 14px 44px 16px;
+  background: radial-gradient(circle at 10% 0%, rgba(127, 224, 195, 0.12), transparent 60%), var(--panel);
+  border: 1px solid var(--line);
+}
+.membrane-box h3 { margin-top: 0; color: var(--gold-bright); }
+.membrane-box p:last-child { margin-bottom: 0; }
+
+body.xenos .site-footer { border-top-color: var(--line); }

@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Xenos — Le Scriptorium Impérial</title>
+  <meta name="description" content="Les espèces xenos du Secteur Macharien : menaces, indices, usage en partie et profils.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..700,0..100,0..1;1,9..144,400..700,0..100,0..1&family=Alegreya+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/xenos.css">
+  <script src="js/main.js" defer></script>
+</head>
+<body class="xenos">
+  <main>
+    <header class="specimen-hero">
+      <!-- La cellule : forme organique abstraite, seule animation de la page -->
+      <svg viewBox="0 0 400 400" role="img" aria-label="Cellule xenos stylisée">
+        <defs>
+          <radialGradient id="cyto" cx="45%" cy="40%" r="60%">
+            <stop offset="0" stop-color="#2f6b5d"/>
+            <stop offset="0.7" stop-color="#173430"/>
+            <stop offset="1" stop-color="#0f1c1a"/>
+          </radialGradient>
+          <radialGradient id="nuc" cx="40%" cy="35%" r="65%">
+            <stop offset="0" stop-color="#d4b8ff"/>
+            <stop offset="0.55" stop-color="#a07ad6"/>
+            <stop offset="1" stop-color="#4a2f73"/>
+          </radialGradient>
+        </defs>
+        <g class="cell-membrane">
+          <path d="M206 34c62 4 128 40 150 104 22 66-4 142-58 184-52 40-132 54-190 18C52 304 26 236 38 172 50 104 104 28 206 34z"
+                fill="url(#cyto)" stroke="#7fe0c3" stroke-width="3" stroke-opacity="0.75"/>
+          <path d="M206 50c56 4 114 38 132 94 18 58-6 124-54 160-46 34-116 46-166 14-42-28-62-86-52-142 10-60 58-130 140-126z"
+                fill="none" stroke="#7fe0c3" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="2 7"/>
+          <g fill="#7fe0c3" fill-opacity="0.55">
+            <circle cx="112" cy="140" r="7"/><circle cx="96" cy="230" r="5"/><circle cx="292" cy="112" r="6"/>
+            <circle cx="310" cy="250" r="8"/><circle cx="160" cy="300" r="5"/><circle cx="250" cy="318" r="4"/>
+          </g>
+          <g fill="none" stroke="#d9a441" stroke-opacity="0.55" stroke-width="2" stroke-linecap="round">
+            <path d="M130 110c20 10 26 30 18 46"/><path d="M290 300c-16-6-26-22-22-40"/><path d="M320 170c-12 6-16 18-12 30"/>
+          </g>
+        </g>
+        <g class="cell-nucleus">
+          <path d="M214 140c40 6 66 40 58 78s-48 60-86 50-56-46-44-80 32-54 72-48z" fill="url(#nuc)"/>
+          <path d="M196 176c14-8 34-2 40 12" fill="none" stroke="#f0e6ff" stroke-opacity="0.6" stroke-width="3" stroke-linecap="round"/>
+        </g>
+      </svg>
+      <div>
+        <p class="ref">Archive IX, scellée par l'Ordo Xenos</p>
+        <h1>Xenos</h1>
+        <p class="lead">L'Humanité n'est ni seule ni la première à voyager entre les étoiles. Voici ce que les archives du Secteur Macharien osent consigner sur les autres.</p>
+      </div>
+    </header>
+
+    <div class="ordo-note">
+      <p><strong>Avertissement de l'Ordo Xenos.</strong> Pour l'Imperium, « xenos » est une insulte au même titre qu'« hérétique » ou « traître ». Connaître l'étranger est déjà suspect ; le comprendre, presque une faute.</p>
+      <p>Posséder un artefact xenos, ou simplement en savoir trop, peut attirer l'attention de l'Inquisition sur les agents.</p>
+    </div>
+
+    <h2>Les xenos à la table</h2>
+    <div class="two-col">
+      <p>
+        L'Imperium est si xénophobe qu'un xenos agissant à découvert sur un monde impérial serait vite traqué et exécuté.
+        Ceux qui s'y trouvent se cachent : sur les mondes frontaliers, dans la foule anonyme des ruches, derrière un intermédiaire humain.
+      </p>
+      <p>
+        Les xenos fonctionnent mieux quand ils restent rares et vraiment étrangers. Décrivez des gestes, une voix, une logique qui
+        ne sont pas humains. Dans une campagne d'enquête, leur présence se devine souvent bien avant de se montrer.
+      </p>
+    </div>
+
+    <h2>Dossiers de spécimens</h2>
+    <p style="color:var(--muted);max-width:44rem">Les grandes espèces connues dans le secteur. Le niveau de menace est une appréciation du Scriptorium pour aider le MJ, pas une règle du livre.</p>
+
+    <article class="dossier" id="orks">
+      <div class="glyph" aria-hidden="true">
+        <svg viewBox="0 0 100 100"><g fill="#7fe0c3" fill-opacity="0.8"><circle cx="50" cy="50" r="16"/><circle cx="24" cy="30" r="8"/><circle cx="78" cy="28" r="10"/><circle cx="74" cy="76" r="7"/><circle cx="26" cy="72" r="11"/><circle cx="52" cy="16" r="5"/><circle cx="88" cy="54" r="5"/><circle cx="12" cy="50" r="4"/></g></svg>
+      </div>
+      <div>
+        <h3>Orks</h3>
+        <p class="alias">La marée verte</p>
+        <div class="threat">Menace <span class="pips"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+        <p>Des hordes brutales et bruyantes qui se rassemblent partout où la vigilance de l'Humanité faiblit un instant. Un monde touché par les Orks n'en est jamais vraiment débarrassé.</p>
+        <details>
+          <summary>Disséquer le dossier</summary>
+          <div class="dissect">
+            <div><h4>Dans le secteur</h4><p>Sur Kallastin, des Orks obsédés par la vitesse vénèrent le lieu d'une bataille légendaire, et l'on murmure qu'un chef de guerre prépare une grande offensive vers ce monde. Sur St. Isidore's Rest, une bataille entière a été figée par une éruption ; les vaisseaux-astéroïdes orks y sont devenus des sanctuaires.</p></div>
+            <div><h4>Indices</h4><ul><li>Épaves bricolées et technologie absurde qui fonctionne malgré tout</li><li>Raids d'éclaireurs « mineurs » qui se multiplient</li><li>Vaisseaux abandonnés à fouiller… peut-être infestés</li></ul></div>
+            <div><h4>En jeu</h4><p>Rarement l'adversaire d'une enquête : plutôt une menace de fond, une guerre qui approche, ou le danger qui rôde dans une épave que le patron veut récupérer.</p></div>
+          </div>
+        </details>
+      </div>
+    </article>
+
+    <article class="dossier" id="aeldari">
+      <div class="glyph" aria-hidden="true">
+        <svg viewBox="0 0 100 100"><path d="M50 8c10 18 10 30 0 42s-10 24 0 42c-10-18-10-30 0-42S40 26 50 8z" fill="#7fe0c3" fill-opacity="0.8"/><path d="M14 50c18-6 28-6 36 0s18 6 36 0" fill="none" stroke="#a07ad6" stroke-width="3" stroke-linecap="round"/><circle cx="50" cy="50" r="30" fill="none" stroke="#7fe0c3" stroke-opacity="0.4" stroke-width="1.5"/></svg>
+      </div>
+      <div>
+        <h3>Aeldari</h3>
+        <p class="alias">Les anciens, gardiens de la Toile</p>
+        <div class="threat">Menace <span class="pips"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+        <p>Une espèce ancienne et hautaine qui revendique des mondes colonisés depuis longtemps par l'Imperium. Elle voyage par la <a href="#toile">Toile</a>, un labyrinthe hors du Warp.</p>
+        <details>
+          <summary>Disséquer le dossier</summary>
+          <div class="dissect">
+            <div><h4>Dans le secteur</h4><p>Dans l'abîme d'Ayzinith, un monde stérile cache un portail de la Toile que les autorités ignorent. Des troupes d'Arlequins aux couleurs vives y entrent et en sortent ; l'Ordo Xenos aimerait beaucoup savoir pourquoi. Des Rangers nomades parcourent aussi le secteur.</p></div>
+            <div><h4>Indices</h4><ul><li>Silhouettes entraperçues puis disparues, tirs d'une précision surnaturelle</li><li>Intérêt marqué pour des ruines ou des lieux oubliés</li><li>Sensibilité au Warp</li></ul></div>
+            <div><h4>En jeu</h4><p>Des énigmes plus que des ennemis : leurs objectifs croisent parfois ceux des agents, sans jamais s'expliquer. Un allié de circonstance est possible… et compromettant.</p></div>
+          </div>
+        </details>
+      </div>
+    </article>
+
+    <article class="dossier" id="drukhari">
+      <div class="glyph" aria-hidden="true">
+        <svg viewBox="0 0 100 100"><path d="M50 12l6 26 22-14-14 22 26 6-26 6 14 22-22-14-6 26-6-26-22 14 14-22-26-6 26-6-14-22 22 14z" fill="#a07ad6" fill-opacity="0.85"/><circle cx="50" cy="50" r="7" fill="#0f1c1a"/></svg>
+      </div>
+      <div>
+        <h3>Drukhari</h3>
+        <p class="alias">Les pillards de l'ombre</p>
+        <div class="threat">Menace <span class="pips"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+        <p>Cousins des Aeldari voués à la cruauté, à l'esclavage et à la piraterie. Ils prolongent leur vie en se nourrissant de la souffrance des autres, et surgissent de portails cachés pour enlever leurs victimes.</p>
+        <details>
+          <summary>Disséquer le dossier</summary>
+          <div class="dissect">
+            <div><h4>Dans le secteur</h4><p>Pendant la Noctis Aeterna, des cabales ont fait du système de Proteus un jeu : semer la peur jusqu'à ce que trois mondes s'entre-déchirent. Sur la planète touristique de Xenophon, un pacte ancien livre en secret des voyageurs aux Drukhari, dont les portails dorment sous les coraux.</p></div>
+            <div><h4>Indices</h4><ul><li>Disparitions sans corps, villages vidés, familles entières envolées</li><li>Peur collective inexplicable, rumeurs qui montent les gens les uns contre les autres</li><li>Lieux que l'on évite sans savoir pourquoi</li></ul></div>
+            <div><h4>En jeu</h4><p>Le parfait antagoniste d'enquête : on remonte une piste de disparitions et l'on découvre trop tard qui se cache derrière.</p></div>
+          </div>
+        </details>
+      </div>
+    </article>
+
+    <article class="dossier" id="tau">
+      <div class="glyph" aria-hidden="true">
+        <svg viewBox="0 0 100 100"><g fill="none" stroke="#7fe0c3" stroke-width="3" stroke-linecap="round"><path d="M50 14v72"/><path d="M50 30c-16 2-26 12-28 26"/><path d="M50 30c16 2 26 12 28 26"/><path d="M50 52c-10 2-16 8-18 18"/><path d="M50 52c10 2 16 8 18 18"/></g><circle cx="50" cy="14" r="6" fill="#d9a441"/></svg>
+      </div>
+      <div>
+        <h3>T'au et Kroot</h3>
+        <p class="alias">L'empire qui promet, et ses chasseurs</p>
+        <div class="threat">Menace <span class="pips"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+        <p>Une jeune puissance qui s'étend sans y être invitée et sape l'autorité impériale par la persuasion et les promesses. Ses alliés kroot, grands chasseurs à l'allure d'oiseaux, évoluent en dévorant leurs proies.</p>
+        <details>
+          <summary>Disséquer le dossier</summary>
+          <div class="dissect">
+            <div><h4>Dans le secteur</h4><p>Les Kroot s'y louent comme mercenaires et chasseurs de primes, en quête de nouveaux matériaux génétiques. Ils sécrètent des odeurs à volonté et imitent les voix qu'ils entendent, ce qui met les humains très mal à l'aise.</p></div>
+            <div><h4>Indices</h4><ul><li>Tracts, discours ou désertions qui vantent un « bien commun »</li><li>Fusils à lames, odeurs musquées, voix qui sonnent faux</li><li>Commerce discret avec des mondes frontaliers</li></ul></div>
+            <div><h4>En jeu</h4><p>Les Kroot font d'excellents mercenaires adverses (ou alliés gênants). Les T'au, eux, sont une menace d'idées : une cellule qui retourne les esprits plutôt qu'elle ne tire.</p></div>
+          </div>
+        </details>
+      </div>
+    </article>
+
+    <article class="dossier" id="tyranides">
+      <div class="glyph" aria-hidden="true">
+        <svg viewBox="0 0 100 100"><g fill="none" stroke="#a07ad6" stroke-width="3" stroke-linecap="round"><path d="M50 50c-6-14 0-30 16-34"/><path d="M50 50c14-6 30 0 34 16"/><path d="M50 50c6 14 0 30-16 34"/><path d="M50 50c-14 6-30 0-34-16"/></g><circle cx="50" cy="50" r="9" fill="#d9a441"/></svg>
+      </div>
+      <div>
+        <h3>Tyranides et cultes Genestealer</h3>
+        <p class="alias">La faim venue d'au-delà de la galaxie</p>
+        <div class="threat">Menace <span class="pips"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+        <p>Des essaims sans esprit propre, guidés par une volonté unique, qui dévorent des mondes entiers. Leur avant-garde, le Genestealer, est un prédateur redoutable… et le premier signe de bien pire.</p>
+        <details>
+          <summary>Disséquer le dossier</summary>
+          <div class="dissect">
+            <div><h4>Dans le secteur</h4><p>Les Genestealers purs y sont rares. Seule une poignée de spécialistes comprend leur vraie nature ; la plupart les croient de simples bêtes transportées par les vaisseaux. Les rumeurs d'hybrides sont officiellement « biologiquement impossibles », mais elles reviennent sur plusieurs planètes, et certaines lignées seraient déjà liées à un culte.</p></div>
+            <div><h4>Indices</h4><ul><li>Familles aux enfants étrangement ressemblants, crânes allongés</li><li>Fidèles d'un culte trop soudé, ouvriers qui se taisent tous ensemble</li><li>Disparitions dans les conduits et les mines</li></ul></div>
+            <div><h4>En jeu</h4><p>Le complot lent par excellence : une infiltration qui grandit sur des générations. Le livre propose même, pour les audacieux, de jouer des cultistes infiltrés.</p></div>
+          </div>
+        </details>
+      </div>
+    </article>
+
+    <article class="dossier" id="necrons">
+      <div class="glyph" aria-hidden="true">
+        <svg viewBox="0 0 100 100"><g fill="none" stroke="#7fe0c3" stroke-width="2.5"><path d="M50 12l32 19v38L50 88 18 69V31z"/><path d="M50 30l16 10v20L50 70 34 60V40z" stroke-opacity="0.5"/></g><circle cx="50" cy="50" r="5" fill="#7fe0c3"/></svg>
+      </div>
+      <div>
+        <h3>Nécrons</h3>
+        <p class="alias">Ceux qui dorment sous la roche</p>
+        <div class="threat">Menace <span class="pips"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+        <p>Les archives parlent à demi-mot de dangers plus anciens, vestiges d'une guerre oubliée entre les étoiles, tapis sur d'innombrables mondes.</p>
+        <details>
+          <summary>Disséquer le dossier</summary>
+          <div class="dissect">
+            <div><h4>Dans le secteur</h4><p>Forkas-63 est née de la collision volontaire de deux planètes par un explorateur du Mechanicus. Il cachait à tous que l'une d'elles était un monde-tombeau nécron. Le minerai extrait depuis a d'étranges propriétés, et des structures xenos ont fini par être détectées.</p></div>
+            <div><h4>Indices</h4><ul><li>Métal vivant qui se répare tout seul</li><li>Machines qui s'éveillent sans alimentation</li><li>Mines où les équipes ne remontent pas</li></ul></div>
+            <div><h4>En jeu</h4><p>Une menace endormie à garder en réserve : le genre de découverte qu'un patron veut étouffer… ou exploiter.</p></div>
+          </div>
+        </details>
+      </div>
+    </article>
+
+    <article class="dossier" id="vilmori">
+      <div class="glyph" aria-hidden="true">
+        <svg viewBox="0 0 100 100"><g fill="#a07ad6" fill-opacity="0.75"><path d="M50 10l10 30-10 50-10-50z"/><path d="M22 34l18 12-6 30-14-26z" fill-opacity="0.45"/><path d="M78 34l-18 12 6 30 14-26z" fill-opacity="0.45"/></g></svg>
+      </div>
+      <div>
+        <h3>Vilmori</h3>
+        <p class="alias">Une espèce éteinte… en principe</p>
+        <div class="threat">Menace <span class="pips"><i class="on"></i><i></i><i></i><i></i><i></i></span> inconnue</div>
+        <p>Une espèce ancienne qui a fait exploser son propre soleil, pour des raisons perdues, donnant naissance à la nébuleuse Gallosque. Des traces de leur civilisation subsistent sur plusieurs mondes du sous-secteur.</p>
+        <details>
+          <summary>Disséquer le dossier</summary>
+          <div class="dissect">
+            <div><h4>Dans le secteur</h4><p>Leurs artefacts à la technologie cristalline valent une fortune, et attirent collectionneurs, libres-marchands… et inquisiteurs.</p></div>
+            <div><h4>En jeu</h4><p>Un excellent moteur d'aventure : une relique convoitée par plusieurs factions, et la question de ce qui l'a vraiment produite.</p></div>
+          </div>
+        </details>
+      </div>
+    </article>
+
+    <h2 id="toile">La Toile</h2>
+    <div class="membrane-box">
+      <p>
+        La Toile (le <em>Webway</em>) est une dimension à part, plus ancienne que les Aeldari eux-mêmes, qui leur permet de voyager
+        entre les étoiles sans affronter les horreurs du Warp. Ses passages relient des mondes distants de milliers d'années-lumière
+        par des portails dans l'espace ou à la surface des planètes. Les Drukhari y abritent leur cité, Commorragh.
+      </p>
+      <p>Pour les agents, un portail découvert est une énigme, une menace… et un secret qui peut valoir une condamnation.</p>
+    </div>
+
+    <h2>Fiches d'autopsie</h2>
+    <p style="color:var(--muted);max-width:44rem">Repères pour le MJ tirés du bestiaire du livre de base : quelques valeurs clés et ce qui rend chaque spécimen dangereux. Le profil complet est dans le livre.</p>
+    <div class="autopsies">
+      <section class="autopsy">
+        <h3>Ranger aeldari</h3>
+        <p class="rank">Élite</p>
+        <dl><div><dt>Blessures</dt><dd>14</dd></div><div><dt>Armure</dt><dd>4</dd></div><div><dt>Initiative</dt><dd>9</dd></div><div><dt>Résolution</dt><dd>2</dd></div></dl>
+        <p>Tireur d'élite très discret et très agile. Sa cape le rend presque invisible s'il ne bouge pas. Il sent le Warp, mais résiste mal aux pouvoirs psychiques.</p>
+        <p><em>Armes :</em> long fusil de ranger, pistolet shuriken perforant.</p>
+      </section>
+      <section class="autopsy">
+        <h3>Guerrier kabalite drukhari</h3>
+        <p class="rank">Élite</p>
+        <dl><div><dt>Blessures</dt><dd>14</dd></div><div><dt>Armure</dt><dd>5</dd></div><div><dt>Initiative</dt><dd>8</dd></div><div><dt>Résolution</dt><dd>2</dd></div></dl>
+        <p>Excellent au couteau, ses lames percent l'armure. Chaque mise à mort renforce tous les Drukhari présents : plus le combat dure, plus ils deviennent dangereux.</p>
+        <p><em>Armes :</em> fusil à éclats empoisonnés, couteau.</p>
+      </section>
+      <section class="autopsy">
+        <h3>Mercenaire kroot</h3>
+        <p class="rank">Élite</p>
+        <dl><div><dt>Blessures</dt><dd>11</dd></div><div><dt>Armure</dt><dd>1</dd></div><div><dt>Initiative</dt><dd>8</dd></div><div><dt>Résolution</dt><dd>2</dd></div></dl>
+        <p>Chasseur d'embuscade : il se dissimule en se déplaçant d'un couvert à l'autre et tire mieux parti des abris.</p>
+        <p><em>Armes :</em> fusil kroot, qui tire et tranche grâce à ses lames.</p>
+      </section>
+      <section class="autopsy">
+        <h3>Genestealer pur</h3>
+        <p class="rank">Élite</p>
+        <dl><div><dt>Blessures</dt><dd>20</dd></div><div><dt>Armure</dt><dd>2</dd></div><div><dt>Initiative</dt><dd>10</dd></div><div><dt>Résolution</dt><dd>2</dd></div></dl>
+        <p>Un monstre de griffes et de vitesse, redoutable au contact, qui escalade tout. Relié à l'esprit de la ruche, il est encore plus déterminé.</p>
+        <p><em>Armes :</em> griffes et serres qui percent et lacèrent l'armure.</p>
+      </section>
+    </div>
+
+    <div class="membrane-box">
+      <h3>L'Ordo Xenos</h3>
+      <p>
+        La branche de l'Inquisition chargée des menaces extraterrestres. Selon l'inquisiteur, ses agents purgent tout contact avec
+        l'étranger… ou collectionnent artefacts et secrets pour combattre l'ennemi avec ses propres armes. Un patron idéal pour une
+        campagne tournée vers les xenos : voir <a href="factions.html">les factions</a> et <a href="creation.html#patron">la création du patron</a>.
+      </p>
+    </div>
+  </main>
+</body>
+</html>

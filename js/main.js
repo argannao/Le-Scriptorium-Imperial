@@ -17,6 +17,7 @@ const MODULES = [
   { href: "psy.html",         label: "Psykers" },
   { href: "factions.html",    label: "Factions" },
   { href: "secteur.html",     label: "Secteur" },
+  { href: "xenos.html",       label: "Xenos" },
   { href: "lexique.html",     label: "Lexique" },
 ];
 
