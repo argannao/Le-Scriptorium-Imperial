@@ -784,12 +784,14 @@
   }
 
   function openDossier() {
-    try { $("#dossier").dataset.ph = localStorage.getItem("scriptorium-phosphor") || ""; } catch (e) { /* stockage indisponible */ }
+    try { $("#dossier").dataset.ph = localStorage.getItem("scriptorium-phosphor") || ""; $("#dossier").dataset.paper = localStorage.getItem("scriptorium-paper") || ""; } catch (e) { /* stockage indisponible */ }
+    paperLabel();
     renderDossier();
     const doc = $("#dossier-doc");
     doc.classList.add("boot"); clearTimeout(openDossier.t); openDossier.t = setTimeout(() => doc.classList.remove("boot"), 2200);
     $("#dossier").hidden = false; $("#dossier").scrollTop = 0; document.body.classList.add("dossier-open");
   }
+  function paperLabel() { const b = $("#paper-btn"); if (b) b.textContent = $("#dossier").dataset.paper === "listing" ? "PDF : listing papier" : "PDF : écran"; }
   function closeDossier() { $("#dossier").hidden = true; document.body.classList.remove("dossier-open"); }
 
 
@@ -968,6 +970,7 @@
     else if (act === "print") { openDossier(); setTimeout(() => window.print(), 60); return; }
     else if (act === "dossier-open") { openDossier(); return; }
     else if (act === "trk") { S.track = S.track || {}; const k = b.dataset.t, i = +b.dataset.i + 1; S.track[k] = S.track[k] === i ? i - 1 : i; }
+    else if (act === "paper") { const d = $("#dossier"); d.dataset.paper = d.dataset.paper === "listing" ? "" : "listing"; paperLabel(); try { localStorage.setItem("scriptorium-paper", d.dataset.paper); } catch (e) {} return; }
     else if (act === "phosphor") { const d = $("#dossier"); d.dataset.ph = d.dataset.ph === "amber" ? "" : "amber"; try { localStorage.setItem("scriptorium-phosphor", d.dataset.ph); } catch (e) {} return; }
     else if (act === "dossier-close") { closeDossier(); return; }
     else if (act === "export") { exportJSON(); return; }
