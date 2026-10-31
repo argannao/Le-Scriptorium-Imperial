@@ -562,7 +562,7 @@
   }
 
 
-  /* ---------- Dossier d'agent (fiche complète, imprimable) ---------- */
+  /* ---------- Dossier d'agent : terminal de cogitateur (imprimable sur listing) ---------- */
 
   function hashStr(t) { let h = 2166136261; for (const ch of t) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
   function imperialDate() {
@@ -571,143 +571,194 @@
     const frac = Math.floor(((d - start) / 864e5 / 365.25) * 1000);
     return `0.${String(frac).padStart(3, "0")}.${String(d.getFullYear() % 1000).padStart(3, "0")}.M42`;
   }
-  const boxes = (n, cls = "") => `<span class="dz-track ${cls}">${'<i></i>'.repeat(Math.max(0, n))}</span>`;
   const firstSentence = (t) => (t || "").split(/(?<=\.)\s/)[0];
+  const dots = (label, w = 22) => esc(label) + `<span class="tm-lead" aria-hidden="true">${" .".repeat(Math.max(1, Math.ceil((w - label.length) / 2)))}</span>`;
 
-  const SEAL_SVG = `<svg viewBox="0 0 120 150" class="dz-seal" aria-hidden="true">
-    <path d="M42 92 L30 148 L46 136 L54 150 L60 96 Z" fill="#e6dcc3" stroke="#8f7333" stroke-width="1.5"/>
-    <path d="M78 92 L90 148 L74 136 L66 150 L60 96 Z" fill="#d9ccae" stroke="#8f7333" stroke-width="1.5"/>
-    <path d="M60 6 C72 4 80 14 92 14 C100 22 108 26 110 40 C116 50 112 62 112 70 C108 82 98 86 92 96 C80 100 72 108 60 106 C48 108 40 100 28 96 C22 86 12 82 8 70 C8 62 4 50 10 40 C12 26 20 22 28 14 C40 14 48 4 60 6 Z" fill="#8e1b1b"/>
-    <circle cx="60" cy="56" r="36" fill="none" stroke="#5e0f0f" stroke-width="3"/>
-    <circle cx="60" cy="56" r="29" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="2 3"/>
-    <text x="60" y="66" text-anchor="middle" font-family="Cinzel, serif" font-size="28" font-weight="700" fill="#e8c873" opacity=".9">I</text>
-    <path d="M38 52 q8 -10 16 -2 M82 52 q-8 -10 -16 -2" stroke="#e8c873" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".85"/>
-  </svg>`;
-  const WINGS_SVG = `<svg viewBox="0 0 240 70" class="dz-wings" aria-hidden="true"><g fill="currentColor">
-    ${[0, 1, 2, 3, 4].map((i) => `<path d="M104 ${30 + i * 4} C${86 - i * 18} ${18 + i * 6} ${60 - i * 14} ${14 + i * 8} ${20 - i * 2} ${8 + i * 10} C${46 - i * 8} ${24 + i * 8} ${70 - i * 10} ${34 + i * 6} 104 ${40 + i * 4} Z"/>
-    <path d="M136 ${30 + i * 4} C${154 + i * 18} ${18 + i * 6} ${180 + i * 14} ${14 + i * 8} ${220 + i * 2} ${8 + i * 10} C${194 + i * 8} ${24 + i * 8} ${170 + i * 10} ${34 + i * 6} 136 ${40 + i * 4} Z"/>`).join("")}
-    <circle cx="120" cy="34" r="15"/></g>
-    <g fill="#0b0a09"><ellipse cx="114" cy="31" rx="4" ry="4.5"/><ellipse cx="126" cy="31" rx="4" ry="4.5"/><path d="M118 38 h4 l-2 4 z"/><rect x="113" y="44" width="14" height="3" rx="1"/></g></svg>`;
+  // empreinte génétique : motif symétrique tiré du nom
+  function genePrint(seed) {
+    let x = seed || 1; const rnd = () => ((x = Math.imul(x ^ (x >>> 15), 2246822507) ^ (x + 0x9e3779b9)) >>> 0) / 4294967296;
+    let r = "";
+    for (let row = 0; row < 11; row++) for (let col = 0; col < 5; col++) {
+      if (rnd() < 0.5) { r += `<rect x="${col}" y="${row}" width="1" height="1"/>`; if (col < 4) r += `<rect x="${8 - col}" y="${row}" width="1" height="1"/>`; }
+    }
+    return `<svg viewBox="-1 -1 11 13" class="tm-gene" aria-hidden="true">${r}</svg>`;
+  }
+
+  // piste cliquable (cocher les blessures, le destin dépensé, etc.), mémorisée avec l'agent
+  function track(key, n, cls = "") {
+    S.track = S.track || {};
+    const used = Math.min(S.track[key] || 0, n);
+    return `<span class="tm-track ${cls}">${Array.from({ length: Math.max(0, n) }, (_, i) =>
+      `<button type="button" class="${i < used ? "on" : ""}" data-act="trk" data-t="${key}" data-i="${i}" aria-label="${key} ${i + 1}"></button>`).join("")}</span>`;
+  }
+
+  const THOUGHTS = [
+    "Un esprit curieux est un esprit vulnérable.",
+    "Le doute est la première fissure dans l'armure.",
+    "Ce que l'on ignore ne peut pas vous trahir.",
+    "Le silence est un serment que l'on renouvelle chaque jour.",
+    "Aucun dossier n'est jamais vraiment clos.",
+    "L'esprit-machine se souvient de ce que la chair oublie.",
+  ];
 
   function renderDossier() {
     const fc = finalCaracs();
     const o = origin(), f = faction(), r = role(), sp = species();
     const talents = allTalents();
     const B = (id) => (fc ? bonus(fc[id]) : null);
-    const v = (x) => (x === null || x === undefined || Number.isNaN(x) ? "—" : x);
     const name = S.name || "Agent sans nom";
-    const ref = "IM-" + (hashStr(name + (f ? f.id : "") + (r ? r.id : "")) % 1e6).toString().padStart(6, "0");
+    const h = hashStr(name + (f ? f.id : "") + (r ? r.id : ""));
+    const ref = "IM-" + (h % 1e6).toString().padStart(6, "0");
     const arch = S.archetype && byId(ARCHETYPES, S.archetype);
-    const wounds = fc ? B("f") + 2 * B("e") + B("fm") + (sp.bonusBlessures || 0) : null;
-    const crits = fc ? B("e") + (sp.bonusCritiques || 0) : null;
+    const wounds = fc ? B("f") + 2 * B("e") + B("fm") + (sp.bonusBlessures || 0) : 0;
+    const crits = fc ? B("e") + (sp.bonusCritiques || 0) : 0;
     const fate = 3 + (talents.includes("Prédestiné") ? 1 : 0);
     const warp = fc && isPsyker() ? B("fm") * (talents.includes("Psyker sanctionné") ? 2 : 1) : null;
-    const classif = isBlank() ? "Sceau du Silence" : isPsyker() ? "Psykana — sous surveillance" : sp.id !== "humain" ? "Xenos — accès restreint" : "Vermillon";
+    const [classif, level] = isBlank() ? ["SCEAU DU SILENCE", "red"] : isPsyker() ? ["PSYKANA // SOUS SURVEILLANCE", "amber"] : sp.id !== "humain" ? ["XENOS // ACCÈS RESTREINT", "red"] : ["VERMILLON", "ok"];
+    const hex = (n, w = 4) => "0x" + (n >>> 0).toString(16).toUpperCase().padStart(w, "0").slice(-w);
+    const thought = THOUGHTS[h % THOUGHTS.length];
 
     const ident = [
-      ["Espèce", sp.nom],
-      ["Origine", xenosOrigin() ? "—" : o && o.nom],
-      ["Faction", f && f.nom],
-      ["Rôle", r && r.nom],
-      ["Archétype", arch && arch.nom],
-      ["Patron", ""],
+      ["ESPÈCE", sp.nom], ["ORIGINE", xenosOrigin() ? "—" : o && o.nom], ["FACTION", f && f.nom],
+      ["RÔLE", r && r.nom], ["ARCHÉTYPE", arch && arch.nom], ["PATRON", ""],
     ];
 
+    const caracRows = CARACS.map((c) => {
+      const val = fc ? fc[c.id] : 0, cells = 20, full = Math.round(Math.min(val, 100) / 100 * cells);
+      return `<div class="tm-car${val >= 40 ? " hi" : ""}">
+        <span class="tm-car-ab">${esc(c.ab.toUpperCase())}</span>
+        <span class="tm-bar" aria-hidden="true">${Array.from({ length: cells }, (_, i) => `<i class="${i < full ? "on" : ""}"></i>`).join("")}</span>
+        <strong>${fc ? String(val).padStart(2, "0") : "--"}</strong><em>B${fc ? bonus(val) : "-"}</em>
+        <small>${esc(c.nom)}</small></div>`;
+    }).join("");
+
     const skillRows = Object.entries(SKILLS).map(([sk, s]) => {
-      const a = advAll(sk), base = fc ? fc[s.c] : null, val = base !== null ? base + 5 * a : "—";
+      const a = advAll(sk), base = fc ? fc[s.c] : null, val = base !== null ? base + 5 * a : "--";
       const specs = [...new Set([...Object.keys(S.role.specs), ...Object.keys(S.xp.spec)])].filter((k) => specAll(k) && k.startsWith(sk + ":"));
-      return `<div class="dz-skill${a || specs.length ? " on" : ""}">
-        <span class="dz-sk-name">${esc(s.nom)}</span><span class="dz-sk-car">${esc(CARACS.find((c) => c.id === s.c).ab)}</span>
-        <span class="dz-pips">${[1, 2, 3, 4].map((i) => `<b class="${i <= a ? "on" : ""}"></b>`).join("")}</span><strong>${val}</strong>
-        ${specs.map((k) => `<span class="dz-spec">↳ ${esc(k.split(":")[1])}<span class="dz-pips">${[1, 2, 3, 4].map((i) => `<b class="${i <= specAll(k) ? "on" : ""}"></b>`).join("")}</span><strong>${base !== null ? val + 5 * specAll(k) : "—"}</strong></span>`).join("")}
+      const lv = (n) => `<span class="tm-lv">[${"◆".repeat(n)}${"◇".repeat(Math.max(0, 4 - n))}]</span>`;
+      return `<div class="tm-sk${a || specs.length ? " on" : ""}">
+        <span class="tm-sk-n">${dots(s.nom.toUpperCase(), 17)}</span><span class="tm-sk-c">${esc(CARACS.find((c) => c.id === s.c).ab)}</span>${lv(a)}<strong>${val}</strong>
+        ${specs.map((k) => `<span class="tm-spec"><span>└─ ${esc(k.split(":")[1])}</span>${lv(specAll(k))}<strong>${base !== null ? val + 5 * specAll(k) : "--"}</strong></span>`).join("")}
       </div>`;
     }).join("");
 
-    const talentCards = talents.map((t) => {
-      const T = TALENTS.find((x) => x.nom === t);
-      return `<div class="dz-card"><div class="dz-card-t">${esc(t)}</div><p>${esc(T ? T.eff : "")}</p></div>`;
-    }).join("") || `<p class="dz-empty">Aucun talent consigné.</p>`;
-    const traitCards = (sp.traits || []).map((t) => `<div class="dz-card xeno"><div class="dz-card-t">${esc(t.nom)}</div><p>${esc(firstSentence(t.d))}</p></div>`).join("");
+    const entry = (tag, title, txt, cls = "") => `<div class="tm-entry ${cls}"><div class="tm-entry-t"><span class="tm-tag">${tag}</span>${esc(title)}</div>${txt ? `<p>${esc(txt)}</p>` : ""}</div>`;
+    const talentList = talents.map((t) => { const T = TALENTS.find((x) => x.nom === t); return entry("TAL", t, T && T.eff); }).join("") || `<p class="tm-dim">&gt; aucune entrée</p>`;
+    const traitList = (sp.traits || []).map((t) => entry("GEN", t.nom, firstSentence(t.d), "xeno")).join("");
+    const powers = isPsyker() ? [...S.psy.minor, ...S.xp.minor].map((p) => [p, "mineur"]).concat([...S.psy.powers, ...S.xp.powers].map((p) => [p, S.psy.discipline])) : [];
+    const powerList = powers.map(([p, d]) => entry("PSY", `${p} — ${d || ""}`, firstSentence((POWER_INFO[p] || {}).d), "warp")).join("");
 
-    const powers = isPsyker() ? [...S.psy.minor, ...S.xp.minor].map((p) => [p, "Mineur"]).concat([...S.psy.powers, ...S.xp.powers].map((p) => [p, S.psy.discipline])) : [];
-    const powerCards = powers.map(([p, d]) => {
-      const P = POWER_INFO[p] || {};
-      return `<div class="dz-card warp"><div class="dz-card-t">${esc(p)} <small>${esc(d || "")}</small></div><p>${esc(firstSentence(P.d))}</p></div>`;
-    }).join("");
-
-    const equip = equipList().map((x) => {
-      if (x.startsWith("[")) return `<li class="dz-pending">${esc(x)}</li>`;
+    const equip = equipList().map((x, i) => {
+      const n = String(i + 1).padStart(2, "0");
+      if (x.startsWith("[")) return `<li class="tm-dim"><span class="tm-idx">${n}</span><span>${esc(x)} <i>// en attente d'attribution</i></span></li>`;
       const it = ITEM_INFO[x];
-      return `<li><span>${esc(x)}</span>${it && it.s ? `<small>${esc(it.s)}</small>` : ""}</li>`;
+      return `<li><span class="tm-idx">${n}</span><span>${esc(x)}${it && it.s && it.s !== "—" ? `<small>${esc(it.s)}</small>` : ""}</span></li>`;
     }).join("");
 
-    const notes = S.notes ? esc(S.notes).replace(/\n/g, "<br>") : "";
+    const notes = S.notes ? esc(S.notes).replace(/\n/g, "<br>&gt; ") : "";
+    const bin = Array.from({ length: 34 }, (_, i) => ((h >>> (i % 31)) & 0xff ^ (i * 37)).toString(2).padStart(8, "0")).join(" ");
 
-    $("#dossier-doc").innerHTML = `
-      <div class="dz-corner tl"></div><div class="dz-corner tr"></div><div class="dz-corner bl"></div><div class="dz-corner br"></div>
-      <header class="dz-head">
-        <div class="dz-meta"><span>Réf. ${ref}</span><span>${imperialDate()}</span></div>
-        ${WINGS_SVG}
-        <div class="dz-kicker">Adeptus Terra · Secteur Macharien</div>
-        <h2 class="dz-title">Dossier d'agent</h2>
-        <div class="dz-classif">Classification : <strong>${esc(classif)}</strong></div>
+    const doc = $("#dossier-doc");
+    doc.className = "dossier-doc tm";
+    doc.innerHTML = `
+      <div class="tm-noise" aria-hidden="true">${bin}</div>
+      <div class="tm-topbar">
+        <span><i class="tm-led"></i>COGITATOR MK.IX</span><span class="tm-hide-s">NŒUD 7-ALPHA</span><span>CANAL CRYPTÉ ${hex(h, 4)}</span>
+      </div>
+      <div class="tm-boot">
+        <div>&gt; ++ RITE DE CONSULTATION INITIÉ ++</div>
+        <div>&gt; Bénédiction de l'esprit-machine<span class="tm-lead"> . . . . . . </span><span class="tm-ok">[ACCORDÉE]</span></div>
+        <div>&gt; Déchiffrement du dossier ${ref}<span class="tm-lead"> . . . . . . </span><span class="tm-ok">[OK]</span></div>
+        <div>&gt; Vérification de l'accréditation<span class="tm-lead"> . . . . . . </span><span class="tm-${level}">[${classif}]</span></div>
+      </div>
+
+      <header class="tm-head">
+        <pre class="tm-ascii" aria-hidden="true">╔════════════════════════════════════════╗
+║   D O S S I E R   D ' A G E N T        ║
+╚════════════════════════════════════════╝</pre>
+        <h2 class="tm-title">Dossier d'agent</h2>
+        <div class="tm-meta"><span>RÉF ${ref}</span><span>DATE ${imperialDate()}</span><span>SECTEUR MACHARIEN</span></div>
       </header>
 
-      <section class="dz-id">
-        <div class="dz-portrait"><span>Pict-capture<br>non archivée</span></div>
-        <div class="dz-id-main">
-          <div class="dz-name">${esc(name)}</div>
-          <dl class="dz-ident">${ident.map(([k, val]) => `<div><dt>${k}</dt><dd>${val ? esc(val) : "<span class='dz-line'></span>"}</dd></div>`).join("")}</dl>
+      <section class="tm-box tm-id">
+        <div class="tm-box-t">┤ IDENTIFICATION ├</div>
+        <div class="tm-id-grid">
+          <figure class="tm-pict">${genePrint(h)}<figcaption>EMPREINTE<br>GÉNÉTIQUE</figcaption></figure>
+          <div class="tm-id-main">
+            <div class="tm-name">${esc(name.toUpperCase())}<span class="tm-cursor"></span></div>
+            <dl>${ident.map(([k, v]) => `<div><dt>${k}</dt><dd>${v ? esc(v) : "<span class='tm-blank'></span>"}</dd></div>`).join("")}</dl>
+          </div>
+          <div class="tm-stamp tm-${level}">${esc(classif)}</div>
         </div>
-        ${SEAL_SVG}
       </section>
 
-      <h3 class="dz-h">Caractéristiques</h3>
-      <div class="dz-caracs">${CARACS.map((c) => `<div class="dz-car"><span class="dz-car-ab">${esc(c.ab)}</span><strong>${fc ? fc[c.id] : "—"}</strong><span class="dz-car-b">${fc ? bonus(fc[c.id]) : "·"}</span><small>${esc(c.nom)}</small></div>`).join("")}</div>
+      <section class="tm-box">
+        <div class="tm-box-t">┤ PROFIL PHYSIOLOGIQUE &amp; MENTAL ├</div>
+        <div class="tm-cars">${caracRows}</div>
+      </section>
 
-      <div class="dz-vitals">
-        <div class="dz-vital big"><span>Blessures</span><strong>${v(wounds)}</strong>${fc ? boxes(wounds) : ""}</div>
-        <div class="dz-vital"><span>Critiques max</span><strong>${v(crits)}</strong>${fc ? boxes(crits, "crit") : ""}</div>
-        <div class="dz-vital"><span>Destin</span><strong>${fate}</strong>${boxes(fate, "fate")}</div>
-        <div class="dz-vital"><span>Initiative</span><strong>${fc ? B("per") + B("ag") : "—"}</strong></div>
-        <div class="dz-vital"><span>Encombrement</span><strong>${fc ? B("f") + B("e") : "—"}</strong></div>
-        <div class="dz-vital"><span>Corruption</span><strong>&nbsp;</strong>${isBlank() ? `<em class="dz-immune">Immunisé</em>` : boxes(10, "corr")}</div>
-        ${warp !== null ? `<div class="dz-vital"><span>Seuil Warp</span><strong>${warp}</strong>${boxes(warp, "warp")}</div>` : ""}
+      <section class="tm-box">
+        <div class="tm-box-t">┤ ÉTAT VITAL <span class="tm-dim tm-noprint">— touchez une case pour la cocher</span> ├</div>
+        <div class="tm-vitals">
+          <div class="tm-v wide"><span>BLESSURES</span><strong>${fc ? wounds : "--"}</strong>${fc ? track("w", wounds) : ""}</div>
+          <div class="tm-v"><span>CRITIQUES</span><strong>${fc ? crits : "--"}</strong>${fc ? track("c", crits, "red") : ""}</div>
+          <div class="tm-v"><span>DESTIN</span><strong>${fate}</strong>${track("d", fate, "round")}</div>
+          <div class="tm-v"><span>CORRUPTION</span><strong>${isBlank() ? "Ø" : (S.track && S.track.k) || 0}</strong>${isBlank() ? `<em class="tm-dim">PARIA // IMMUNISÉ</em>` : track("k", 10, "amber")}</div>
+          ${warp !== null ? `<div class="tm-v"><span>SEUIL WARP</span><strong>${warp}</strong>${track("p", warp, "violet")}</div>` : ""}
+          <div class="tm-v"><span>INITIATIVE</span><strong>${fc ? B("per") + B("ag") : "--"}</strong></div>
+          <div class="tm-v"><span>ENCOMBREMENT</span><strong>${fc ? B("f") + B("e") : "--"}</strong></div>
+        </div>
+      </section>
+
+      <section class="tm-box">
+        <div class="tm-box-t">┤ COMPÉTENCES <span class="tm-dim">— valeur = carac. + 5 × niveau</span> ├</div>
+        <div class="tm-skills">${skillRows}</div>
+      </section>
+
+      <div class="tm-cols">
+        <section class="tm-box">
+          <div class="tm-box-t">┤ TALENTS ├</div>
+          ${talentList}
+          ${traitList ? `<div class="tm-sub">// TRAITS D'ESPÈCE</div>${traitList}` : ""}
+          ${isPsyker() ? `<div class="tm-sub">// POUVOIRS PSYCHIQUES</div>${powerList || `<p class="tm-dim">&gt; à choisir</p>`}` : ""}
+        </section>
+        <div>
+          <section class="tm-box">
+            <div class="tm-box-t">┤ INVENTAIRE ├</div>
+            <ul class="tm-equip">${equip || "<li class='tm-dim'>&gt; vide</li>"}</ul>
+            <div class="tm-kv"><span>SOLARS</span><strong>${f ? esc(String(f.solars)) : "--"}</strong></div>
+          </section>
+          <section class="tm-box">
+            <div class="tm-box-t">┤ INFLUENCE ├</div>
+            <p>${f ? `+1 &gt;&gt; ${esc(f.influence)}` : "--"}</p>
+            ${sp.relations ? `<p class="tm-dim">${esc(sp.relations)}</p>` : ""}
+          </section>
+          <section class="tm-box">
+            <div class="tm-box-t">┤ EXPÉRIENCE ├</div>
+            <div class="tm-xp"><div><span>GAGNÉE</span><strong>${xp()}</strong></div><div><span>DÉPENSÉE</span><strong>${spent()}</strong></div><div class="${remaining() < 0 ? "neg" : ""}"><span>RESTANTE</span><strong>${remaining()}</strong></div></div>
+          </section>
+        </div>
       </div>
 
-      <h3 class="dz-h">Compétences <small>● niveau d'avancement · valeur = caractéristique + 5 × niveau</small></h3>
-      <div class="dz-skills">${skillRows}</div>
+      <section class="tm-box">
+        <div class="tm-box-t">┤ JOURNAL DE L'ENQUÊTEUR ├</div>
+        <div class="tm-notes">${notes ? "&gt; " + notes : ""}<span class="tm-cursor"></span></div>
+      </section>
 
-      <div class="dz-cols">
-        <div>
-          <h3 class="dz-h">Talents</h3>
-          <div class="dz-cards">${talentCards}</div>
-          ${traitCards ? `<h3 class="dz-h">Traits d'espèce</h3><div class="dz-cards">${traitCards}</div>` : ""}
-          ${isPsyker() ? `<h3 class="dz-h">Pouvoirs psychiques</h3><div class="dz-cards">${powerCards || `<p class="dz-empty">À choisir.</p>`}</div>` : ""}
-        </div>
-        <div>
-          <h3 class="dz-h">Équipement</h3>
-          <ul class="dz-equip">${equip || "<li class='dz-pending'>—</li>"}</ul>
-          <div class="dz-solars"><span>Solars</span><strong>${f ? esc(String(f.solars)) : "—"}</strong></div>
-          <h3 class="dz-h">Influence</h3>
-          <p class="dz-p">${f ? `+1 auprès de : <strong>${esc(f.influence)}</strong>` : "—"}</p>
-          ${sp.relations ? `<p class="dz-p dz-small">${esc(sp.relations)}</p>` : ""}
-          <h3 class="dz-h">Expérience</h3>
-          <div class="dz-xp"><div><span>Gagnés</span><strong>${xp()}</strong></div><div><span>Dépensés</span><strong>${spent()}</strong></div><div><span>Restants</span><strong>${remaining()}</strong></div></div>
-        </div>
-      </div>
-
-      <h3 class="dz-h">Notes de l'enquêteur</h3>
-      <div class="dz-notes">${notes || "<span class='dz-line'></span><span class='dz-line'></span><span class='dz-line'></span>"}</div>
-
-      <footer class="dz-foot">
-        <div class="dz-sign"><span class="dz-line"></span><small>Visa du patron</small></div>
-        <p>Ce document est la propriété de l'Imperium. Toute lecture non autorisée constitue un acte d'hérésie.<br><em>Un esprit curieux est un esprit vulnérable.</em></p>
-        <div class="dz-sign"><span class="dz-line"></span><small>Sceau de l'agent</small></div>
+      <footer class="tm-foot">
+        <div>++ FIN DE TRANSMISSION ++ <span class="tm-dim">CHECKSUM ${hex(h * 2654435761, 8)}</span></div>
+        <div class="tm-thought">PENSÉE DU JOUR : « ${esc(thought)} »</div>
+        <div class="tm-dim">Toute consultation non autorisée sera signalée à l'Ordo compétent.</div>
       </footer>`;
   }
 
-  function openDossier() { renderDossier(); $("#dossier").hidden = false; document.body.classList.add("dossier-open"); }
+  function openDossier() {
+    try { $("#dossier").dataset.ph = localStorage.getItem("scriptorium-phosphor") || ""; } catch (e) { /* stockage indisponible */ }
+    renderDossier();
+    const doc = $("#dossier-doc");
+    doc.classList.add("boot"); clearTimeout(openDossier.t); openDossier.t = setTimeout(() => doc.classList.remove("boot"), 2200);
+    $("#dossier").hidden = false; $("#dossier").scrollTop = 0; document.body.classList.add("dossier-open");
+  }
   function closeDossier() { $("#dossier").hidden = true; document.body.classList.remove("dossier-open"); }
 
   function renderAll() {
@@ -776,6 +827,8 @@
     else if (act === "reset") { if (confirm("Effacer cet agent et recommencer ?")) S = blank(); }
     else if (act === "print") { openDossier(); setTimeout(() => window.print(), 60); return; }
     else if (act === "dossier-open") { openDossier(); return; }
+    else if (act === "trk") { S.track = S.track || {}; const k = b.dataset.t, i = +b.dataset.i + 1; S.track[k] = S.track[k] === i ? i - 1 : i; }
+    else if (act === "phosphor") { const d = $("#dossier"); d.dataset.ph = d.dataset.ph === "amber" ? "" : "amber"; try { localStorage.setItem("scriptorium-phosphor", d.dataset.ph); } catch (e) {} return; }
     else if (act === "dossier-close") { closeDossier(); return; }
     else if (act === "export") { exportJSON(); return; }
     else if (act === "import") { $("#import-file").click(); return; }

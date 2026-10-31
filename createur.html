@@ -6,13 +6,13 @@
   <title>Créateur d'agent — Le Scriptorium Impérial</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=4">
-  <link rel="stylesheet" href="css/dossier.css?v=4">
-  <script src="js/main.js?v=4" defer></script>
-  <script src="js/createur-data.js?v=4" defer></script>
-  <script src="js/createur-infos.js?v=4" defer></script>
-  <script src="js/createur.js?v=4" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=5">
+  <link rel="stylesheet" href="css/dossier.css?v=5">
+  <script src="js/main.js?v=5" defer></script>
+  <script src="js/createur-data.js?v=5" defer></script>
+  <script src="js/createur-infos.js?v=5" defer></script>
+  <script src="js/createur.js?v=5" defer></script>
   <style>
     main { max-width: 1280px; }
     .forge { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); gap: 1.5rem; align-items: start; }
@@ -213,8 +213,9 @@
   </main>
   <div id="dossier" hidden>
     <div class="dossier-bar no-print">
-      <span>Dossier d'agent</span>
-      <span><button class="btn" type="button" data-act="print">Imprimer / PDF</button>
+      <span>&gt; terminal du cogitateur</span>
+      <span><button class="btn ghost" type="button" data-act="phosphor">Phosphore vert / ambre</button>
+      <button class="btn" type="button" data-act="print">Imprimer / PDF</button>
       <button class="btn ghost" type="button" data-act="dossier-close">Fermer</button></span>
     </div>
     <article id="dossier-doc" class="dossier-doc"></article>
