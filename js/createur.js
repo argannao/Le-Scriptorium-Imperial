@@ -19,8 +19,26 @@
     role: { id: "", rolled: false, talents: [], adv: {}, specs: {}, equip: {} },
     psy: { discipline: "", minor: [], powers: [] },
     xp: blankXp(),
+    levels: [], maxLevel: 20, view: 0,     // niveaux 2+ (un par mission) · niveau max · niveau consulté (0 = actuel)
   });
   function blankXp() { return { car: {}, skill: {}, spec: {}, talents: [], minor: [], powers: [] }; }
+
+  /* ---------- Niveaux : niveau 1 = création (S.xp), puis un « seau » d'achats par mission ---------- */
+  let VIEW = 0;                                           // niveau pris en compte par les calculs (0 = tous)
+  const allBuckets = () => [S.xp, ...S.levels];
+  const buckets = () => (VIEW ? allBuckets().slice(0, VIEW) : allBuckets());
+  const level = () => 1 + S.levels.length;
+  const E = () => S.levels.length ? S.levels[S.levels.length - 1] : S.xp;   // niveau en cours d'achat
+  const eachBucket = (fn) => allBuckets().forEach(fn);
+  function X() {
+    const m = blankXp();
+    buckets().forEach((b) => {
+      ["car", "skill", "spec"].forEach((k) => Object.entries(b[k] || {}).forEach(([id, n]) => { m[k][id] = (m[k][id] || 0) + n; }));
+      ["talents", "minor", "powers"].forEach((k) => m[k].push(...(b[k] || [])));
+    });
+    return m;
+  }
+  function at(n, fn) { const old = VIEW; VIEW = n; try { return fn(); } finally { VIEW = old; } }
 
   let S = load() || blank();
 
@@ -30,6 +48,7 @@
   function normalize(obj) {
     const st = Object.assign(blank(), obj);
     st.xp = Object.assign(blankXp(), obj.xp || {});
+    st.levels = (obj.levels || []).map((l) => Object.assign(blankXp(), { xp: 100 }, l));
     return st;
   }
   function save() {
@@ -53,7 +72,7 @@
   function finalCaracs() {
     const b = creationCaracs();
     if (!b) return null;
-    CARACS.forEach((c) => { b[c.id] += S.xp.car[c.id] || 0; });
+    const x = X(); CARACS.forEach((c) => { b[c.id] += x.car[c.id] || 0; });
     return b;
   }
 
@@ -83,7 +102,7 @@
     const r = role();
     if (r && r.psyker && !list.includes("Psyker")) list.push("Psyker");
     S.role.talents.forEach((t) => { if (!list.includes(t)) list.push(t); });
-    S.xp.talents.forEach((t) => { if (!list.includes(t)) list.push(t); });
+    X().talents.forEach((t) => { if (!list.includes(t)) list.push(t); });
     return list;
   }
 
@@ -94,8 +113,8 @@
   }
 
   const advTotal = (sk) => (S.faction.adv[sk] || 0) + (S.role.adv[sk] || 0);   // niveaux obtenus à la création
-  const advAll = (sk) => advTotal(sk) + (S.xp.skill[sk] || 0);                   // + niveaux achetés en XP
-  const specAll = (key) => (S.role.specs[key] || 0) + (S.xp.spec[key] || 0);
+  const advAll = (sk) => advTotal(sk) + (X().skill[sk] || 0);                   // + niveaux achetés en XP
+  const specAll = (key) => (S.role.specs[key] || 0) + (X().spec[key] || 0);
 
   /* Coûts en XP (livre de base, p. 90) */
   const CAR_COSTS = [[25, 20], [30, 25], [35, 30], [40, 40], [45, 60], [50, 80], [55, 110], [60, 140], [65, 180], [70, 220], [75, 270], [80, 320]];
@@ -104,11 +123,11 @@
 
   function spent() {
     let x = 0;
-    const cc = creationCaracs();
-    if (cc) CARACS.forEach((c) => { for (let i = 1; i <= (S.xp.car[c.id] || 0); i++) x += carCost(cc[c.id] + i); });
-    Object.entries(S.xp.skill).forEach(([sk, n]) => { for (let i = 1; i <= n; i++) x += levelCost(advTotal(sk) + i); });
-    Object.entries(S.xp.spec).forEach(([k, n]) => { for (let i = 1; i <= n; i++) x += levelCost((S.role.specs[k] || 0) + i); });
-    x += 100 * S.xp.talents.length + 60 * S.xp.minor.length + 100 * S.xp.powers.length;
+    const cc = creationCaracs(), m = X();
+    if (cc) CARACS.forEach((c) => { for (let i = 1; i <= (m.car[c.id] || 0); i++) x += carCost(cc[c.id] + i); });
+    Object.entries(m.skill).forEach(([sk, n]) => { for (let i = 1; i <= n; i++) x += levelCost(advTotal(sk) + i); });
+    Object.entries(m.spec).forEach(([k, n]) => { for (let i = 1; i <= n; i++) x += levelCost((S.role.specs[k] || 0) + i); });
+    x += 100 * m.talents.length + 60 * m.minor.length + 100 * m.powers.length;
     return x;
   }
   const remaining = () => xp() - spent();
@@ -120,6 +139,7 @@
     if (S.origin.rolled && !xenosOrigin()) x += 25;
     if (S.faction.rolled) x += 75;
     if (S.role.rolled) x += 50;
+    S.levels.slice(0, VIEW ? VIEW - 1 : undefined).forEach((l) => { x += +l.xp || 0; });
     return x;
   }
 
@@ -205,10 +225,10 @@
     Object.keys(S.role.adv).forEach((sk) => { while (advTotal(sk) > 2 && S.role.adv[sk] > 0) S.role.adv[sk]--; });
     if (S.faction.id && !factionAllowed(S.faction.id)) S.faction = { id: "", rolled: false, choix: "", adv: {}, talentPick: 0, equip: {} };
     if (role() && role().psyker && (isBlank() || species().psyker === false)) S.role = { id: "", rolled: false, talents: [], adv: {}, specs: {}, equip: {} };
-    if (!isPsyker()) { S.psy = { discipline: "", minor: [], powers: [] }; S.xp.minor = []; S.xp.powers = []; delete S.xp.skill.psy;
-      Object.keys(S.xp.spec).forEach((k) => { if (k.startsWith("psy:")) delete S.xp.spec[k]; }); }
-    S.xp.talents = S.xp.talents.filter((t) => !factionTalents().includes(t) && !S.role.talents.includes(t));
-    Object.keys(S.xp.skill).forEach((sk) => { while (advAll(sk) > 4 && S.xp.skill[sk] > 0) S.xp.skill[sk]--; });
+    if (!isPsyker()) { S.psy = { discipline: "", minor: [], powers: [] };
+      eachBucket((b) => { b.minor = []; b.powers = []; delete b.skill.psy; Object.keys(b.spec).forEach((k) => { if (k.startsWith("psy:")) delete b.spec[k]; }); }); }
+    eachBucket((b) => { b.talents = b.talents.filter((t) => !factionTalents().includes(t) && !S.role.talents.includes(t)); });
+    [...allBuckets()].reverse().forEach((b) => Object.keys(b.skill).forEach((sk) => { while (advAll(sk) > 4 && b.skill[sk] > 0) b.skill[sk]--; }));
   }
 
   /* ---------- Rendu des étapes ---------- */
@@ -414,15 +434,17 @@
     // --- 6. Dépense des XP
     const budget = xp(), rest = remaining();
     const fc0 = creationCaracs(), fcx = finalCaracs();
-    let xps = `<div class="xp-bar ${rest < 0 ? "over" : ""}">Budget <strong>${budget}</strong> XP · dépensé <strong>${spent()}</strong> · reste <strong>${rest}</strong></div>`;
+    let xps = progressionHTML();
+    xps += `<h4 class="lvl-buy">Achats du niveau ${level()}</h4>`;
+    xps += `<div class="xp-bar ${rest < 0 ? "over" : ""}">Budget <strong>${budget}</strong> XP · dépensé <strong>${spent()}</strong> · reste <strong>${rest}</strong></div>`;
     if (!budget && !spent()) {
-      xps += `<p class="hint">Vous n'avez pas d'XP bonus : ils s'obtiennent en laissant le hasard décider aux étapes 1 à 4. Vous pourrez aussi revenir ici après vos premières parties.</p>`;
+      xps += `<p class="hint">Vous n'avez pas d'XP bonus : ils s'obtiennent en laissant le hasard décider aux étapes 1 à 4. Après votre première mission, passez au niveau 2 ci-dessus.</p>`;
     }
     if (rest < 0) xps += `<p class="warn-txt">Vous avez dépensé plus que votre budget (une étape précédente a peut-être changé). Retirez des achats ou réinitialisez.</p>`;
     if (!fcx) xps += `<p class="hint">Déterminez d'abord les caractéristiques.</p>`;
     else {
       xps += `<h4>Caractéristiques <span class="hint">(+1 par achat ; 60 maximum)</span></h4><div class="adv-list">${CARACS.map((c) => {
-        const n = S.xp.car[c.id] || 0, v = fcx[c.id], cost = carCost(v + 1);
+        const n = E().car[c.id] || 0, v = fcx[c.id], cost = carCost(v + 1);
         const can = v < 60 && cost <= rest;
         return `<div class="adv"><span>${c.nom} <small>${v}${n ? ` (+${n})` : ""} · prochain : ${v < 60 ? cost + " XP" : "max"}</small></span>
           <span class="stepper"><button type="button" data-act="xc-" data-c="${c.id}" ${n ? "" : "disabled"}>−</button><span class="val">${n}</span>
@@ -430,7 +452,7 @@
       }).join("")}</div>`;
 
       xps += `<h4>Compétences <span class="hint">(4 niveaux maximum au total)</span></h4><div class="adv-list">${Object.entries(SKILLS).map(([sk, sd]) => {
-        const n = S.xp.skill[sk] || 0, lvl = advAll(sk), cost = levelCost(lvl + 1);
+        const n = E().skill[sk] || 0, lvl = advAll(sk), cost = levelCost(lvl + 1);
         const locked = sk === "psy" && !isPsyker();
         const can = !locked && lvl < 4 && cost <= rest;
         return `<div class="adv"><span>${sd.nom} <small>niv. ${lvl}${n ? ` (+${n})` : ""} · ${lvl < 4 ? cost + " XP" : "max"}</small></span>
@@ -438,10 +460,10 @@
           <button type="button" data-act="xs+" data-sk="${sk}" ${can ? "" : "disabled"}>+</button></span></div>`;
       }).join("")}</div>`;
 
-      const specKeys = [...new Set([...Object.keys(S.role.specs), ...Object.keys(S.xp.spec)])];
+      const specKeys = [...new Set([...Object.keys(S.role.specs), ...Object.keys(X().spec)])];
       xps += `<h4>Spécialisations <span class="hint">(4 niveaux maximum chacune)</span></h4>`;
       if (specKeys.length) xps += `<div class="adv-list">${specKeys.map((k) => {
-        const [sk, sp] = k.split(":"); const n = S.xp.spec[k] || 0, lvl = specAll(k), cost = levelCost(lvl + 1);
+        const [sk, sp] = k.split(":"); const n = E().spec[k] || 0, lvl = specAll(k), cost = levelCost(lvl + 1);
         return `<div class="adv"><span>${SKILLS[sk].nom} (${esc(sp)}) <small>niv. ${lvl} · ${lvl < 4 ? cost + " XP" : "max"}</small></span>
           <span class="stepper"><button type="button" data-act="xp-" data-k="${esc(k)}" ${n ? "" : "disabled"}>−</button><span class="val">${n}</span>
           <button type="button" data-act="xp+" data-k="${esc(k)}" ${lvl < 4 && cost <= rest ? "" : "disabled"}>+</button></span></div>`;
@@ -454,7 +476,7 @@
       const owned = allTalents();
       const buyable = TALENTS.filter((t) => !t.creation && t.nom !== "Psyker" && !owned.includes(t.nom) && !(t.nom === "Psyker" && isBlank()));
       xps += `<h4>Talents <span class="hint">(100 XP chacun ; vérifiez les prérequis)</span></h4>`;
-      if (S.xp.talents.length) xps += `<div class="chips">${S.xp.talents.map((t) => `<span class="chip on"${tip("talent", t)}>${esc(t)} <button type="button" class="x" data-act="xt-del" data-t="${esc(t)}" aria-label="Retirer">×</button></span>`).join("")}</div>`;
+      if (E().talents.length) xps += `<div class="chips">${E().talents.map((t) => `<span class="chip on"${tip("talent", t)}>${esc(t)} <button type="button" class="x" data-act="xt-del" data-t="${esc(t)}" aria-label="Retirer">×</button></span>`).join("")}</div>`;
       xps += `<div class="row"><select class="select" id="xp-tal-select"><option value="">— Choisir un talent —</option>${buyable.map((t) =>
         `<option value="${esc(t.nom)}">${esc(t.nom)}${t.req && t.req !== "—" ? " — " + esc(t.req) : ""}</option>`).join("")}</select>
         <button class="btn ghost" type="button" data-act="xt-add" ${rest >= 100 ? "" : "disabled"}>Acheter (100 XP)</button></div>
@@ -462,10 +484,10 @@
         <p class="hint">Le site ne vérifie pas les prérequis à votre place : relisez-les dans <a href="talents.html" target="_blank">l'Archive IV</a>. Psyker, Paria, Prédestiné, Héritier et Psyker sanctionné ne s'achètent pas ici.</p>`;
 
       if (isPsyker()) {
-        const knownMinor = [...S.psy.minor, ...S.xp.minor];
-        const knownPow = [...S.psy.powers, ...S.xp.powers];
+        const knownMinor = [...S.psy.minor, ...X().minor];
+        const knownPow = [...S.psy.powers, ...X().powers];
         xps += `<h4>Pouvoirs psychiques <span class="hint">(mineur 60 XP, discipline 100 XP)</span></h4>`;
-        const bought = [...S.xp.minor.map((p) => [p, "m"]), ...S.xp.powers.map((p) => [p, "d"])];
+        const bought = [...E().minor.map((p) => [p, "m"]), ...E().powers.map((p) => [p, "d"])];
         if (bought.length) xps += `<div class="chips">${bought.map(([p, t]) => `<span class="chip on"${tip("power", p)}>${p} <button type="button" class="x" data-act="xpw-del" data-p="${p}" data-t="${t}" aria-label="Retirer">×</button></span>`).join("")}</div>`;
         xps += `<div class="row"><select class="select" id="xp-minor-select"><option value="">— Pouvoir mineur —</option>${PSY_MINOR.filter((p) => !knownMinor.includes(p)).map((p) => `<option>${p}</option>`).join("")}</select>
           <button class="btn ghost" type="button" data-act="xpm-add" ${rest >= 60 ? "" : "disabled"}>Apprendre (60 XP)</button></div>
@@ -474,7 +496,7 @@
           <button class="btn ghost" type="button" data-act="xpd-add" ${rest >= 100 ? "" : "disabled"}>Apprendre (100 XP)</button></div>
           <div class="preview" data-preview-for="xp-power-select" data-kind="power"></div>`;
       }
-      if (spent()) xps += `<p><button class="btn ghost" type="button" data-act="xp-reset">Annuler toutes les dépenses</button></p>`;
+      if (bucketCost(level())) xps += `<p><button class="btn ghost" type="button" data-act="xp-reset">Annuler les achats du niveau ${level()}</button></p>`;
     }
     $("#step-xp").innerHTML = xps;
 
@@ -508,7 +530,8 @@
     return out;
   }
 
-  function renderSheet() {
+  function renderSheet() { at(S.view && S.view < level() ? S.view : 0, renderSheetAt); }
+  function renderSheetAt() {
     const fc = finalCaracs();
     const o = origin(), f = faction(), r = role();
     const talents = allTalents();
@@ -517,6 +540,7 @@
     let h = `<div class="sheet-head">
       <div class="sheet-name">${esc(S.name) || "Agent sans nom"}</div>
       <div class="sheet-sub">${[species().id !== "humain" && species().nom, !xenosOrigin() && o && o.nom, f && f.nom, r && r.nom].filter(Boolean).join(" · ") || "Origine · Faction · Rôle"}</div>
+      <div class="sheet-lvl">Niveau ${VIEW || level()}${VIEW ? ` <em>(consultation — actuel : ${level()})</em>` : ""}</div>
     </div>`;
 
     h += `<div class="sheet-caracs">${CARACS.map((c) => `<div><span>${c.ab}</span><strong>${fc ? fc[c.id] : "—"}</strong><small>${fc ? "B" + bonus(fc[c.id]) : ""}</small></div>`).join("")}</div>`;
@@ -540,7 +564,7 @@
       const a = advAll(sk);
       const base = fc ? fc[s.c] : null;
       const val = base !== null ? base + 5 * a : "—";
-      const specs = [...new Set([...Object.keys(S.role.specs), ...Object.keys(S.xp.spec)])].filter((k) => specAll(k) && k.startsWith(sk + ":"));
+      const specs = [...new Set([...Object.keys(S.role.specs), ...Object.keys(X().spec)])].filter((k) => specAll(k) && k.startsWith(sk + ":"));
       const specTxt = specs.map((k) => `<div class="spec">↳ ${esc(k.split(":")[1])} <strong>${base !== null ? val + 5 * specAll(k) : "—"}</strong></div>`).join("");
       return `<tr class="${a || specs.length ? "trained" : ""}"><td>${s.nom} <small>(${carNom(s.c)})</small>${specTxt}</td><td>${"●".repeat(a)}${"○".repeat(Math.max(0, 4 - a))}</td><td><strong>${val}</strong></td></tr>`;
     }).join("")}</tbody></table>`;
@@ -549,7 +573,7 @@
     h += `<h4>Talents</h4><p>${talents.length ? talents.map((t) => `<span class="tipped"${tip("talent", t)}>${esc(t)}</span>`).join(" · ") : "<span class='hint'>—</span>"}</p>`;
 
     if (isPsyker()) {
-      const pw = [...S.psy.minor, ...S.xp.minor].map((p) => [p, "mineur"]).concat([...S.psy.powers, ...S.xp.powers].map((p) => [p, S.psy.discipline]));
+      const pw = [...S.psy.minor, ...X().minor].map((p) => [p, "mineur"]).concat([...S.psy.powers, ...X().powers].map((p) => [p, S.psy.discipline]));
       h += `<h4>Pouvoirs psychiques</h4><p>${pw.length ? pw.map(([p, d]) => `<span class="tipped"${tip("power", p)}>${esc(p)}</span> <small>(${esc(d)})</small>`).join(" · ") : "<span class='hint'>à choisir</span>"}</p>`;
     }
 
@@ -601,7 +625,8 @@
     "L'esprit-machine se souvient de ce que la chair oublie.",
   ];
 
-  function renderDossier() {
+  function renderDossier() { at(S.view && S.view < level() ? S.view : 0, renderDossierAt); }
+  function renderDossierAt() {
     const fc = finalCaracs();
     const o = origin(), f = faction(), r = role(), sp = species();
     const talents = allTalents();
@@ -614,13 +639,13 @@
     const crits = fc ? B("e") + (sp.bonusCritiques || 0) : 0;
     const fate = 3 + (talents.includes("Prédestiné") ? 1 : 0);
     const warp = fc && isPsyker() ? B("fm") * (talents.includes("Psyker sanctionné") ? 2 : 1) : null;
-    const [classif, level] = isBlank() ? ["SCEAU DU SILENCE", "red"] : isPsyker() ? ["PSYKANA // SOUS SURVEILLANCE", "amber"] : sp.id !== "humain" ? ["XENOS // ACCÈS RESTREINT", "red"] : ["VERMILLON", "ok"];
+    const [classif, tone] = isBlank() ? ["SCEAU DU SILENCE", "red"] : isPsyker() ? ["PSYKANA // SOUS SURVEILLANCE", "amber"] : sp.id !== "humain" ? ["XENOS // ACCÈS RESTREINT", "red"] : ["VERMILLON", "ok"];
     const hex = (n, w = 4) => "0x" + (n >>> 0).toString(16).toUpperCase().padStart(w, "0").slice(-w);
     const thought = THOUGHTS[h % THOUGHTS.length];
 
     const ident = [
       ["ESPÈCE", sp.nom], ["ORIGINE", xenosOrigin() ? "—" : o && o.nom], ["FACTION", f && f.nom],
-      ["RÔLE", r && r.nom], ["ARCHÉTYPE", arch && arch.nom], ["PATRON", ""],
+      ["RÔLE", r && r.nom], ["ARCHÉTYPE", arch && arch.nom], ["NIVEAU", `${VIEW || level()}${VIEW ? ` (archive — actuel ${level()})` : ""}`], ["PATRON", ""],
     ];
 
     const caracRows = CARACS.map((c) => {
@@ -634,7 +659,7 @@
 
     const skillRows = Object.entries(SKILLS).map(([sk, s]) => {
       const a = advAll(sk), base = fc ? fc[s.c] : null, val = base !== null ? base + 5 * a : "--";
-      const specs = [...new Set([...Object.keys(S.role.specs), ...Object.keys(S.xp.spec)])].filter((k) => specAll(k) && k.startsWith(sk + ":"));
+      const specs = [...new Set([...Object.keys(S.role.specs), ...Object.keys(X().spec)])].filter((k) => specAll(k) && k.startsWith(sk + ":"));
       const lv = (n) => `<span class="tm-lv">[${"◆".repeat(n)}${"◇".repeat(Math.max(0, 4 - n))}]</span>`;
       return `<div class="tm-sk${a || specs.length ? " on" : ""}">
         <span class="tm-sk-n">${dots(s.nom.toUpperCase(), 17)}</span><span class="tm-sk-c">${esc(CARACS.find((c) => c.id === s.c).ab)}</span>${lv(a)}<strong>${val}</strong>
@@ -645,7 +670,7 @@
     const entry = (tag, title, txt, cls = "") => `<div class="tm-entry ${cls}"><div class="tm-entry-t"><span class="tm-tag">${tag}</span>${esc(title)}</div>${txt ? `<p>${esc(txt)}</p>` : ""}</div>`;
     const talentList = talents.map((t) => { const T = TALENTS.find((x) => x.nom === t); return entry("TAL", t, T && T.eff); }).join("") || `<p class="tm-dim">&gt; aucune entrée</p>`;
     const traitList = (sp.traits || []).map((t) => entry("GEN", t.nom, firstSentence(t.d), "xeno")).join("");
-    const powers = isPsyker() ? [...S.psy.minor, ...S.xp.minor].map((p) => [p, "mineur"]).concat([...S.psy.powers, ...S.xp.powers].map((p) => [p, S.psy.discipline])) : [];
+    const powers = isPsyker() ? [...S.psy.minor, ...X().minor].map((p) => [p, "mineur"]).concat([...S.psy.powers, ...X().powers].map((p) => [p, S.psy.discipline])) : [];
     const powerList = powers.map(([p, d]) => entry("PSY", `${p} — ${d || ""}`, firstSentence((POWER_INFO[p] || {}).d), "warp")).join("");
 
     const equip = equipList().map((x, i) => {
@@ -669,7 +694,7 @@
         <div>&gt; ++ RITE DE CONSULTATION INITIÉ ++</div>
         <div>&gt; Bénédiction de l'esprit-machine<span class="tm-lead"> . . . . . . </span><span class="tm-ok">[ACCORDÉE]</span></div>
         <div>&gt; Déchiffrement du dossier ${ref}<span class="tm-lead"> . . . . . . </span><span class="tm-ok">[OK]</span></div>
-        <div>&gt; Vérification de l'accréditation<span class="tm-lead"> . . . . . . </span><span class="tm-${level}">[${classif}]</span></div>
+        <div>&gt; Vérification de l'accréditation<span class="tm-lead"> . . . . . . </span><span class="tm-${tone}">[${classif}]</span></div>
       </div>
 
       <header class="tm-head">
@@ -688,7 +713,7 @@
             <div class="tm-name">${esc(name.toUpperCase())}<span class="tm-cursor"></span></div>
             <dl>${ident.map(([k, v]) => `<div><dt>${k}</dt><dd>${v ? esc(v) : "<span class='tm-blank'></span>"}</dd></div>`).join("")}</dl>
           </div>
-          <div class="tm-stamp tm-${level}">${esc(classif)}</div>
+          <div class="tm-stamp tm-${tone}">${esc(classif)}</div>
         </div>
       </section>
 
@@ -739,6 +764,12 @@
           </section>
         </div>
       </div>
+
+      ${(VIEW || level()) > 1 ? `<section class="tm-box">
+        <div class="tm-box-t">┤ JOURNAL DE PROGRESSION ├</div>
+        <ol class="tm-log">${levelLog().filter((l) => l.n <= (VIEW || level())).map((l) => `<li><span class="tm-tag">NIV ${String(l.n).padStart(2, "0")}</span>
+          <span>${l.n === 1 ? "Création" : `Mission · +${l.gain} XP`} <span class="tm-dim">— dépensé ${l.cost} XP</span><br><span class="tm-dim">&gt; ${l.items.length ? l.items.map(esc).join(" · ") : "aucun achat"}</span></span></li>`).join("")}</ol>
+      </section>` : ""}
 
       <section class="tm-box">
         <div class="tm-box-t">┤ JOURNAL DE L'ENQUÊTEUR ├</div>
@@ -817,9 +848,55 @@
     }
   }
 
+
+  /* ---------- Progression par niveau ---------- */
+  const bucketCost = (n) => at(n, spent) - (n > 1 ? at(n - 1, spent) : 0);
+  function bucketSummary(b) {
+    const parts = [];
+    Object.entries(b.car).forEach(([c, n]) => n && parts.push(`${carNom(c)} +${n}`));
+    Object.entries(b.skill).forEach(([sk, n]) => n && parts.push(`${SKILLS[sk].nom} +${n}`));
+    Object.entries(b.spec).forEach(([k, n]) => n && parts.push(`${SKILLS[k.split(":")[0]].nom} (${k.split(":")[1]}) +${n}`));
+    b.talents.forEach((t) => parts.push(`Talent : ${t}`));
+    b.minor.forEach((p) => parts.push(`Pouvoir : ${p}`));
+    b.powers.forEach((p) => parts.push(`Pouvoir : ${p}`));
+    return parts;
+  }
+  function levelLog() {
+    return allBuckets().map((b, i) => {
+      const n = i + 1;
+      return { n, gain: n === 1 ? at(1, xp) : +b.xp || 0, cost: bucketCost(n), items: bucketSummary(b), left: at(n, remaining) };
+    });
+  }
+  function progressionHTML() {
+    const L = level(), log = levelLog();
+    const lastXp = S.levels.length ? S.levels[S.levels.length - 1].xp : 100;
+    return `<div class="lvl-box">
+      <div class="lvl-head">
+        <div class="lvl-badge"><small>Niveau</small><strong>${L}</strong><small>/ ${S.maxLevel}</small></div>
+        <p class="hint">Un niveau = une mission. À chaque niveau, l'agent reçoit l'XP de la mission et la dépense ci-dessous ; l'XP non dépensée est gardée pour plus tard.</p>
+      </div>
+      <ol class="lvl-log">${log.map((l) => `<li class="${l.n === L ? "cur" : ""}">
+        <span class="lvl-n">Niv. ${l.n}</span>
+        <span class="lvl-gain">${l.n === 1 ? `Création <small>(+${l.gain} XP bonus)</small>` : `Mission <input class="lvl-in" type="number" min="0" step="5" value="${l.gain}" data-act="lvl-xp" data-l="${l.n}" aria-label="XP du niveau ${l.n}"> XP`}</span>
+        <span class="lvl-items">${l.items.length ? l.items.map(esc).join(" · ") : `<em class="hint">aucun achat</em>`}</span>
+        <span class="lvl-cost">−${l.cost} XP <small>reste ${l.left}</small></span>
+      </li>`).join("")}</ol>
+      <div class="lvl-actions">
+        <label>XP de la prochaine mission <input class="lvl-in" type="number" id="lvl-new-xp" min="0" step="5" value="${lastXp}"></label>
+        <button class="btn" type="button" data-act="lvl-up" ${L >= S.maxLevel ? "disabled" : ""}>Passer au niveau ${L + 1}</button>
+        <button class="btn ghost" type="button" data-act="lvl-undo" ${L > 1 ? "" : "disabled"}>Annuler le niveau ${L}</button>
+      </div>
+      <div class="lvl-actions">
+        <label>Voir l'agent au niveau <select class="select lvl-sel" data-act="lvl-view">${log.map((l) => `<option value="${l.n === L ? 0 : l.n}" ${(S.view || L) === l.n ? "selected" : ""}>${l.n}${l.n === L ? " (actuel)" : ""}</option>`).join("")}</select></label>
+        <label>Niveau max <input class="lvl-in" type="number" min="${L}" max="99" value="${S.maxLevel}" data-act="lvl-max"></label>
+      </div>
+    </div>`;
+  }
+
   function renderAll() {
     // un talent obtenu par la faction ou le rôle n'a plus à être acheté en XP
-    S.xp.talents = S.xp.talents.filter((t) => !factionTalents().includes(t) && !S.role.talents.includes(t));
+    eachBucket((b) => { b.talents = b.talents.filter((t) => !factionTalents().includes(t) && !S.role.talents.includes(t)); });
+    if (S.view >= level()) S.view = 0;
     renderSteps(); renderSheet(); save();
     if (!$("#dossier").hidden) renderDossier();
   }
@@ -871,16 +948,22 @@
       resetRoleIfBlocked();
       applyKit(a);
     }
-    else if (act === "xc+" || act === "xc-") { const c = b.dataset.c; S.xp.car[c] = Math.max(0, (S.xp.car[c] || 0) + (act === "xc+" ? 1 : -1)); }
-    else if (act === "xs+" || act === "xs-") { const k = b.dataset.sk; S.xp.skill[k] = Math.max(0, (S.xp.skill[k] || 0) + (act === "xs+" ? 1 : -1)); if (!S.xp.skill[k]) delete S.xp.skill[k]; }
-    else if (act === "xp+" || act === "xp-") { const k = b.dataset.k; S.xp.spec[k] = Math.max(0, (S.xp.spec[k] || 0) + (act === "xp+" ? 1 : -1)); if (!S.xp.spec[k]) delete S.xp.spec[k]; }
-    else if (act === "xp-spec-add") { const k = $("#xp-spec-select").value; if (!k) return; S.xp.spec[k] = (S.xp.spec[k] || 0) + 1; }
-    else if (act === "xt-add") { const t = $("#xp-tal-select").value; if (!t) return; S.xp.talents.push(t); }
-    else if (act === "xt-del") { S.xp.talents = S.xp.talents.filter((t) => t !== b.dataset.t); }
-    else if (act === "xpm-add") { const v = $("#xp-minor-select").value; if (!v) return; S.xp.minor.push(v); }
-    else if (act === "xpd-add") { const v = $("#xp-power-select").value; if (!v) return; S.xp.powers.push(v); }
-    else if (act === "xpw-del") { const key = b.dataset.t === "m" ? "minor" : "powers"; S.xp[key] = S.xp[key].filter((x) => x !== b.dataset.p); }
-    else if (act === "xp-reset") { S.xp = blankXp(); }
+    else if (act === "xc+" || act === "xc-") { const c = b.dataset.c; E().car[c] = Math.max(0, (E().car[c] || 0) + (act === "xc+" ? 1 : -1)); }
+    else if (act === "xs+" || act === "xs-") { const k = b.dataset.sk; E().skill[k] = Math.max(0, (E().skill[k] || 0) + (act === "xs+" ? 1 : -1)); if (!E().skill[k]) delete E().skill[k]; }
+    else if (act === "xp+" || act === "xp-") { const k = b.dataset.k; E().spec[k] = Math.max(0, (E().spec[k] || 0) + (act === "xp+" ? 1 : -1)); if (!E().spec[k]) delete E().spec[k]; }
+    else if (act === "xp-spec-add") { const k = $("#xp-spec-select").value; if (!k) return; E().spec[k] = (E().spec[k] || 0) + 1; }
+    else if (act === "xt-add") { const t = $("#xp-tal-select").value; if (!t) return; E().talents.push(t); }
+    else if (act === "xt-del") { E().talents = E().talents.filter((t) => t !== b.dataset.t); }
+    else if (act === "xpm-add") { const v = $("#xp-minor-select").value; if (!v) return; E().minor.push(v); }
+    else if (act === "xpd-add") { const v = $("#xp-power-select").value; if (!v) return; E().powers.push(v); }
+    else if (act === "xpw-del") { const key = b.dataset.t === "m" ? "minor" : "powers"; E()[key] = E()[key].filter((x) => x !== b.dataset.p); }
+    else if (act === "xp-reset") { const e = E(); Object.assign(e, blankXp(), { xp: e.xp }); }
+    else if (act === "lvl-up") {
+      if (level() >= S.maxLevel) return;
+      const v = Math.max(0, parseInt($("#lvl-new-xp").value, 10) || 0);
+      S.levels.push(Object.assign(blankXp(), { xp: v })); S.view = 0;
+    }
+    else if (act === "lvl-undo") { if (!S.levels.length || !confirm(`Annuler le niveau ${level()} et tous ses achats ?`)) return; S.levels.pop(); S.view = 0; }
     else if (act === "reset") { if (confirm("Effacer cet agent et recommencer ?")) S = blank(); }
     else if (act === "print") { openDossier(); setTimeout(() => window.print(), 60); return; }
     else if (act === "dossier-open") { openDossier(); return; }
@@ -917,7 +1000,10 @@
       const cur = store[el.dataset.i] || [];
       store[el.dataset.i] = el.checked ? [...cur, el.value] : cur.filter((x) => x !== el.value);
     }
-    else if (act === "psy-disc") { S.psy.discipline = el.value; S.psy.powers = []; S.xp.powers = []; }
+    else if (act === "psy-disc") { S.psy.discipline = el.value; S.psy.powers = []; eachBucket((b) => { b.powers = []; }); }
+    else if (act === "lvl-max") { S.maxLevel = Math.max(level(), Math.min(99, parseInt(el.value, 10) || 20)); }
+    else if (act === "lvl-xp") { const l = S.levels[+el.dataset.l - 2]; if (l) l.xp = Math.max(0, parseInt(el.value, 10) || 0); }
+    else if (act === "lvl-view") { S.view = +el.value; }
     else if (act === "psy-minor") { S.psy.minor = el.checked ? [...S.psy.minor, el.value] : S.psy.minor.filter((x) => x !== el.value); }
     else if (act === "psy-power") { S.psy.powers = el.checked ? [...S.psy.powers, el.value] : S.psy.powers.filter((x) => x !== el.value); }
     else return;

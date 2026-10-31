@@ -154,6 +154,9 @@ body.dossier-open { overflow: hidden; }
 .tm-xp span { display: block; font-size: 0.68rem; color: var(--ph-mid); letter-spacing: 0.08em; }
 .tm-xp strong { font-family: "VT323", monospace; font-size: 1.6rem; font-weight: normal; }
 .tm-xp .neg { color: var(--red); border-color: var(--red); }
+.tm-log { list-style: none; margin: 0; padding: 0; }
+.tm-log li { display: flex; gap: 0.6rem; align-items: baseline; padding: 0.2rem 0; border-bottom: 1px dotted var(--ph-dim); break-inside: avoid; font-size: 0.88rem; }
+.tm-log .tm-tag { flex-shrink: 0; }
 .tm-notes { min-height: 3.5rem; font-size: 0.9rem; color: var(--ph-mid); }
 
 .tm-foot { text-align: center; margin-top: 1.3rem; padding-top: 0.7rem; border-top: 1px dashed var(--ph-dim); font-size: 0.8rem; display: grid; gap: 0.25rem; }

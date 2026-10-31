@@ -7,12 +7,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=6">
-  <link rel="stylesheet" href="css/dossier.css?v=6">
-  <script src="js/main.js?v=6" defer></script>
-  <script src="js/createur-data.js?v=6" defer></script>
-  <script src="js/createur-infos.js?v=6" defer></script>
-  <script src="js/createur.js?v=6" defer></script>
+  <link rel="stylesheet" href="css/style.css?v=7">
+  <link rel="stylesheet" href="css/dossier.css?v=7">
+  <script src="js/main.js?v=7" defer></script>
+  <script src="js/createur-data.js?v=7" defer></script>
+  <script src="js/createur-infos.js?v=7" defer></script>
+  <script src="js/createur.js?v=7" defer></script>
   <style>
     main { max-width: 1280px; }
     .forge { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); gap: 1.5rem; align-items: start; }
@@ -159,6 +159,30 @@
     .sheet-actions { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.8rem; }
     .btn.ghost { background: none; border-color: var(--gold-soft); color: var(--gold); }
 
+    /* Progression par niveau */
+    .sheet-lvl { font-family: var(--font-mono); font-size: 0.85rem; color: var(--gold); letter-spacing: 0.08em; }
+    .sheet-lvl em { color: var(--muted); }
+    .lvl-box { border: 1px solid var(--gold-soft); border-radius: var(--radius); background: var(--panel-2); padding: 0.8rem; margin-bottom: 1rem; }
+    .lvl-head { display: flex; gap: 0.9rem; align-items: center; }
+    .lvl-head .hint { margin: 0; }
+    .lvl-badge { flex-shrink: 0; display: grid; place-items: center; width: 4.6rem; height: 4.6rem; border: 2px solid var(--gold); border-radius: 50%; text-align: center; line-height: 1; background: radial-gradient(circle, rgba(201,162,74,0.15), transparent 70%); }
+    .lvl-badge strong { font-family: var(--font-title); font-size: 1.7rem; color: var(--gold-bright); }
+    .lvl-badge small { font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); }
+    .lvl-log { list-style: none; margin: 0.8rem 0; padding: 0; border-left: 2px solid var(--line); }
+    .lvl-log li { position: relative; display: grid; grid-template-columns: 3.4rem minmax(0, 1fr) auto; gap: 0.15rem 0.6rem; align-items: baseline; padding: 0.35rem 0 0.35rem 0.8rem; border-bottom: 1px dotted var(--line); }
+    .lvl-log li::before { content: ""; position: absolute; left: -6px; top: 0.75rem; width: 10px; height: 10px; border-radius: 50%; background: var(--panel-2); border: 2px solid var(--gold-soft); }
+    .lvl-log li.cur::before { background: var(--gold); border-color: var(--gold-bright); box-shadow: 0 0 6px var(--gold); }
+    .lvl-n { font-family: var(--font-title); color: var(--gold); font-size: 0.85rem; }
+    .lvl-gain { font-size: 0.98rem; }
+    .lvl-items { grid-column: 2 / -1; grid-row: 2; font-size: 0.92rem; color: var(--text); }
+    .lvl-cost { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); text-align: right; white-space: nowrap; }
+    .lvl-in { width: 4.6rem; background: var(--bg); color: var(--parchment); border: 1px solid var(--gold-soft); border-radius: var(--radius); padding: 0.15rem 0.3rem; font-family: var(--font-mono); font-size: 0.9rem; }
+    .lvl-actions { display: flex; flex-wrap: wrap; gap: 0.5rem 0.8rem; align-items: center; margin-top: 0.5rem; }
+    .lvl-actions label { display: flex; align-items: center; gap: 0.4rem; font-size: 0.95rem; color: var(--muted); }
+    .lvl-sel { width: auto; min-width: 0; }
+    .lvl-buy { font-family: var(--font-title); color: var(--gold); letter-spacing: 0.1em; }
+    @media (max-width: 520px) { .lvl-log li { grid-template-columns: 3rem minmax(0, 1fr); } .lvl-cost { grid-column: 2; text-align: left; } .lvl-items { grid-row: auto; } }
+
     /* Impression : seule la fiche, en clair */
     @media print {
       .site-header, .site-footer, .page-title, .steps, .sheet-actions, .no-print { display: none !important; }
@@ -194,7 +218,7 @@
         <section class="step" data-step="faction"><h2><span class="n">4</span>Faction</h2><div id="step-faction"></div></section>
         <section class="step" data-step="role"><h2><span class="n">5</span>Rôle</h2><div id="step-role"></div></section>
         <section class="step" data-step="psy"><h2><span class="n">6</span>Pouvoirs psychiques</h2><div id="step-psy"></div></section>
-        <section class="step" data-step="xp"><h2><span class="n">7</span>Dépenser l'expérience</h2><div id="step-xp"></div></section>
+        <section class="step" data-step="xp"><h2><span class="n">7</span>Expérience et niveaux</h2><div id="step-xp"></div></section>
         <p class="hint">Les règles complètes de création sont dans <a href="creation.html">l'Archive II</a> ; les coûts en XP dans <a href="regles.html#entre-missions">l'Archive I</a>.</p>
       </div>
 
