@@ -130,6 +130,46 @@
     return r.specSkills.flatMap((sk) => SKILLS[sk].specs.map((sp) => `${sk}:${sp}`));
   }
 
+  /* ---------- Recommandations de caractéristiques ---------- */
+  // Pondération : compétences du rôle ×2, de la faction ×1, plus un socle de survie (E pour les Blessures, Ag et Per pour l'Initiative)
+  const ROLE_WHY = {
+    interlocuteur: "parler, convaincre et lire les gens",
+    mystique: "manifester et contrôler les pouvoirs psychiques",
+    penombre: "se faufiler, tirer et réagir vite",
+    savant: "savoir, soigner et réparer",
+    guerrier: "frapper, tirer et encaisser",
+    zelote: "tenir bon, frapper et inspirer par la foi",
+  };
+  function recoCaracs() {
+    const w = Object.fromEntries(CARACS.map((c) => [c.id, 0]));
+    const r = role(), f = faction();
+    // ce que chaque rôle fait vraiment en jeu : 3 priorités puis 2 caractéristiques utiles
+    const ROLE_CARACS = {
+      interlocuteur: ["soc", "fm", "per", "int", "ag"],
+      mystique:      ["fm", "per", "int", "e", "ag"],
+      penombre:      ["ag", "ct", "per", "f", "e"],
+      savant:        ["int", "per", "ag", "fm", "e"],
+      guerrier:      ["cc", "ct", "e", "f", "ag"],
+      zelote:        ["fm", "cc", "e", "f", "soc"],
+    };
+    if (r) ROLE_CARACS[r.id].forEach((c, i) => { w[c] += [6, 5, 4, 2.5, 2][i]; });
+    if (f) { f.skills.forEach((sk) => { w[SKILLS[sk].c] += 0.4; }); w[f.fixe] += 1; }
+    w.e += 1.5; w.ag += 0.5; w.per += 0.5;              // Blessures (2 × BE) et Initiative
+    Object.entries(species().mods || {}).forEach(([c, v]) => { w[c] += v / 10; }); // jouer avec les forces de l'espèce
+    const ordre = CARACS.map((c) => c.id).sort((a, b) => w[b] - w[a]);
+    return { ordre, prio: ordre.slice(0, 3), utile: ordre.slice(3, 5), base: !r && !f };
+  }
+  function recoTexte() {
+    const { prio, utile, base } = recoCaracs();
+    const r = role(), f = faction();
+    const pour = [r && r.nom, f && f.nom].filter(Boolean).join(" · ");
+    const why = r ? ` (pour ${ROLE_WHY[r.id]})` : "";
+    return `<div class="reco"><div class="reco-head">Recommandations ${base ? "générales" : `pour <strong>${esc(pour)}</strong>`}</div>
+      <p><span class="reco-chip p1">Priorité</span> ${prio.map(carNom).join(", ")}${why}
+      · <span class="reco-chip p2">Utile</span> ${utile.map(carNom).join(", ")}</p>
+      <p class="hint">${base ? "Choisissez un rôle (étape 5) ou un archétype pour des conseils adaptés. " : ""}L'Endurance compte double dans les Blessures ; Perception et Agilité font l'Initiative. Un bonus (chiffre des dizaines) ne monte qu'à chaque dizaine franchie : 39 et 31 donnent le même bonus.</p></div>`;
+  }
+
   /* ---------- Actions ---------- */
 
   function rollCaracs() {
@@ -219,20 +259,27 @@
         <label><input type="radio" name="carmode" value="hasard" data-act="carmode" ${S.car.mode === "hasard" ? "checked" : ""}> Au hasard (2d10 + 20)</label>
         <label><input type="radio" name="carmode" value="repartition" data-act="carmode" ${S.car.mode === "repartition" ? "checked" : ""}> Répartition de 90 points</label>
       </div>`;
+    const reco = recoCaracs();
+    const rk = (id) => (reco.prio.includes(id) ? " reco-1" : reco.utile.includes(id) ? " reco-2" : "");
+    car += recoTexte();
     if (S.car.mode === "hasard") {
       car += `<p><button class="btn" type="button" data-act="roll-car">${S.car.values ? "Relancer" : "Lancer les dés"}</button>
         <span class="hint">${S.car.rolls === 0 ? "Garder le premier jet : +50 XP. Réarranger : +25 XP. Relancer : pas d'XP."
           : S.car.rolls > 1 ? "Relancé : pas d'XP bonus." : S.car.swapped ? "Réarrangé : +25 XP." : "Premier jet gardé tel quel : +50 XP."}</span></p>`;
       if (base) {
-        car += `<p class="hint">Pour échanger deux valeurs, cliquez sur l'une puis sur l'autre.</p><div class="carac-grid">${CARACS.map((c) =>
-          `<button type="button" class="carac ${S.car.swapSel === c.id ? "sel" : ""}" data-act="swap" data-c="${c.id}"><span>${c.ab}</span><strong>${base[c.id]}</strong></button>`).join("")}</div>`;
+        car += `<p class="hint">Pour échanger deux valeurs, cliquez sur l'une puis sur l'autre.
+          <button class="btn ghost small" type="button" data-act="reco-sort">Placer mes meilleurs jets selon les recommandations</button>
+          <span class="hint">(compte comme un réarrangement : +25 XP au lieu de 50)</span></p><div class="carac-grid">${CARACS.map((c) =>
+          `<button type="button" class="carac${rk(c.id)} ${S.car.swapSel === c.id ? "sel" : ""}" data-act="swap" data-c="${c.id}"><span>${c.ab}</span><strong>${base[c.id]}</strong></button>`).join("")}</div>`;
       }
     } else {
       const used = sum(S.car.points);
-      car += `<p class="hint">Chaque caractéristique part de 20. Répartissez 90 points (4 à 18 par caractéristique). Reste : <strong>${90 - used}</strong></p>
+      car += `<p class="hint">Chaque caractéristique part de 20. Répartissez 90 points (4 à 18 par caractéristique). Reste : <strong>${90 - used}</strong>
+          <button class="btn ghost small" type="button" data-act="reco-points">Répartition conseillée</button>
+          <button class="btn ghost small" type="button" data-act="reco-even">Tout à égalité</button></p>
         <div class="carac-grid">${CARACS.map((c) => {
           const v = S.car.points[c.id];
-          return `<div class="carac"><span>${c.ab}</span><strong>${20 + v}</strong>
+          return `<div class="carac${rk(c.id)}"><span>${c.ab}</span><strong>${20 + v}</strong>
             <span class="stepper"><button type="button" data-act="pt-" data-c="${c.id}" ${v <= 4 ? "disabled" : ""}>−</button>
             <button type="button" data-act="pt+" data-c="${c.id}" ${v >= 18 || used >= 90 ? "disabled" : ""}>+</button></span></div>`;
         }).join("")}</div>`;
@@ -514,10 +561,160 @@
     $("#sheet").innerHTML = h;
   }
 
+
+  /* ---------- Dossier d'agent (fiche complète, imprimable) ---------- */
+
+  function hashStr(t) { let h = 2166136261; for (const ch of t) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+  function imperialDate() {
+    // datation impériale : n° de contrôle · fraction de l'année · année du millénaire · M42
+    const d = new Date(), start = new Date(d.getFullYear(), 0, 1);
+    const frac = Math.floor(((d - start) / 864e5 / 365.25) * 1000);
+    return `0.${String(frac).padStart(3, "0")}.${String(d.getFullYear() % 1000).padStart(3, "0")}.M42`;
+  }
+  const boxes = (n, cls = "") => `<span class="dz-track ${cls}">${'<i></i>'.repeat(Math.max(0, n))}</span>`;
+  const firstSentence = (t) => (t || "").split(/(?<=\.)\s/)[0];
+
+  const SEAL_SVG = `<svg viewBox="0 0 120 150" class="dz-seal" aria-hidden="true">
+    <path d="M42 92 L30 148 L46 136 L54 150 L60 96 Z" fill="#e6dcc3" stroke="#8f7333" stroke-width="1.5"/>
+    <path d="M78 92 L90 148 L74 136 L66 150 L60 96 Z" fill="#d9ccae" stroke="#8f7333" stroke-width="1.5"/>
+    <path d="M60 6 C72 4 80 14 92 14 C100 22 108 26 110 40 C116 50 112 62 112 70 C108 82 98 86 92 96 C80 100 72 108 60 106 C48 108 40 100 28 96 C22 86 12 82 8 70 C8 62 4 50 10 40 C12 26 20 22 28 14 C40 14 48 4 60 6 Z" fill="#8e1b1b"/>
+    <circle cx="60" cy="56" r="36" fill="none" stroke="#5e0f0f" stroke-width="3"/>
+    <circle cx="60" cy="56" r="29" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="2 3"/>
+    <text x="60" y="66" text-anchor="middle" font-family="Cinzel, serif" font-size="28" font-weight="700" fill="#e8c873" opacity=".9">I</text>
+    <path d="M38 52 q8 -10 16 -2 M82 52 q-8 -10 -16 -2" stroke="#e8c873" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".85"/>
+  </svg>`;
+  const WINGS_SVG = `<svg viewBox="0 0 240 70" class="dz-wings" aria-hidden="true"><g fill="currentColor">
+    ${[0, 1, 2, 3, 4].map((i) => `<path d="M104 ${30 + i * 4} C${86 - i * 18} ${18 + i * 6} ${60 - i * 14} ${14 + i * 8} ${20 - i * 2} ${8 + i * 10} C${46 - i * 8} ${24 + i * 8} ${70 - i * 10} ${34 + i * 6} 104 ${40 + i * 4} Z"/>
+    <path d="M136 ${30 + i * 4} C${154 + i * 18} ${18 + i * 6} ${180 + i * 14} ${14 + i * 8} ${220 + i * 2} ${8 + i * 10} C${194 + i * 8} ${24 + i * 8} ${170 + i * 10} ${34 + i * 6} 136 ${40 + i * 4} Z"/>`).join("")}
+    <circle cx="120" cy="34" r="15"/></g>
+    <g fill="#0b0a09"><ellipse cx="114" cy="31" rx="4" ry="4.5"/><ellipse cx="126" cy="31" rx="4" ry="4.5"/><path d="M118 38 h4 l-2 4 z"/><rect x="113" y="44" width="14" height="3" rx="1"/></g></svg>`;
+
+  function renderDossier() {
+    const fc = finalCaracs();
+    const o = origin(), f = faction(), r = role(), sp = species();
+    const talents = allTalents();
+    const B = (id) => (fc ? bonus(fc[id]) : null);
+    const v = (x) => (x === null || x === undefined || Number.isNaN(x) ? "—" : x);
+    const name = S.name || "Agent sans nom";
+    const ref = "IM-" + (hashStr(name + (f ? f.id : "") + (r ? r.id : "")) % 1e6).toString().padStart(6, "0");
+    const arch = S.archetype && byId(ARCHETYPES, S.archetype);
+    const wounds = fc ? B("f") + 2 * B("e") + B("fm") + (sp.bonusBlessures || 0) : null;
+    const crits = fc ? B("e") + (sp.bonusCritiques || 0) : null;
+    const fate = 3 + (talents.includes("Prédestiné") ? 1 : 0);
+    const warp = fc && isPsyker() ? B("fm") * (talents.includes("Psyker sanctionné") ? 2 : 1) : null;
+    const classif = isBlank() ? "Sceau du Silence" : isPsyker() ? "Psykana — sous surveillance" : sp.id !== "humain" ? "Xenos — accès restreint" : "Vermillon";
+
+    const ident = [
+      ["Espèce", sp.nom],
+      ["Origine", xenosOrigin() ? "—" : o && o.nom],
+      ["Faction", f && f.nom],
+      ["Rôle", r && r.nom],
+      ["Archétype", arch && arch.nom],
+      ["Patron", ""],
+    ];
+
+    const skillRows = Object.entries(SKILLS).map(([sk, s]) => {
+      const a = advAll(sk), base = fc ? fc[s.c] : null, val = base !== null ? base + 5 * a : "—";
+      const specs = [...new Set([...Object.keys(S.role.specs), ...Object.keys(S.xp.spec)])].filter((k) => specAll(k) && k.startsWith(sk + ":"));
+      return `<div class="dz-skill${a || specs.length ? " on" : ""}">
+        <span class="dz-sk-name">${esc(s.nom)}</span><span class="dz-sk-car">${esc(CARACS.find((c) => c.id === s.c).ab)}</span>
+        <span class="dz-pips">${[1, 2, 3, 4].map((i) => `<b class="${i <= a ? "on" : ""}"></b>`).join("")}</span><strong>${val}</strong>
+        ${specs.map((k) => `<span class="dz-spec">↳ ${esc(k.split(":")[1])}<span class="dz-pips">${[1, 2, 3, 4].map((i) => `<b class="${i <= specAll(k) ? "on" : ""}"></b>`).join("")}</span><strong>${base !== null ? val + 5 * specAll(k) : "—"}</strong></span>`).join("")}
+      </div>`;
+    }).join("");
+
+    const talentCards = talents.map((t) => {
+      const T = TALENTS.find((x) => x.nom === t);
+      return `<div class="dz-card"><div class="dz-card-t">${esc(t)}</div><p>${esc(T ? T.eff : "")}</p></div>`;
+    }).join("") || `<p class="dz-empty">Aucun talent consigné.</p>`;
+    const traitCards = (sp.traits || []).map((t) => `<div class="dz-card xeno"><div class="dz-card-t">${esc(t.nom)}</div><p>${esc(firstSentence(t.d))}</p></div>`).join("");
+
+    const powers = isPsyker() ? [...S.psy.minor, ...S.xp.minor].map((p) => [p, "Mineur"]).concat([...S.psy.powers, ...S.xp.powers].map((p) => [p, S.psy.discipline])) : [];
+    const powerCards = powers.map(([p, d]) => {
+      const P = POWER_INFO[p] || {};
+      return `<div class="dz-card warp"><div class="dz-card-t">${esc(p)} <small>${esc(d || "")}</small></div><p>${esc(firstSentence(P.d))}</p></div>`;
+    }).join("");
+
+    const equip = equipList().map((x) => {
+      if (x.startsWith("[")) return `<li class="dz-pending">${esc(x)}</li>`;
+      const it = ITEM_INFO[x];
+      return `<li><span>${esc(x)}</span>${it && it.s ? `<small>${esc(it.s)}</small>` : ""}</li>`;
+    }).join("");
+
+    const notes = S.notes ? esc(S.notes).replace(/\n/g, "<br>") : "";
+
+    $("#dossier-doc").innerHTML = `
+      <div class="dz-corner tl"></div><div class="dz-corner tr"></div><div class="dz-corner bl"></div><div class="dz-corner br"></div>
+      <header class="dz-head">
+        <div class="dz-meta"><span>Réf. ${ref}</span><span>${imperialDate()}</span></div>
+        ${WINGS_SVG}
+        <div class="dz-kicker">Adeptus Terra · Secteur Macharien</div>
+        <h2 class="dz-title">Dossier d'agent</h2>
+        <div class="dz-classif">Classification : <strong>${esc(classif)}</strong></div>
+      </header>
+
+      <section class="dz-id">
+        <div class="dz-portrait"><span>Pict-capture<br>non archivée</span></div>
+        <div class="dz-id-main">
+          <div class="dz-name">${esc(name)}</div>
+          <dl class="dz-ident">${ident.map(([k, val]) => `<div><dt>${k}</dt><dd>${val ? esc(val) : "<span class='dz-line'></span>"}</dd></div>`).join("")}</dl>
+        </div>
+        ${SEAL_SVG}
+      </section>
+
+      <h3 class="dz-h">Caractéristiques</h3>
+      <div class="dz-caracs">${CARACS.map((c) => `<div class="dz-car"><span class="dz-car-ab">${esc(c.ab)}</span><strong>${fc ? fc[c.id] : "—"}</strong><span class="dz-car-b">${fc ? bonus(fc[c.id]) : "·"}</span><small>${esc(c.nom)}</small></div>`).join("")}</div>
+
+      <div class="dz-vitals">
+        <div class="dz-vital big"><span>Blessures</span><strong>${v(wounds)}</strong>${fc ? boxes(wounds) : ""}</div>
+        <div class="dz-vital"><span>Critiques max</span><strong>${v(crits)}</strong>${fc ? boxes(crits, "crit") : ""}</div>
+        <div class="dz-vital"><span>Destin</span><strong>${fate}</strong>${boxes(fate, "fate")}</div>
+        <div class="dz-vital"><span>Initiative</span><strong>${fc ? B("per") + B("ag") : "—"}</strong></div>
+        <div class="dz-vital"><span>Encombrement</span><strong>${fc ? B("f") + B("e") : "—"}</strong></div>
+        <div class="dz-vital"><span>Corruption</span><strong>&nbsp;</strong>${isBlank() ? `<em class="dz-immune">Immunisé</em>` : boxes(10, "corr")}</div>
+        ${warp !== null ? `<div class="dz-vital"><span>Seuil Warp</span><strong>${warp}</strong>${boxes(warp, "warp")}</div>` : ""}
+      </div>
+
+      <h3 class="dz-h">Compétences <small>● niveau d'avancement · valeur = caractéristique + 5 × niveau</small></h3>
+      <div class="dz-skills">${skillRows}</div>
+
+      <div class="dz-cols">
+        <div>
+          <h3 class="dz-h">Talents</h3>
+          <div class="dz-cards">${talentCards}</div>
+          ${traitCards ? `<h3 class="dz-h">Traits d'espèce</h3><div class="dz-cards">${traitCards}</div>` : ""}
+          ${isPsyker() ? `<h3 class="dz-h">Pouvoirs psychiques</h3><div class="dz-cards">${powerCards || `<p class="dz-empty">À choisir.</p>`}</div>` : ""}
+        </div>
+        <div>
+          <h3 class="dz-h">Équipement</h3>
+          <ul class="dz-equip">${equip || "<li class='dz-pending'>—</li>"}</ul>
+          <div class="dz-solars"><span>Solars</span><strong>${f ? esc(String(f.solars)) : "—"}</strong></div>
+          <h3 class="dz-h">Influence</h3>
+          <p class="dz-p">${f ? `+1 auprès de : <strong>${esc(f.influence)}</strong>` : "—"}</p>
+          ${sp.relations ? `<p class="dz-p dz-small">${esc(sp.relations)}</p>` : ""}
+          <h3 class="dz-h">Expérience</h3>
+          <div class="dz-xp"><div><span>Gagnés</span><strong>${xp()}</strong></div><div><span>Dépensés</span><strong>${spent()}</strong></div><div><span>Restants</span><strong>${remaining()}</strong></div></div>
+        </div>
+      </div>
+
+      <h3 class="dz-h">Notes de l'enquêteur</h3>
+      <div class="dz-notes">${notes || "<span class='dz-line'></span><span class='dz-line'></span><span class='dz-line'></span>"}</div>
+
+      <footer class="dz-foot">
+        <div class="dz-sign"><span class="dz-line"></span><small>Visa du patron</small></div>
+        <p>Ce document est la propriété de l'Imperium. Toute lecture non autorisée constitue un acte d'hérésie.<br><em>Un esprit curieux est un esprit vulnérable.</em></p>
+        <div class="dz-sign"><span class="dz-line"></span><small>Sceau de l'agent</small></div>
+      </footer>`;
+  }
+
+  function openDossier() { renderDossier(); $("#dossier").hidden = false; document.body.classList.add("dossier-open"); }
+  function closeDossier() { $("#dossier").hidden = true; document.body.classList.remove("dossier-open"); }
+
   function renderAll() {
     // un talent obtenu par la faction ou le rôle n'a plus à être acheté en XP
     S.xp.talents = S.xp.talents.filter((t) => !factionTalents().includes(t) && !S.role.talents.includes(t));
     renderSteps(); renderSheet(); save();
+    if (!$("#dossier").hidden) renderDossier();
   }
 
   /* ---------- Événements ---------- */
@@ -537,6 +734,17 @@
       }
     }
     else if (act === "pt+") S.car.points[b.dataset.c]++;
+    else if (act === "reco-points") {
+      // 3 priorités à 16, 2 utiles à 12, le reste à 5/5/4/4 : total 90, dans les bornes 4–18
+      const { ordre } = recoCaracs(), pts = [16, 16, 16, 12, 12, 5, 5, 4, 4];
+      ordre.forEach((id, i) => { S.car.points[id] = pts[i]; });
+    }
+    else if (act === "reco-even") { CARACS.forEach((c) => { S.car.points[c.id] = 10; }); }
+    else if (act === "reco-sort" && S.car.values) {
+      const tri = Object.values(S.car.values).sort((a, b) => b - a);
+      recoCaracs().ordre.forEach((id, i) => { S.car.values[id] = tri[i]; });
+      S.car.swapped = true; S.car.swapSel = null;
+    }
     else if (act === "pt-") S.car.points[b.dataset.c]--;
     else if (act === "roll-origin") rollOrigin();
     else if (act === "roll-faction") rollFaction();
@@ -566,7 +774,9 @@
     else if (act === "xpw-del") { const key = b.dataset.t === "m" ? "minor" : "powers"; S.xp[key] = S.xp[key].filter((x) => x !== b.dataset.p); }
     else if (act === "xp-reset") { S.xp = blankXp(); }
     else if (act === "reset") { if (confirm("Effacer cet agent et recommencer ?")) S = blank(); }
-    else if (act === "print") { window.print(); return; }
+    else if (act === "print") { openDossier(); setTimeout(() => window.print(), 60); return; }
+    else if (act === "dossier-open") { openDossier(); return; }
+    else if (act === "dossier-close") { closeDossier(); return; }
     else if (act === "export") { exportJSON(); return; }
     else if (act === "import") { $("#import-file").click(); return; }
     else return;
@@ -753,7 +963,7 @@
   document.addEventListener("focusin", (e) => { const el = e.target.closest("[data-tip]"); if (el) showTip(el); });
   document.addEventListener("focusout", () => { if (!pinned) tt.hidden = true; });
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") hideTip();
+    if (e.key === "Escape") { hideTip(); if (!$("#dossier").hidden) closeDossier(); }
     if ((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("info")) { e.preventDefault(); e.target.click(); }
   });
   // au défilement, la fiche suit ce qui se trouve sous le curseur

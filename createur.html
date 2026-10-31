@@ -7,11 +7,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=2">
-  <script src="js/main.js?v=2" defer></script>
-  <script src="js/createur-data.js?v=2" defer></script>
-  <script src="js/createur-infos.js?v=2" defer></script>
-  <script src="js/createur.js?v=2" defer></script>
+  <link rel="stylesheet" href="css/style.css?v=4">
+  <link rel="stylesheet" href="css/dossier.css?v=4">
+  <script src="js/main.js?v=4" defer></script>
+  <script src="js/createur-data.js?v=4" defer></script>
+  <script src="js/createur-infos.js?v=4" defer></script>
+  <script src="js/createur.js?v=4" defer></script>
   <style>
     main { max-width: 1280px; }
     .forge { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); gap: 1.5rem; align-items: start; }
@@ -41,6 +42,17 @@
       font-family: var(--font-mono);
     }
     button.carac { cursor: pointer; }
+    .carac.reco-1 { border-color: var(--gold); box-shadow: inset 0 0 0 1px rgba(201, 162, 74, 0.35); }
+    .carac.reco-1 span::after { content: " ★"; color: var(--gold-bright); }
+    .carac.reco-2 { border-color: var(--gold-soft); }
+    .carac.reco-2 span::after { content: " ☆"; color: var(--gold-soft); }
+    .reco { border: 1px solid var(--line); border-left: 3px solid var(--gold); border-radius: var(--radius); background: var(--panel-2); padding: 0.6rem 0.9rem; margin: 0.6rem 0 0.8rem; }
+    .reco p { margin: 0.25rem 0; }
+    .reco-head { font-family: var(--font-title); color: var(--gold); font-size: 0.95rem; letter-spacing: 0.04em; }
+    .reco-chip { display: inline-block; font-family: var(--font-mono); font-size: 0.75rem; padding: 0.05rem 0.45rem; border-radius: 2px; border: 1px solid; margin-right: 0.2rem; }
+    .reco-chip.p1 { color: var(--gold-bright); border-color: var(--gold); }
+    .reco-chip.p2 { color: var(--gold-soft); border-color: var(--gold-soft); }
+    .btn.small { font-size: 0.7rem; padding: 0.35rem 0.7rem; margin-left: 0.3rem; }
     .carac.sel { border-color: var(--gold-bright); box-shadow: 0 0 0 2px rgba(232, 200, 115, 0.3); }
     .carac span { font-size: 0.8rem; color: var(--slate-dim); }
     .carac strong { font-size: 1.4rem; }
@@ -189,7 +201,8 @@
       <aside class="sheet-wrap">
         <div id="sheet"></div>
         <div class="sheet-actions">
-          <button class="btn" type="button" data-act="print">Imprimer</button>
+          <button class="btn" type="button" data-act="dossier-open">Ouvrir le dossier complet</button>
+          <button class="btn ghost" type="button" data-act="print">Imprimer</button>
           <button class="btn ghost" type="button" data-act="export">Exporter</button>
           <button class="btn ghost" type="button" data-act="import">Importer</button>
           <button class="btn ghost" type="button" data-act="reset">Recommencer</button>
@@ -198,5 +211,13 @@
       </aside>
     </div>
   </main>
+  <div id="dossier" hidden>
+    <div class="dossier-bar no-print">
+      <span>Dossier d'agent</span>
+      <span><button class="btn" type="button" data-act="print">Imprimer / PDF</button>
+      <button class="btn ghost" type="button" data-act="dossier-close">Fermer</button></span>
+    </div>
+    <article id="dossier-doc" class="dossier-doc"></article>
+  </div>
 </body>
 </html>
