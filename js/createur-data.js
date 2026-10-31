@@ -244,3 +244,70 @@ const SPECIES = [
     relations: "−2 Ministorum, −1 Astra Militarum. L'Inquisition le voit comme une source de renseignements… ou une menace d'idées.",
   },
 ];
+
+/* ---------- Astartes jouables (RÈGLE MAISON, non officielle) ----------
+   Le livre ne prévoit pas d'Astartes joueurs ; il les décrit seulement comme des surhommes
+   « aux caractéristiques dans les 60 et au-delà ». Ils gardent l'origine humaine de leur monde de recrutement. */
+SPECIES.push(
+  {
+    id: "neophyte", nom: "Astartes (néophyte scout)", mods: { cc: 10, ct: 10, f: 10, e: 10, ag: 5, per: 5, fm: 5, soc: -10 }, factions: ["inq"], psyker: true,
+    bonusBlessures: 2,
+    desc: "Un aspirant encore incomplet : ses implants ne sont pas tous en place et il porte une carapace de scout. Il est très supérieur à un humain, mais reste jouable aux côtés d'agents ordinaires.",
+    traits: [
+      { nom: "Physiologie en devenir", d: "+2 Blessures maximum. Avantage aux tests de Résistance contre les poisons et la fatigue." },
+      { nom: "Hypno-conditionnement", d: "Avantage aux tests pour résister à la peur." },
+      { nom: "Serment du Chapitre", d: "Il est prêté par son Chapitre (par exemple à un inquisiteur) : les ordres du Chapitre passent avant ceux du patron." },
+    ],
+    talents: [], equip: ["Armure de scout", "Bolter", "Couteau de combat"],
+    relations: "Respecté et craint partout. Le Chapitre peut le rappeler à tout moment.",
+  },
+  {
+    id: "astartes", nom: "Astartes (frère de bataille)", mods: { cc: 20, ct: 20, f: 20, e: 20, ag: 10, per: 10, fm: 15, soc: -10 }, factions: ["inq"], psyker: true,
+    bonusBlessures: 6, bonusCritiques: 2,
+    desc: "Un Ange de la Mort complet, en armure énergétique. Il éclipse n'importe quel agent : à réserver à une table entièrement Astartes, ou à un joueur seul avec l'accord du MJ.",
+    traits: [
+      { nom: "Physiologie transhumaine", d: "+6 Blessures et +2 blessures critiques maximum. Avantage aux tests de Résistance. Un seul cœur peut s'arrêter : il survit là où un humain mourrait." },
+      { nom: "Hypno-conditionnement", d: "Immunisé à l'état Effrayé ; Avantage aux tests de Discipline." },
+      { nom: "Ange de la Mort", d: "Avantage aux tests de Présence (Intimidation), mais Désavantage aux tests de Discrétion en milieu civil : impossible de passer inaperçu." },
+      { nom: "Serment du Chapitre", d: "Il sert son Chapitre avant tout. Son patron (souvent l'Ordo Xenos ou une escouade détachée) n'a qu'une autorité relative sur lui." },
+    ],
+    talents: [], equip: ["Armure énergétique", "Bolter", "Couteau de combat"],
+    relations: "Aucune faction n'ose s'opposer à lui ouvertement ; le Ministorum le vénère, les gouverneurs le redoutent.",
+  },
+);
+
+/* ---------- Archétypes de départ (tableau « Je veux jouer… » du livre de base) ----------
+   Ils remplissent origine, faction et rôle. duty = devoir de faction pré-rempli quand le livre le précise. */
+const ARCHETYPES = [
+  { id: "soeur-silence", nom: "Acolyte Sœur du Silence", origin: "sanct", faction: "tel", role: "zelote",
+    duty: { nom: "Sœur-en-attente", choix: "e", talentPick: 1, adv: { vig: 2, dis: 2, nav: 1 } },
+    note: "Une Paria (aucune présence dans le Warp) destinée à rejoindre les Sœurs du Silence. Elle n'a pas encore prêté le vœu de silence et peut encore parler. Pour apprendre leur langue des signes, prenez Savoir interdit (Linguistique, langage des signes)." },
+  { id: "adepte-adm", nom: "Adepte de l'Administratum", origin: "ruche", faction: "adm", role: "savant" },
+  { id: "pilote", nom: "Pilote de l'Aeronautica", origin: "vide", faction: "flo", role: "savant" },
+  { id: "commissaire", nom: "Cadet commissaire", origin: "schola", faction: "mil", role: "interlocuteur" },
+  { id: "culte-mort", nom: "Assassin du Culte de la Mort", origin: "feodal", faction: "min", role: "zelote" },
+  { id: "ganger", nom: "Ganger", origin: "ruche", faction: "inf", role: "penombre" },
+  { id: "garde", nom: "Garde impérial", origin: "feodal", faction: "mil", role: "guerrier" },
+  { id: "acolyte-inq", nom: "Acolyte inquisitorial", origin: "schola", faction: "inq", role: "penombre" },
+  { id: "exorciste", nom: "Exorciste inquisitorial", origin: "sanct", faction: "inq", role: "zelote" },
+  { id: "stormtrooper", nom: "Stormtrooper inquisitorial", origin: "schola", faction: "inq", role: "guerrier" },
+  { id: "paria-inq", nom: "Paria inquisitorial", origin: "ruche", faction: "inq", role: "mystique",
+    note: "Tel que le propose le tableau du livre (Inquisition + Mystique)." },
+  { id: "medecin", nom: "Médecin de l'Astra Militarum", origin: "feodal", faction: "mil", role: "savant" },
+  { id: "sniper", nom: "Tireur d'élite de l'Astra Militarum", origin: "schola", faction: "mil", role: "penombre" },
+  { id: "missionnaire", nom: "Missionnaire", origin: "sanct", faction: "min", role: "interlocuteur" },
+  { id: "assassinorum", nom: "Initié de l'Officio Assassinorum", origin: "schola", faction: "adm", role: "penombre" },
+  { id: "predicateur", nom: "Prédicateur", origin: "sanct", faction: "min", role: "zelote" },
+  { id: "rejuvenat", nom: "Adepte rejuvenat", origin: "sanct", faction: "adm", role: "savant" },
+  { id: "mercenaire-rt", nom: "Mercenaire de libre-marchand", origin: "feral", faction: "rt", role: "guerrier" },
+  { id: "seneschal", nom: "Sénéchal de libre-marchand", origin: "vide", faction: "rt", role: "interlocuteur" },
+  { id: "psyker-sanct", nom: "Psyker sanctionné", origin: "vide", faction: "tel", role: "mystique",
+    duty: { nom: "Psyker sanctionné", choix: "per", talentPick: 0, adv: { vig: 1, dis: 2, psy: 2 } } },
+  { id: "dialogus", nom: "Novice Sœur Dialogus", origin: "schola", faction: "min", role: "savant" },
+  { id: "famulous", nom: "Novice Sœur Famulous", origin: "schola", faction: "min", role: "interlocuteur" },
+  { id: "hospitaliere", nom: "Novice Sœur Hospitalière", origin: "schola", faction: "min", role: "savant" },
+  { id: "soeur-bataille", nom: "Novice Sœur de Bataille", origin: "schola", faction: "min", role: "guerrier" },
+  { id: "technopretre", nom: "Technoprêtre", origin: "forge", faction: "mec", role: "savant" },
+  { id: "scion", nom: "Cadet Tempestus Scion", origin: "schola", faction: "mil", role: "guerrier" },
+  { id: "homme-armes", nom: "Homme d'armes de la Flotte", origin: "vide", faction: "flo", role: "guerrier" },
+];

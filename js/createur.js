@@ -239,6 +239,15 @@
     }
     $("#step-car").innerHTML = car;
 
+    // --- Démarrage rapide par archétype
+    const arch = byId(ARCHETYPES, S.archetype);
+    let qs = `<p class="hint">Le tableau « Je veux jouer… » du livre propose une combinaison origine + faction + rôle pour chaque concept. Choisissez-en un : les étapes 3 à 5 se remplissent, il ne reste qu'à répartir les points.</p>
+      <div class="row"><select class="select" id="arch-select"><option value="">— Choisir un archétype —</option>${ARCHETYPES.map((a) =>
+        `<option value="${a.id}" ${S.archetype === a.id ? "selected" : ""}>${esc(a.nom)}</option>`).join("")}</select>
+      <button class="btn" type="button" data-act="arch-apply">Appliquer</button></div>
+      <div class="preview" data-preview-for="arch-select" data-kind="archetype">${arch ? tipContent("archetype", arch.id) : ""}</div>`;
+    $("#step-archetype").innerHTML = qs;
+
     // --- Espèce
     const sp = species();
     let spc = `${cards("species", "spc", SPECIES, sp.id, "species")}
@@ -467,11 +476,11 @@
 
     if (fc) {
       const B = (id) => bonus(fc[id]);
-      const wounds = B("f") + 2 * B("e") + B("fm");
+      const wounds = B("f") + 2 * B("e") + B("fm") + (species().bonusBlessures || 0);
       const sanctioned = talents.includes("Psyker sanctionné");
       h += `<div class="sheet-derived">
         <div><span>Blessures</span><strong>${wounds}</strong></div>
-        <div><span>Critiques max</span><strong>${B("e")}</strong></div>
+        <div><span>Critiques max</span><strong>${B("e") + (species().bonusCritiques || 0)}</strong></div>
         <div><span>Initiative</span><strong>${B("per") + B("ag")}</strong></div>
         <div><span>Encombrement</span><strong>${B("f") + B("e")}</strong></div>
         <div><span>Destin</span><strong>${fate}</strong></div>
@@ -536,6 +545,15 @@
       const tgt = b.dataset.scope === "faction" ? S.faction.adv : S.role.adv;
       const sk = b.dataset.sk;
       tgt[sk] = Math.max(0, (tgt[sk] || 0) + (act === "adv+" ? 1 : -1));
+    }
+    else if (act === "arch-apply") {
+      const a = byId(ARCHETYPES, $("#arch-select").value); if (!a) return;
+      S.archetype = a.id; S.species = "humain";
+      S.origin = { id: a.origin, rolled: false, choix: "" };
+      S.faction = { id: a.faction, rolled: false, choix: a.duty?.choix || "", adv: { ...(a.duty?.adv || {}) }, talentPick: a.duty?.talentPick || 0, equip: {} };
+      S.role = { id: a.role, rolled: false, talents: [], adv: {}, specs: {}, equip: {} };
+      S.psy = { discipline: "", minor: [], powers: [] };
+      resetRoleIfBlocked();
     }
     else if (act === "xc+" || act === "xc-") { const c = b.dataset.c; S.xp.car[c] = Math.max(0, (S.xp.car[c] || 0) + (act === "xc+" ? 1 : -1)); }
     else if (act === "xs+" || act === "xs-") { const k = b.dataset.sk; S.xp.skill[k] = Math.max(0, (S.xp.skill[k] || 0) + (act === "xs+" ? 1 : -1)); if (!S.xp.skill[k]) delete S.xp.skill[k]; }
@@ -627,6 +645,12 @@
   }
 
   function tipContent(kind, key) {
+    if (kind === "archetype") {
+      const a = byId(ARCHETYPES, key); if (!a) return "";
+      return `<div class="tt-kicker">Archétype du livre</div><div class="tt-title">${esc(a.nom)}</div>
+        ${field("Origine", esc(byId(ORIGINS, a.origin).nom))}${field("Faction", esc(byId(FACTIONS, a.faction).nom))}${field("Rôle", esc(byId(ROLES, a.role).nom))}
+        ${a.duty ? field("Devoir de faction", esc(a.duty.nom) + " (pré-rempli)") : ""}${a.note ? `<p>${esc(a.note)}</p>` : ""}`;
+    }
     if (kind === "species") {
       const sp = byId(SPECIES, key); if (!sp) return "";
       const mods = Object.entries(sp.mods).map(([c, v]) => `${v > 0 ? "+" : "−"}${Math.abs(v)} ${carNom(c)}`).join(", ");

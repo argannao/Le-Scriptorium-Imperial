@@ -52,6 +52,24 @@
       </table>
     </div>
 
+    <h2 id="archetypes">Je veux jouer…</h2>
+    <div class="panel">
+      <p>Le livre propose une combinaison toute prête pour 27 concepts de personnage. Le <a href="createur.html">créateur</a> peut les appliquer en un clic.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Archétype</th><th>Origine</th><th>Faction</th><th>Rôle</th></tr></thead>
+        <tbody id="t-archetypes"></tbody>
+      </table>
+    </div>
+    <script src="js/createur-data.js"></script>
+    <script>
+      document.getElementById("t-archetypes").innerHTML = ARCHETYPES.map((a) =>
+        `<tr><td>${a.nom}${a.duty ? ` <small>(devoir : ${a.duty.nom})</small>` : ""}</td><td>${ORIGINS.find((o) => o.id === a.origin).nom}</td><td>${FACTIONS.find((f) => f.id === a.faction).nom}</td><td>${ROLES.find((r) => r.id === a.role).nom}</td></tr>`).join("");
+    </script>
+
+    <div class="panel warn"><p><strong>Astartes :</strong> les Space Marines ne sont pas jouables dans le livre. Le Scriptorium les propose en <strong>règle maison</strong> (néophyte scout ou frère de bataille), réservés à l'Inquisition, à l'étape « Espèce » du <a href="createur.html">créateur</a>. Le frère de bataille éclipse tout agent humain : à réserver à une table entièrement Astartes.</p></div>
+
     <div class="panel warn"><p><strong>Agents xenos :</strong> le livre ne prévoit que des agents humains. Le Scriptorium propose en <strong>règle maison</strong> cinq espèces xenos jouables (hybride Genestealer, Aeldari, Drukhari, Kroot, T'au) : voir <a href="xenos.html#jouer">Jouer un xenos</a> et l'étape « Espèce » du <a href="createur.html">créateur</a>.</p></div>
 
     <h2 id="caracs">1. Caractéristiques</h2>

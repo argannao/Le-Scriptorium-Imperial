@@ -172,6 +172,11 @@ const ITEM_INFO = {
   "Fusil kroot":                   { t: "Arme xenos", s: "Tir : dég. 7, portée longue, Lourd (4) · Lames : dég. 6 en mêlée, Deux mains (profil du livre)", d: "Un long fusil à projectiles, garni de lames pour le corps à corps." },
   "Pistolet à impulsions":         { t: "Arme xenos", s: "Dég. 7 · Portée moyenne · Proche, Perforant (2) (règle maison)", d: "Une arme à plasma t'au, compacte et fiable." },
   "Drone traducteur":              { t: "Équipement xenos", s: "Avantage aux tests de Linguistique pour comprendre une langue (règle maison)", d: "Un petit drone flottant qui traduit et enregistre les conversations." },
+  // Équipement Astartes (règle maison ; armure énergétique d'après la table du livre)
+  "Armure énergétique":            { t: "Armure énergétique", s: "Armure 10 · tout le corps · Bruyant (table du livre)", d: "Une armure motorisée liée à son porteur ; sans alimentation, elle perd ses avantages." },
+  "Armure de scout":               { t: "Armure carapace", s: "Armure 5 · tête, bras, torse, jambes (règle maison)", d: "Des plaques de carapace allégées, faites pour bouger vite et sans bruit." },
+  "Bolter":                        { t: "Arme à distance", s: "Dég. 8 · Portée longue · Bruyant, Perforant (4), Tir rapide (2), Dispersion, Deux mains", d: "L'arme emblématique des Astartes : des projectiles autopropulsés qui explosent dans la cible." },
+  "Couteau de combat":             { t: "Arme de mêlée", s: "Dég. 2 + BF · Discret (règle maison)", d: "Une lame massive, taillée à l'échelle d'un transhumain." },
   // Augmétiques
   "Matrice d'augures":             { t: "Augmétique", s: "Compte dans la limite d'augmétiques (BE)", d: "Des capteurs intégrés qui donnent les sens d'un auspex." },
   "Implant vocal":                 { t: "Augmétique", s: "Compte dans la limite (BE)", d: "Une voix amplifiée et modulable, idéale pour prêcher ou commander." },
