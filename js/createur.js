@@ -288,7 +288,7 @@
 
     // --- Démarrage rapide par archétype
     const arch = byId(ARCHETYPES, S.archetype);
-    let qs = `<p class="hint">Le tableau « Je veux jouer… » du livre propose une combinaison origine + faction + rôle pour chaque concept. Choisissez-en un : les étapes 3 à 5 se remplissent, il ne reste qu'à répartir les points.</p>
+    let qs = `<p class="hint">Le tableau « Je veux jouer… » du livre propose une combinaison origine + faction + rôle pour chaque concept. Choisissez-en un : tout se remplit (caractéristiques conseillées, origine, faction, rôle, niveaux de compétence, spécialisations, talents, équipement et pouvoirs). Vous pouvez ensuite tout ajuster étape par étape.</p>
       <div class="row"><select class="select" id="arch-select"><option value="">— Choisir un archétype —</option>${ARCHETYPES.map((a) =>
         `<option value="${a.id}" ${S.archetype === a.id ? "selected" : ""}>${esc(a.nom)}</option>`).join("")}</select>
       <button class="btn" type="button" data-act="arch-apply">Appliquer</button></div>
@@ -761,6 +761,62 @@
   }
   function closeDossier() { $("#dossier").hidden = true; document.body.classList.remove("dossier-open"); }
 
+
+  /* ---------- Archétype : tout remplir (choix, niveaux, spécialisations, talents, équipement, pouvoirs) ---------- */
+  function applyKit(a) {
+    const k = (typeof ARCH_KITS !== "undefined" && ARCH_KITS[a.id]) || {};
+    const o = origin(), f = faction(), r = role();
+    if (S.car.mode === "repartition") { const pts = [16, 16, 16, 12, 12, 5, 5, 4, 4]; recoCaracs().ordre.forEach((id, i) => { S.car.points[id] = pts[i]; }); }
+    const reco = recoCaracs().ordre, rank = (c) => reco.indexOf(c);
+    const best = (opts) => [...opts].sort((x, y) => rank(x) - rank(y))[0];
+    if (o && !xenosOrigin() && !S.origin.choix) S.origin.choix = best(o.choix);
+    if (f && !S.faction.choix) S.faction.choix = best(f.choix);
+
+    // niveaux : on remplit une à une la compétence la mieux classée (2 maximum par compétence, création comprise)
+    const prio = (list) => (sk) => { const i = list.indexOf(sk); return (i < 0 ? 0 : 20 - 4 * i) + (9 - rank(SKILLS[sk].c)); };
+    function place(tgt, skills, n, score) {
+      const sc = Object.fromEntries(skills.map((sk) => [sk, score(sk)]));
+      for (let i = 0; i < n; i++) {
+        const sk = skills.filter((x) => advTotal(x) < 2 && (tgt[x] || 0) < 2).sort((x, y) => sc[y] - sc[x])[0];
+        if (!sk) break; tgt[sk] = (tgt[sk] || 0) + 1; sc[sk] -= 6;
+      }
+    }
+    const sk = k.sk || [];
+    if (f && !a.duty) place(S.faction.adv, f.skills, 5, prio(k.fsk || [...sk, ...(r ? r.skills : [])]));
+    if (r) place(S.role.adv, r.skills, 3, prio(sk));
+
+    // spécialisations (2, une par spécialisation)
+    if (r) {
+      const opts = roleSpecOptions();
+      const wanted = (k.sp || []).filter((x) => opts.includes(x));
+      const rest = opts.filter((x) => !wanted.includes(x)).sort((x, y) => prio(sk)(y.split(":")[0]) - prio(sk)(x.split(":")[0]));
+      [...wanted, ...rest].slice(0, 2).forEach((x) => { S.role.specs[x] = 1; });
+    }
+
+    // talents de rôle, sans doublon avec ceux de la faction
+    if (r) {
+      const owned = factionTalents(), ok = (t) => !owned.includes(t) && !S.role.talents.includes(t);
+      [...(k.rt || []), ...r.talents.list].forEach((t) => { if (S.role.talents.length < r.talents.n && r.talents.list.includes(t) && ok(t)) S.role.talents.push(t); });
+    }
+
+    // équipement : choix du kit, sinon les premières options
+    const fill = (items, picks, want = {}) => items.forEach((it, i) => {
+      if (typeof it === "string") return;
+      if (it.one) picks[i] = it.one.includes(want[i]) ? want[i] : it.one[0];
+      else { const w = [].concat(want[i] || []).filter((x) => it.options.includes(x)); picks[i] = [...w, ...it.options.filter((x) => !w.includes(x))].slice(0, it.pick); }
+    });
+    if (f) fill(f.equip, S.faction.equip, k.f);
+    if (r) fill(r.equip, S.role.equip, k.r);
+
+    // pouvoirs psychiques
+    if (isPsyker()) {
+      const pc = powerCounts(), d = k.d && PSY_DISCIPLINES[k.d] ? k.d : "Divination";
+      S.psy.discipline = d;
+      S.psy.minor = [...(k.mi || []), "Smite", "Psychic Scrutiny", "Soulsight", "Luck"].filter((x, i, l) => PSY_MINOR.includes(x) && l.indexOf(x) === i).slice(0, pc.minor);
+      S.psy.powers = [...(k.pw || []), ...PSY_DISCIPLINES[d]].filter((x, i, l) => PSY_DISCIPLINES[d].includes(x) && l.indexOf(x) === i).slice(0, pc.disc);
+    }
+  }
+
   function renderAll() {
     // un talent obtenu par la faction ou le rôle n'a plus à être acheté en XP
     S.xp.talents = S.xp.talents.filter((t) => !factionTalents().includes(t) && !S.role.talents.includes(t));
@@ -813,6 +869,7 @@
       S.role = { id: a.role, rolled: false, talents: [], adv: {}, specs: {}, equip: {} };
       S.psy = { discipline: "", minor: [], powers: [] };
       resetRoleIfBlocked();
+      applyKit(a);
     }
     else if (act === "xc+" || act === "xc-") { const c = b.dataset.c; S.xp.car[c] = Math.max(0, (S.xp.car[c] || 0) + (act === "xc+" ? 1 : -1)); }
     else if (act === "xs+" || act === "xs-") { const k = b.dataset.sk; S.xp.skill[k] = Math.max(0, (S.xp.skill[k] || 0) + (act === "xs+" ? 1 : -1)); if (!S.xp.skill[k]) delete S.xp.skill[k]; }
