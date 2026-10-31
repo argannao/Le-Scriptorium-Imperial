@@ -163,18 +163,17 @@ body.dossier-open { overflow: hidden; }
 .tm-thought { font-family: "VT323", monospace; font-size: 1.2rem; color: var(--ph); }
 
 /* Démarrage : les lignes s'affichent une à une */
-.tm.boot .tm-boot div, .tm.boot > header, .tm.boot > section, .tm.boot > .tm-cols, .tm.boot > footer { animation: tm-in 0.35s steps(4) both; }
+.tm.boot .tm-boot div, .tm.boot .tm-page > header, .tm.boot .tm-page > section, .tm.boot .tm-page > .tm-cols, .tm.boot .tm-page > footer { animation: tm-in 0.35s steps(4) both; }
 .tm.boot .tm-boot div:nth-child(1) { animation-delay: 0.05s; }
 .tm.boot .tm-boot div:nth-child(2) { animation-delay: 0.3s; }
 .tm.boot .tm-boot div:nth-child(3) { animation-delay: 0.55s; }
 .tm.boot .tm-boot div:nth-child(4) { animation-delay: 0.8s; }
-.tm.boot > header { animation-delay: 1s; }
-.tm.boot > section:nth-of-type(1) { animation-delay: 1.15s; }
-.tm.boot > section:nth-of-type(2) { animation-delay: 1.3s; }
-.tm.boot > section:nth-of-type(3) { animation-delay: 1.45s; }
-.tm.boot > section:nth-of-type(4) { animation-delay: 1.6s; }
-.tm.boot > .tm-cols { animation-delay: 1.75s; }
-.tm.boot > section:nth-of-type(5), .tm.boot > footer { animation-delay: 1.9s; }
+.tm.boot .tm-page:first-of-type > header { animation-delay: 1s; }
+.tm.boot .tm-page:first-of-type > section:nth-of-type(1) { animation-delay: 1.15s; }
+.tm.boot .tm-page:first-of-type > section:nth-of-type(2) { animation-delay: 1.3s; }
+.tm.boot .tm-page:first-of-type > section:nth-of-type(3) { animation-delay: 1.45s; }
+.tm.boot .tm-page:first-of-type > section:nth-of-type(4) { animation-delay: 1.6s; }
+.tm.boot .tm-page + .tm-page > * { animation-delay: 1.8s; }
 @keyframes tm-in { from { opacity: 0; clip-path: inset(0 100% 0 0); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
 @media (prefers-reduced-motion: reduce) {
   .tm *, .tm::after { animation: none !important; }
@@ -210,7 +209,7 @@ body.dossier-open { overflow: hidden; }
   body.dossier-open #dossier { position: static; overflow: visible; background: var(--screen); padding: 0; }
   .dossier-bar, .tm-cursor, .tm-noprint { display: none !important; }
   .tm {
-    max-width: none; margin: 0; border-radius: 0; font-size: 8.6pt; line-height: 1.35; padding: 9mm 11mm 8mm;
+    max-width: none; margin: 0; border-radius: 0; font-size: 8.4pt; line-height: 1.3; padding: 0;
     box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.6);
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
     text-shadow: 0 0 1.5px var(--ph-glow);
@@ -218,7 +217,26 @@ body.dossier-open { overflow: hidden; }
   .tm::after { display: none; }
   .tm::before { background: repeating-linear-gradient(to bottom, rgba(0,0,0,0.22) 0 1px, transparent 1px 3px); }
   .tm * { animation: none !important; }
-  .tm-box { break-inside: avoid; margin-top: 0.9rem; padding: 0.8rem 0.8rem 0.5rem; }
+  /* deux pages fixes : 1 = identité, profil, état vital, compétences · 2 = talents, inventaire, journaux */
+  .tm-page { padding: 9mm 11mm 8mm; min-height: 296mm; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  .tm-page:first-of-type { break-after: page; }
+  .tm-boot { display: none; }
+  .tm-head { margin: 0 0 0.3rem; }
+  .tm-cars { gap: 0; }
+  .tm-car { line-height: 1.15; }
+  .tm-v { padding: 0.2rem 0.5rem; }
+  .tm-v > strong { font-size: 1.3rem; }
+  .tm-vitals { gap: 0.35rem; }
+  .tm-track button { width: 12px; height: 12px; }
+  .tm-pict { padding: 0.25rem; }
+  .tm-id-grid { grid-template-columns: 90px minmax(0, 1fr); }
+  .tm-box { break-inside: avoid; margin-top: 1.05rem; padding: 0.75rem 0.8rem 0.45rem; }
+  .tm-car { gap: 0.6rem; }
+  .tm-car strong { font-size: 1.25rem; }
+  .tm-car-ab { font-size: 1.1rem; }
+  .tm-ascii { font-size: 0.8rem; }
+  .tm-name { font-size: 2rem; }
+  .tm-sk { line-height: 1.25; }
   .tm-cols > *, .tm-skills { break-inside: auto; }
   .tm-cols .tm-box, .tm-foot { break-inside: avoid; }
   .tm-head { margin: 0.2rem 0 0.6rem; }
@@ -227,14 +245,14 @@ body.dossier-open { overflow: hidden; }
   .tm-id { padding-top: 1.4rem; }
   .tm-foot { margin-top: 0.6rem; padding-top: 0.4rem; gap: 0.1rem; }
   .tm-thought { font-size: 1rem; }
-  .tm-boot { margin-bottom: 0.3rem; }
 
   /* Option listing */
   html:has(#dossier[data-paper="listing"]), body.dossier-open:has(#dossier[data-paper="listing"]) { background: #fff !important; }
   #dossier[data-paper="listing"] { --ph: #10301a; --ph-mid: #24543a; --ph-dim: #6c8f78; --ph-faint: transparent; --amber: #8a4b00; --red: #a01e1e; --violet: #4b3a8e; --screen: #fbfdf9; background: #fff; }
   #dossier[data-paper="listing"] .tm-noise { display: none; }
+  #dossier[data-paper="listing"] .tm-page { padding-left: 17mm; padding-right: 17mm; }
   #dossier[data-paper="listing"] .tm {
-    text-shadow: none; box-shadow: none; padding: 9mm 17mm 8mm;
+    text-shadow: none; box-shadow: none;
     background:
       radial-gradient(circle at 6mm 50%, #fff 1.6mm, #c9d3cb 1.7mm, #c9d3cb 1.9mm, transparent 2mm) 0 0 / 100% 12.7mm repeat-y,
       radial-gradient(circle at calc(100% - 6mm) 50%, #fff 1.6mm, #c9d3cb 1.7mm, #c9d3cb 1.9mm, transparent 2mm) 0 0 / 100% 12.7mm repeat-y,

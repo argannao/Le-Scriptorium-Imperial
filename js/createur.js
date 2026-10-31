@@ -687,6 +687,7 @@
     doc.className = "dossier-doc tm";
     doc.innerHTML = `
       <div class="tm-noise" aria-hidden="true">${bin}</div>
+      <div class="tm-page">
       <div class="tm-topbar">
         <span><i class="tm-led"></i>COGITATOR MK.IX</span><span class="tm-hide-s">NŒUD 7-ALPHA</span><span>CANAL CRYPTÉ ${hex(h, 4)}</span>
       </div>
@@ -740,6 +741,8 @@
         <div class="tm-skills">${skillRows}</div>
       </section>
 
+      </div>
+      <div class="tm-page">
       <div class="tm-cols">
         <section class="tm-box">
           <div class="tm-box-t">┤ TALENTS ├</div>
@@ -780,7 +783,8 @@
         <div>++ FIN DE TRANSMISSION ++ <span class="tm-dim">CHECKSUM ${hex(h * 2654435761, 8)}</span></div>
         <div class="tm-thought">PENSÉE DU JOUR : « ${esc(thought)} »</div>
         <div class="tm-dim">Toute consultation non autorisée sera signalée à l'Ordo compétent.</div>
-      </footer>`;
+      </footer>
+      </div>`;
   }
 
   function openDossier() {
