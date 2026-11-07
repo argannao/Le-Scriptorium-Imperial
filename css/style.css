@@ -522,3 +522,5 @@ th {
 .module-card.xenos-card h3 { color: #b5f2df; font-family: "Fraunces", Georgia, serif; letter-spacing: 0; }
 .module-card.xenos-card .go { color: #7fe0c3; }
 .module-card.xenos-card:hover { border-color: #4f9e88; box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(127, 224, 195, 0.25); }
+
+.hint { color: var(--muted); font-style: italic; font-size: 0.95rem; }

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bibliothèque — Le Scriptorium Impérial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=10">
+  <script src="js/main.js?v=10" defer></script>
+  <style>
+    .book { display: grid; grid-template-columns: 4.2rem minmax(0, 1fr); gap: 1rem; align-items: start; }
+    .book-spine { writing-mode: vertical-rl; transform: rotate(180deg); text-align: center; padding: 0.8rem 0.3rem; min-height: 9rem;
+      font-family: var(--font-title); font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase;
+      background: linear-gradient(to right, #3a120f, var(--crimson) 40%, #3a120f); color: var(--gold-bright); border: 1px solid var(--gold-soft); border-radius: 3px; }
+    .book-spine.mech { background: linear-gradient(to right, #2b0d0a, #8a2a12 40%, #2b0d0a); }
+    .book-spine.inq  { background: linear-gradient(to right, #111, #2c2c2c 40%, #111); }
+    .book-spine.adv  { background: linear-gradient(to right, #13230f, #2f4a22 40%, #13230f); }
+    .book-spine.voll { background: linear-gradient(to right, #1e1d0b, #5a5419 40%, #1e1d0b); }
+    .book h3 { margin-top: 0; }
+    .book ul { margin: 0.4rem 0; padding-left: 1.2rem; }
+    .status { display: inline-block; font-family: var(--font-mono); font-size: 0.78rem; padding: 0.1rem 0.5rem; border: 1px solid; border-radius: 2px; margin-left: 0.3rem; }
+    .status.ok { color: #8fd18a; border-color: #4f8a4b; }
+    .status.no { color: var(--gold); border-color: var(--gold-soft); }
+    .meta { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); }
+    @media (max-width: 560px) { .book { grid-template-columns: 2.6rem minmax(0, 1fr); } .book-spine { font-size: 0.65rem; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header class="page-title">
+      <div class="kicker">Archive XI — Registre des parutions</div>
+      <h1>Bibliothèque</h1>
+      <p class="lead">Les livres de la gamme <em>Imperium Maledictum</em> et ce que chacun apporte, avec ce qui est déjà intégré au site. Registre mis à jour en novembre 2026.</p>
+    </header>
+
+    <div class="panel">
+      <p>
+        Le site résume le <strong>livre de base</strong>. Les suppléments ci-dessous sont listés à partir des annonces de l'éditeur et de la presse spécialisée :
+        leurs règles <strong>ne sont pas encore reprises</strong> dans les archives ni dans le créateur. Pour les y intégrer, il faut le livre (PDF) sous la main.
+      </p>
+    </div>
+
+    <h2>Livre de base</h2>
+    <div class="panel book">
+      <div class="book-spine">Livre de base</div>
+      <div>
+        <h3>Imperium Maledictum — Livre de règles <span class="status ok">Intégré</span></h3>
+        <p class="meta">Cubicle 7 · 2023</p>
+        <p>Règles d100, création d'agent, factions, rôles, talents, armurerie, pouvoirs psychiques et le Secteur Macharien. C'est la source de toutes les archives et du <a href="createur.html">créateur</a>.</p>
+      </div>
+    </div>
+
+    <h2>Suppléments</h2>
+
+    <div class="panel book">
+      <div class="book-spine adv">Adversaires</div>
+      <div>
+        <h3>Macharian Adversary Guide <span class="status no">Non intégré</span></h3>
+        <p class="meta">Paru le 25 septembre 2026 · 160 pages · nécessite le livre de base</p>
+        <ul>
+          <li>Les grandes menaces du secteur, chacune avec son profil : opposition impériale, démons et hérétiques (Space Marines du Chaos compris), incursions xenos (Aeldari, Drukhari, Tyranides, Nécrons, Orks, T'au…), et des menaces diverses.</li>
+          <li><strong>PNJ de rang Champion</strong> : un nouveau palier au-dessus des Chefs, pour les ennemis qui marquent une campagne (Space Marines, Patriarches genestealers, Cryptarques nécrons…).</li>
+          <li>Des dizaines d'accroches de scénario, des conseils pour construire rencontres et patrouilles, et des complications de rencontre.</li>
+          <li>Quatre patrons prêts à l'emploi pour le groupe.</li>
+        </ul>
+        <p>Sur le site : voir les menaces de l'<a href="xenos.html">Archive IX</a>.</p>
+      </div>
+    </div>
+
+    <div class="panel book">
+      <div class="book-spine mech">Mechanicus</div>
+      <div>
+        <h3>Adeptus Mechanicus — Player's Guide &amp; GM's Guide <span class="status no">Non intégré</span></h3>
+        <p class="meta">Parus en juin 2026 · deux livres (160 et 192 pages) · existe aussi en édition collector</p>
+        <ul>
+          <li><strong>Guide du joueur</strong> : jouer un Tech-Adepte, créer un patron du Mechanicus, augmétiques, armes sacrées de Mars, véhicules, familiers techniques, rites binaires, compétences et talents supplémentaires.</li>
+          <li><strong>Guide du MJ</strong> : archéotech et tech-hérésie, guerres de l'ombre entre mondes-forges, l'Arche Mechanicus <em>Recollections of Rust</em> et son voyage à travers le secteur (cadre de campagne), nouveaux contacts, menaces et « rapports de dysfonctionnement ».</li>
+        </ul>
+        <p>Sur le site : l'Adeptus Mechanicus dans les <a href="factions.html">factions</a>, les augmétiques dans l'<a href="armurerie.html">armurerie</a>.</p>
+      </div>
+    </div>
+
+    <div class="panel book">
+      <div class="book-spine inq">Inquisition</div>
+      <div>
+        <h3>Inquisition — Player's Guide &amp; GM's Guide <span class="status no">Non intégré</span></h3>
+        <p class="meta">Deux livres, près de 300 pages au total · existe aussi en édition collector</p>
+        <ul>
+          <li>L'Inquisition en détail : histoire, ordos, et la vie d'un agent au service d'un inquisiteur.</li>
+          <li>Nouvelles compétences, talents, règles et pouvoirs psychiques.</li>
+          <li>Côté MJ : ennemis redoutables et secrets à faire découvrir.</li>
+        </ul>
+        <p>Sur le site : l'Inquisition dans les <a href="factions.html">factions</a> et l'Ordo Xenos dans l'<a href="xenos.html">Archive IX</a>.</p>
+      </div>
+    </div>
+
+    <div class="panel book">
+      <div class="book-spine voll">Voll</div>
+      <div>
+        <h3>Voll Adventures <span class="status no">Non intégré</span></h3>
+        <p class="meta">Annoncé en septembre 2025 · recueil de scénarios · nécessite seulement le livre de base</p>
+        <ul>
+          <li>Voll, monde-ruche aux déserts d'acide, dirigé par une ancienne dynastie de libres-marchands et son aristocratie : guildes, gangs et pression de la dîme.</li>
+          <li>Cinq aventures : <em>The Eye of Voll</em>, <em>Illicit Fabrications</em>, <em>Implacable</em>, <em>Interminable Devotion</em> et <em>Paradigm Shift</em>.</li>
+          <li>Profils d'alliés et d'ennemis, et un guide de la planète (« Voll Primer »).</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Dans le reste de la galaxie</h2>
+    <div class="panel warn">
+      <h3>Nouvelle édition du jeu de figurines</h3>
+      <p>
+        Games Workshop a lancé en 2026 une <strong>nouvelle édition de Warhammer 40,000</strong>, avec la boîte <em>Armageddon</em>.
+        Son récit suit la guerre sur Armageddon : l'avant-garde ork de Wazdakka Gutsmek débarque, Ghazghkull suit, et Yarrick appelle à l'aide
+        l'opération Imperator, une coalition de Chapitres Space Marines menée par les Blood Angels.
+      </p>
+      <p>Ces événements se déroulent loin du Secteur Macharien et ne changent rien aux règles d'<em>Imperium Maledictum</em>. Un MJ peut s'en servir comme rumeur ou toile de fond.</p>
+    </div>
+  </main>
+</body>
+</html>

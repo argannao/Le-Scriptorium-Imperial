@@ -19,6 +19,7 @@ const MODULES = [
   { href: "secteur.html",     label: "Secteur" },
   { href: "xenos.html",       label: "Xenos" },
   { href: "lexique.html",     label: "Lexique" },
+  { href: "bibliotheque.html", label: "Bibliothèque" },
 ];
 
 // Sceau du site (roue dentée + plume), dessin original.

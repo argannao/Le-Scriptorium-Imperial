@@ -7,8 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=9">
-  <script src="js/main.js?v=9" defer></script>
+  <link rel="stylesheet" href="css/style.css?v=10">
+  <script src="js/main.js?v=10" defer></script>
 </head>
 <body>
   <main>
@@ -62,7 +62,7 @@
         <tbody id="t-archetypes"></tbody>
       </table>
     </div>
-    <script src="js/createur-data.js?v=9"></script>
+    <script src="js/createur-data.js?v=10"></script>
     <script>
       document.getElementById("t-archetypes").innerHTML = ARCHETYPES.map((a) =>
         `<tr><td>${a.nom}${a.duty ? ` <small>(devoir : ${a.duty.nom})</small>` : ""}</td><td>${ORIGINS.find((o) => o.id === a.origin).nom}</td><td>${FACTIONS.find((f) => f.id === a.faction).nom}</td><td>${ROLES.find((r) => r.id === a.role).nom}</td></tr>`).join("");
